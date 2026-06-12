@@ -1,21 +1,22 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { ArrowLeft, ShieldCheck, Activity } from "lucide-react";
-import { useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
 
 // Corrected Interface matching exactly what the backend route sends back
+
+interface UserDetails{
+    id:string
+    email:string
+    full_name:string
+
+  
+}
 interface LoginResponse {
-  success: boolean;
-  message: string;
-  data: {
-    access_token: string;
-    refresh_token: string;
-  } | null;
-  user: {
-    id: string;
-    email: string;
-    full_name: string;
-  };
+   data:{
+    access_token:string
+    user:UserDetails
+   }
 }
 
 function Login() {
@@ -55,19 +56,20 @@ function Login() {
       setError(null);
       
       // 2. FIXED: Access response structure smoothly via standard Axios formatting
-      const response = await axios.post<{ data: LoginResponse }>("http://localhost:8000/auth/login", formData);
+      const response = await axios.post("http://localhost:8000/auth/login", formData);
       
       // Grab backend elements out of payload safely
-      const serverPayload = response.data; 
-      const token = serverPayload.data?.data.access_token;
-      const user = serverPayload.data.user;
+      const {data}:LoginResponse = response.data; 
+      const token = data.access_token;
+      const user = data.user;
+      console.log(user)
 
       if (token) {
         localStorage.setItem('token', token);
       }
       
       if (user) {
-        localStorage.setItem('email', user.email);
+        localStorage.setItem('email',user.email );
         localStorage.setItem('full_name', user.full_name);
         localStorage.setItem('id', user.id.toString());
       }
@@ -161,6 +163,13 @@ function Login() {
             <span className="flex-shrink mx-4 text-[9px] text-zinc-700 tracking-[0.3em] uppercase">OR</span>
             <div className="flex-grow border-t border-zinc-900"></div>
           </div>
+
+
+          <Link to='/register'
+            className="w-full border border-zinc-900 bg-zinc-950 text-zinc-400 font-bold text-xs tracking-widest uppercase py-4 hover:text-white hover:border-zinc-700 transition-all rounded-none flex items-center justify-center gap-2"
+          >
+            Create Account
+          </Link>
 
           {/* Google Sign In Component */}
           <button

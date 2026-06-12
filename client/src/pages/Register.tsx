@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Terminal, ArrowLeft, ShieldAlert, Activity } from "lucide-react";
-import { useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
 
 interface ResponseDetails {
   data: {
@@ -153,12 +153,12 @@ export default function Register() {
 
           {/* Subdued Redirect Link */}
           <div className="text-center pt-2">
-            <a
-              href="/login"
+            <Link
+              to="/login"
               className="text-[10px] text-zinc-500 hover:text-white uppercase tracking-wider transition-colors"
             >
               Already verified? Sign in to terminal →
-            </a>
+            </Link>
           </div>
         </div>
 

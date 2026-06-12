@@ -2,10 +2,18 @@ import React, { useState } from "react";
 import axios from "axios";
 import { Terminal, ArrowLeft, ShieldAlert, Activity } from "lucide-react";
 
+
+interface ResponseDetails{
+    data:{
+        email:string
+        full_name:string
+        id:string
+    }
+}
 export default function Register() {
   const [formData, setFormData] = useState({ fullName:'',email: "", password: "" });
   const [loading, setLoading] = useState(false);
-
+   const [error,setError] = useState(false);
   const handleInput = (e: any) => {
     const { name, value } = e.target;
     setFormData((prevState) => ({
@@ -16,19 +24,28 @@ export default function Register() {
 
   const handleRegister = async (e: any) => {
     e.preventDefault();
+    setLoading(true)
+    setError(false)
     
     if (!formData.fullName.trim() || !formData.email.trim() || !formData.password.trim()) {
-      return alert("fill the form ");
+      setLoading(false)
+      return;
     }
 
     try {
       setLoading(true);
-      const response = await axios.post("http://localhost:8000/auth/register", formData);
+      const response = await axios.post("http://localhost:8000/auth/register", {
+        email:formData.email,
+        password:formData.password,
+        full_name:formData.fullName
+      });
+      localStorage.setItem('token',response.data.data.token)
       console.log("Registration successful:", response.data);
       // Optional: Add redirect logic or success state notification here
     } catch (err) {
-      console.log(err);
-      alert("Registration failed to initialize.");
+        const backendMessage = err.response?.data?.message || err.message;
+        console.log("Server rejected transaction:", backendMessage);
+        setError(backendMessage);
     } finally {
       setLoading(false);
     }
@@ -64,6 +81,7 @@ export default function Register() {
           </div>
 
           <form onSubmit={handleRegister} className="space-y-5">
+            {error?<div className="text-red-600">{error}</div>:''}
           <div className="space-y-2">
               <label className="text-[10px] uppercase tracking-[0.2em] text-zinc-500 font-bold block">
                 Operator Name

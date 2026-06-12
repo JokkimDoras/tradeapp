@@ -9,7 +9,7 @@ const { supabase, supabaseAdmin } = require('../config/supabase');
 router.post('/register', async (req, res) => {
   const { email, password, full_name } = req.body;
 
-  // Input validation
+  // 1. INPUT VALIDATION FIRST (Saves database overhead)
   if (!email || !password || !full_name) {
     return res.status(400).json({
       success: false,
@@ -32,36 +32,61 @@ router.post('/register', async (req, res) => {
     });
   }
 
-  const { data, error } = await supabaseAdmin.auth.admin.createUser({
-    email,
-    password,
-    email_confirm: true, // sends verification email
-    user_metadata: { full_name },
-  });
+  try {
+    // 2. CHECK EXISTING EMAIL SAFE HANDLING
+    const { data: existing, error: checkError } = await supabase
+      .from('users')
+      .select('email')
+      .eq('email', email)
+      .maybeSingle(); 
+      
+    if (checkError) {
+      console.error('Database pre-check error:', checkError);
+      return res.status(500).json({ success: false, message: 'Internal server safety check failed.' });
+    }
 
-  if (error) {
-    // Supabase returns "User already registered" — map to clean message
-    const isDuplicate =
-      error.message.toLowerCase().includes('already registered') ||
-      error.message.toLowerCase().includes('already exists');
+    if (existing) {
+      return res.status(400).json({ 
+        success: false,
+        message: 'Operator email is already registered' 
+      });
+    }
 
-    return res.status(isDuplicate ? 409 : 400).json({
-      success: false,
-      message: isDuplicate
-        ? 'An account with this email already exists'
-        : error.message,
+    // 3. CREATE USER IN SUPABASE AUTH
+    const { data, error } = await supabaseAdmin.auth.admin.createUser({
+      email,
+      password,
+      email_confirm: true, // Note: if true, user is auto-confirmed, no verification email is required. Set to false if you want them to verify via email link.
+      user_metadata: { full_name },
     });
-  }
 
-  return res.status(201).json({
-    success: true,
-    message: 'Account created. Please check your email to verify your account.',
-    data: {
-      id: data.user.id,
-      email: data.user.email,
-      full_name,
-    },
-  });
+    if (error) {
+      const isDuplicate =
+        error.message.toLowerCase().includes('already registered') ||
+        error.message.toLowerCase().includes('already exists');
+
+      return res.status(isDuplicate ? 409 : 400).json({
+        success: false,
+        message: isDuplicate
+          ? 'An account with this email already exists'
+          : error.message,
+      });
+    }
+
+    return res.status(201).json({
+      success: true,
+      message: 'Account created successfully.',
+      data: {
+        id: data.user.id,
+        email: data.user.email,
+        full_name,
+      },
+    });
+
+  } catch (catchErr) {
+    console.error('Registration crash catch:', catchErr);
+    return res.status(500).json({ success: false, message: 'Critical system registration failure.' });
+  }
 });
 
 // ─────────────────────────────────────────────

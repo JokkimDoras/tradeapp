@@ -1,54 +1,85 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
-import {  ArrowLeft, ShieldCheck, Activity } from "lucide-react";
-import {  useNavigate } from "react-router";
+import { ArrowLeft, ShieldCheck, Activity } from "lucide-react";
+import { Link, useNavigate } from "react-router";
 
-interface ResponseDetails{
-  data:{
-    access_token:string,
-    user:{
-      id:string,
-      email:string,
-      full_name:string,
-    }
-  }
+// Corrected Interface matching exactly what the backend route sends back
+
+interface UserDetails{
+    id:string
+    email:string
+    full_name:string
+
+  
 }
+interface LoginResponse {
+   data:{
+    access_token:string
+    user:UserDetails
+   }
+}
+
 function Login() {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [loading, setLoading] = useState(false);
-  const [error,setError] = useState(null)
-  const navigator = useNavigate()
+  const [error, setError] = useState<string | null>(null);
+  const navigator = useNavigate();
 
-  const handleInput = (e) => {
+  // 1. FIXED: Run only ONCE when the component mounts to auto-fill registration email
+  useEffect(() => {
+    const savedEmail = localStorage.getItem("email");
+    if (savedEmail) {
+      setFormData((prev) => ({
+        ...prev,
+        email: savedEmail, // Map cleanly to the email field, not full_name
+      }));
+    }
+  }, []); // Empty dependency array stops the infinite loop safely
+
+  const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
+    setFormData((prev) => ({
+      ...prev,
       [name]: value,
-    });
+    }));
   };
 
-  const handleLogin = async (e) => {
+  const handleLogin = async (e: React.FormEvent) => {
     if (e) e.preventDefault();
 
     if (!formData.email.trim() || !formData.password.trim()) {
-      return alert("fill the email and password");
+      return alert("Please fill in both email and password variables.");
     }
 
     try {
       setLoading(true);
-      setError(null)
-      const response:ResponseDetails = await axios.post("http://localhost:8000/auth/login", formData);
-      console.log(response)
-      localStorage.setItem('token', response.data.data.access_token);
-      localStorage.setItem('email', response.data.data.user.email);
-      localStorage.setItem('full_name', response.data.data.user.full_name);
-      localStorage.setItem('id', response.data.data.user.id.toString());
-      console.log("Authenticated successfully:", response.data);
-      navigator('/dashboard',{replace:true})
+      setError(null);
       
-    } catch (error) {
-      console.log(error)
-      setError(error.response?.data?.message )
+      // 2. FIXED: Access response structure smoothly via standard Axios formatting
+      const response = await axios.post("http://localhost:8000/auth/login", formData);
+      
+      // Grab backend elements out of payload safely
+      const {data}:LoginResponse = response.data; 
+      const token = data.access_token;
+      const user = data.user;
+      console.log(user)
+
+      if (token) {
+        localStorage.setItem('token', token);
+      }
+      
+      if (user) {
+        localStorage.setItem('email',user.email );
+        localStorage.setItem('full_name', user.full_name);
+        localStorage.setItem('id', user.id.toString());
+      }
+      
+      console.log("Session authenticated successfully.");
+      navigator('/dashboard', { replace: true });
+      
+    } catch (err: any) {
+      console.error(err);
+      setError(err.response?.data?.message || "Authentication clearance denied.");
     } finally {
       setLoading(false);
     }
@@ -89,14 +120,14 @@ function Login() {
 
           <form onSubmit={handleLogin} className="space-y-5">
             <div className="space-y-2">
-              <div className="text-red-600">{error}</div>
+              {error && <div className="text-xs text-red-500 font-bold uppercase tracking-wide border border-red-950 bg-red-950/20 px-3 py-2">⚠️ {error}</div>}
               <label className="text-[10px] uppercase tracking-[0.2em] text-zinc-500 font-bold block">
                 Operator Email Address
               </label>
               <input
                 type="email"
                 name="email"
-                placeholder="OPERATOR@DOMAIN.COM"
+                placeholder="you@mail.com"
                 value={formData.email}
                 onChange={handleInput}
                 className="w-full bg-zinc-950 border border-zinc-900 px-4 py-3.5 text-xs text-white placeholder:text-zinc-800 focus:outline-none focus:border-white transition-colors rounded-none"
@@ -132,6 +163,13 @@ function Login() {
             <span className="flex-shrink mx-4 text-[9px] text-zinc-700 tracking-[0.3em] uppercase">OR</span>
             <div className="flex-grow border-t border-zinc-900"></div>
           </div>
+
+
+          <Link to='/register'
+            className="w-full border border-zinc-900 bg-zinc-950 text-zinc-400 font-bold text-xs tracking-widest uppercase py-4 hover:text-white hover:border-zinc-700 transition-all rounded-none flex items-center justify-center gap-2"
+          >
+            Create Account
+          </Link>
 
           {/* Google Sign In Component */}
           <button

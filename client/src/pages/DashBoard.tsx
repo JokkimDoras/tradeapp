@@ -10,10 +10,7 @@ export default function DashBoard() {
     const email = localStorage.getItem('email');
     const id = localStorage.getItem('id');
   
-    console.log("Token:", token);
-    console.log("Full Name:", fullName);
-    console.log("Email:", email);
-    console.log("ID:", id);
+  
     useEffect(() => {
         if (!token) {
             navigate('/login');

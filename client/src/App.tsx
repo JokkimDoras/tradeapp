@@ -8,14 +8,26 @@ import {
   Menu, 
   X 
 } from 'lucide-react';
+import { Link, useNavigate } from 'react-router'; // Added useNavigate
 
 export default function TradeVaultLanding() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [emailInput, setEmailInput] = useState(""); // State to capture the bottom input
+  const navigate = useNavigate();
+
+  const handleInitializeSystem = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (emailInput.trim()) {
+      // Save the email to localStorage so the login page can auto-grab it
+      localStorage.setItem("email", emailInput.trim());
+    }
+    navigate('/login');
+  };
 
   return (
     <div className="min-h-screen bg-black text-white antialiased selection:bg-white selection:text-black">
       
-      {/* HEADER - COMPACTED MAX-W-5XL FOR EXTRA SIDE GUTTER SPACE */}
+      {/* HEADER */}
       <header className="sticky top-0 z-50 bg-black/90 backdrop-blur-md border-b border-zinc-900 px-6 sm:px-12">
         <div className="max-w-5xl mx-auto h-20 flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -29,13 +41,14 @@ export default function TradeVaultLanding() {
             <a href="#features" className="hover:text-white transition-colors">Capabilities</a>
           </nav>
 
+          {/* FIXED: Replaced standard href with react-router Links to stop page reloads */}
           <div className="hidden md:flex items-center gap-6">
-            <a href="/login" className="text-[11px] uppercase tracking-[0.2em] text-zinc-400 hover:text-white transition-colors">
+            <Link to="/login" className="text-[11px] uppercase tracking-[0.2em] text-zinc-400 hover:text-white transition-colors">
               Access
-            </a>
-            <a href="/login" className="bg-white text-black text-[11px] font-bold uppercase tracking-[0.2em] px-5 py-2.5 hover:bg-zinc-200 transition-colors">
+            </Link>
+            <Link to="/login" className="bg-white text-black text-[11px] font-bold uppercase tracking-[0.2em] px-5 py-2.5 hover:bg-zinc-200 transition-colors">
               Start Journaling
-            </a>
+            </Link>
           </div>
 
           <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="md:hidden text-zinc-400 hover:text-white">
@@ -45,19 +58,20 @@ export default function TradeVaultLanding() {
 
         {/* Mobile Menu */}
         {isMenuOpen && (
-          <div className="md:hidden bg-black border-b border-zinc-900 py-8 space-y-6 text-[11px] uppercase tracking-[0.2em]">
+          <div className="md:hidden bg-black border-b border-zinc-900 py-8 space-y-6 text-[11px] uppercase tracking-[0.2em] px-6">
             <a href="#philosophy" onClick={() => setIsMenuOpen(false)} className="block text-zinc-400">Philosophy</a>
             <a href="#system" onClick={() => setIsMenuOpen(false)} className="block text-zinc-400">The Workspace</a>
             <a href="#features" onClick={() => setIsMenuOpen(false)} className="block text-zinc-400">Capabilities</a>
             <div className="pt-4 border-t border-zinc-900 flex flex-col gap-4">
-              <a href="/login" onClick={() => setIsMenuOpen(false)} className="text-left text-zinc-400">Access Portal</a>
-              <a href="/login" onClick={() => setIsMenuOpen(false)} className="bg-white text-black text-center font-bold py-3">Start Journaling</a>
+              {/* FIXED: Clean mobile routing */}
+              <Link to="/login" onClick={() => setIsMenuOpen(false)} className="text-left text-zinc-400">Access Portal</Link>
+              <Link to="/login" onClick={() => setIsMenuOpen(false)} className="bg-white text-black text-center font-bold py-3 block">Start Journaling</Link>
             </div>
           </div>
         )}
       </header>
 
-      {/* HERO SECTION - PERFECTLY CENTERED WITH TIGHT MAX-W-5XL WIDTH */}
+      {/* HERO SECTION */}
       <section className="relative px-6 sm:px-12 pt-20 pb-24 md:pt-36 md:pb-40 border-b border-zinc-900">
         <div className="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-16 items-start">
           
@@ -77,9 +91,10 @@ export default function TradeVaultLanding() {
             </p>
 
             <div className="pt-4 flex flex-col sm:flex-row items-stretch sm:items-center gap-4 text-xs font-bold uppercase tracking-[0.2em]">
-              <a href="/login" className="bg-white text-black px-8 py-4 flex items-center justify-center gap-3 hover:bg-zinc-200 transition-all group text-center">
+              {/* FIXED: Link component integration */}
+              <Link to="/login" className="bg-white text-black px-8 py-4 flex items-center justify-center gap-3 hover:bg-zinc-200 transition-all group text-center">
                 Deploy Your Vault <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-              </a>
+              </Link>
               <a href="#system" className="border border-zinc-800 text-zinc-400 hover:text-white hover:border-zinc-600 px-8 py-4 text-center transition-colors">
                 Explore The Schema
               </a>
@@ -100,7 +115,7 @@ export default function TradeVaultLanding() {
         </div>
       </section>
 
-      {/* CORE TERMINAL MOCKUP - MAX-W-5XL */}
+      {/* CORE TERMINAL MOCKUP */}
       <section id="system" className="bg-black py-24 md:py-32 px-6 sm:px-12 border-b border-zinc-900">
         <div className="max-w-5xl mx-auto">
           
@@ -114,7 +129,6 @@ export default function TradeVaultLanding() {
             </div>
           </div>
 
-          {/* APPLICATION INTERFACE BOX */}
           <div className="border border-zinc-800 bg-[#050505] overflow-hidden shadow-2xl">
             <div className="bg-black border-b border-zinc-900 px-4 py-3 flex items-center justify-between text-xs text-zinc-500 font-mono">
               <div className="flex items-center gap-6">
@@ -124,8 +138,6 @@ export default function TradeVaultLanding() {
             </div>
 
             <div className="p-4 sm:p-8 grid grid-cols-1 lg:grid-cols-12 gap-6">
-              
-              {/* Telemetry Metrics */}
               <div className="lg:col-span-4 space-y-6">
                 <div className="bg-black border border-zinc-900 p-6 space-y-4">
                   <div className="text-[10px] uppercase tracking-[0.2em] text-zinc-500">Historical Metric Ratio</div>
@@ -143,7 +155,6 @@ export default function TradeVaultLanding() {
                 </div>
               </div>
 
-              {/* Mock Execution Log Grid */}
               <div className="lg:col-span-8 bg-black border border-zinc-900 p-4 sm:p-6">
                 <div className="overflow-x-auto">
                   <table className="w-full text-left text-xs font-mono whitespace-nowrap">
@@ -174,7 +185,6 @@ export default function TradeVaultLanding() {
                   </table>
                 </div>
               </div>
-
             </div>
           </div>
 
@@ -201,7 +211,6 @@ export default function TradeVaultLanding() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-16">
-            
             <div className="space-y-3">
               <div className="flex items-center gap-3 text-zinc-400">
                 <Terminal className="h-4 w-4" />
@@ -241,8 +250,8 @@ export default function TradeVaultLanding() {
                 Evaluate expected values vs actual metrics. Stop cutting winners short or extending loss levels out of raw emotional hesitation.
               </p>
             </div>
-
           </div>
+
         </div>
       </section>
 
@@ -270,16 +279,20 @@ export default function TradeVaultLanding() {
           </p>
 
           <div className="pt-4 max-w-md mx-auto">
-            <div className="flex flex-col sm:flex-row items-stretch justify-center border border-zinc-800 bg-black p-1.5">
+            {/* FIXED: Form now catches the email typed by the user, saves it, and pushes them instantly to /login */}
+            <form onSubmit={handleInitializeSystem} className="flex flex-col sm:flex-row items-stretch justify-center border border-zinc-800 bg-black p-1.5">
               <input 
                 type="email" 
+                required
+                value={emailInput}
+                onChange={(e) => setEmailInput(e.target.value)}
                 placeholder="OPERATOR_EMAIL@DOMAIN.COM" 
                 className="px-4 py-3 bg-zinc-950 text-white placeholder:text-zinc-700 focus:outline-none text-xs font-mono grow border-none"
               />
-              <button className="bg-white text-black font-bold text-xs tracking-widest uppercase px-6 py-4 hover:bg-zinc-200 transition-all shrink-0">
+              <button type="submit" className="bg-white text-black font-bold text-xs tracking-widest uppercase px-6 py-4 hover:bg-zinc-200 transition-all shrink-0">
                 Initialize System
               </button>
-            </div>
+            </form>
           </div>
 
         </div>
@@ -301,4 +314,3 @@ export default function TradeVaultLanding() {
     </div>
   );
 }
-

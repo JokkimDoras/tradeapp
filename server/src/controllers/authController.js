@@ -78,12 +78,15 @@ const loginUser = async (req, res) => {
   }
 };
 
+//LOGOUT
+
 const logoutUser = async (req, res) => {
   const authHeader = req.headers.authorization;
-
+  console.log(authHeader)
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
     return res.status(401).json({ success: false, message: 'No active session' });
   }
+
 
   const { error } = await supabase.auth.signOut();
 

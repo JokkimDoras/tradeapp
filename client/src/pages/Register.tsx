@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
+import { useState } from "react";
 import axios from "axios";
-import { Terminal, ArrowLeft, ShieldAlert, Activity } from "lucide-react";
+import { Terminal, ArrowLeft, Activity } from "lucide-react";
 import { Link, useNavigate } from "react-router";
 
 interface ResponseDetails {
@@ -55,7 +55,6 @@ export default function Register() {
         }
       );
       localStorage.setItem("email", response.data.data.email);
-      console.log("Registration successful:", response);
       navigate('/login')
       // Optional: Add redirect logic or success state notification here
     } catch (err) {

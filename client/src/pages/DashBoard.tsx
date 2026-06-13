@@ -21,7 +21,6 @@ export default function DashBoard() {
 
     const handleLogout = async () => {
         try {
-            // 1. Alert your backend to invalidate the session in Supabase
             const response = await axios.post('http://localhost:8000/auth/logout', {}, {
                 headers: {
                     'Authorization': `Bearer ${token}`
@@ -38,10 +37,6 @@ export default function DashBoard() {
             localStorage.removeItem('full_name');
             localStorage.removeItem('email');
             localStorage.removeItem('id');
-          
-
-            // ALTERNATIVE: If you aren't storing anything else important in your app, 
-            // you can just use: localStorage.clear();
 
             // 3. Navigate away to login screen
             navigate('/login')

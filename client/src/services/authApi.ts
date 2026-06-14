@@ -1,9 +1,11 @@
 import axios from "axios";
 
+const API_URL = 'https://tradeapp-43tb.onrender.com';
+
 export default async function logOutUserApi(token) {
     try {
          await axios.post(
-            'http://localhost:8000/auth/logout', {}, {
+            `${API_URL}/auth/logout`, {}, {
             headers: {
                 Authorization: `Bearer ${token}`
             },

@@ -56,7 +56,7 @@ function Login() {
       setError(null);
       
       // 2. FIXED: Access response structure smoothly via standard Axios formatting
-      const response = await axios.post("http://localhost:8000/auth/login", formData);
+      const response = await axios.post("https://tradeapp-43tb.onrender.com/auth/login", formData);
       
       // Grab backend elements out of payload safely
       const {data}:LoginResponse = response.data; 

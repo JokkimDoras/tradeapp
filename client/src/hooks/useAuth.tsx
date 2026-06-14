@@ -9,11 +9,11 @@ export default function useAuth() {
 
 
 
-  const logout = async (token) => {
+  const logout = async (token:string) => {
     setLoading(true); // 1. Turn on loading state here!
     try {
       await logOutUserApi(token);
-    } catch (err) {
+    } catch (err:any) {
       console.error("'from useAuth' Server-side logout failed:", err.message);
       setError(err.message);
     } finally {

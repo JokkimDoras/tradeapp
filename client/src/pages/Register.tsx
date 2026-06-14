@@ -47,7 +47,7 @@ export default function Register() {
     try {
       setLoading(true);
       const response: ResponseDetails = await axios.post(
-        "http://localhost:8000/auth/register",
+        "https://tradeapp-43tb.onrender.com/auth/register",
         {
           email: formData.email,
           password: formData.password,

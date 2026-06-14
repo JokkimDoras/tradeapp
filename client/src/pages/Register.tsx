@@ -1,27 +1,19 @@
 import { useState } from "react";
-import axios from "axios";
 import { Terminal, ArrowLeft, Activity } from "lucide-react";
-import { Link, useNavigate } from "react-router";
+import { Link } from "react-router";
+import useAuth from "../hooks/useAuth";
 
-interface ResponseDetails {
-  data: {
-    data: {
-      email: string;
-      full_name: string;
-      id: string;
-    };
-  };
-}
+
 export default function Register() {
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
     password: "",
   });
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(false);
+  const{register,loading,error} = useAuth()
 
-  const navigate = useNavigate();
+
+
   const handleInput = (e: any) => {
     const { name, value } = e.target;
     setFormData((prevState) => ({
@@ -32,40 +24,14 @@ export default function Register() {
 
   const handleRegister = async (e: any) => {
     e.preventDefault();
-    setLoading(true);
-    setError(false);
+    if (!formData.fullName.trim() ||!formData.email.trim() ||!formData.password.trim()) return;
+    try{
+      await register(formData)
+    }catch(err){
 
-    if (
-      !formData.fullName.trim() ||
-      !formData.email.trim() ||
-      !formData.password.trim()
-    ) {
-      setLoading(false);
-      return;
     }
 
-    try {
-      setLoading(true);
-      const response: ResponseDetails = await axios.post(
-        "http://localhost:8000/auth/register",
-        {
-          email: formData.email,
-          password: formData.password,
-          full_name: formData.fullName,
-        }
-      );
-      localStorage.setItem("email", response.data.data.email);
-      navigate('/login')
-      // Optional: Add redirect logic or success state notification here
-    } catch (err) {
-      const backendMessage = err.response?.data?.message || err.message;
-      console.log("Server rejected transaction:", backendMessage);
-      setError(backendMessage);
-    } finally {
-      setLoading(false);
     }
-  };
-
 
   return (
     <div className="min-h-screen bg-black text-white font-mono antialiased selection:bg-white selection:text-black grid grid-cols-1 md:grid-cols-12">

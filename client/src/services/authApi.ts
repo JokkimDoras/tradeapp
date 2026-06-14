@@ -1,19 +1,64 @@
+// src/services/authApi.ts
 import axios from "axios";
 
-export default async function logOutUserApi(token) {
-    try {
-         await axios.post(
-            'http://localhost:8000/auth/logout', {}, {
-            headers: {
-                Authorization: `Bearer ${token}`
-            },
-        })
-    } catch (err) {
-        console.error("Backend logout failed:", err);
-    }
+const API_URL = import.meta.env.VITE_API_URL || "https://tradeapp-43tb.onrender.com";
 
+interface UserDetails {
+  id: string;
+  email: string;
+  full_name: string;
 }
 
+interface AuthBackendPayload {
+  data: {
+    access_token: string;
+    user: UserDetails;
+  };
+}
 
+export async function loginUserApi(formData: any) {
+  try {
+    const response = await axios.post<AuthBackendPayload>(`${API_URL}/auth/login`, formData);
+    const payload = response.data.data; 
 
+    if (payload?.access_token) localStorage.setItem("token", payload.access_token);
+    if (payload?.user?.full_name) localStorage.setItem("fullname", payload.user.full_name);
+    if (payload?.user?.email) localStorage.setItem("email", payload.user.email);
+    
+    return payload;
+  } catch (err: any) {
+    console.error("Critical Network Error on Login Channel:", err.response?.data || err.message);
+    throw err; 
+  } 
+}
 
+export async function registerUserApi(formData: any) {
+  try {
+    const response = await axios.post<AuthBackendPayload>(`${API_URL}/auth/register`, {
+      email: formData.email,
+      password: formData.password,
+      full_name: formData.fullName, 
+    });
+    const payload = response.data.data;
+
+    if (payload?.access_token) localStorage.setItem("token", payload.access_token);
+    if (payload?.user?.full_name) localStorage.setItem("fullname", payload.user.full_name);
+    if (payload?.user?.email) localStorage.setItem("email", payload.user.email);
+
+    return payload;
+  } catch (err: any) {
+    console.error("Critical Network Error on Registration Channel:", err.response?.data || err.message);
+    throw err;
+  }
+}
+
+export default async function logOutUserApi(token: string) {
+  try {
+    await axios.post(`${API_URL}/auth/logout`, {}, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+  } catch (err) {
+    console.error("Backend cache cleanup process rejected:", err);
+    throw err;
+  }
+}

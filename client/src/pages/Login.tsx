@@ -25,16 +25,16 @@ function Login() {
   const [error, setError] = useState<string | null>(null);
   const navigator = useNavigate();
 
-  // 1. FIXED: Run only ONCE when the component mounts to auto-fill registration email
+  
   useEffect(() => {
     const savedEmail = localStorage.getItem("email");
     if (savedEmail) {
       setFormData((prev) => ({
         ...prev,
-        email: savedEmail, // Map cleanly to the email field, not full_name
+        email: savedEmail, 
       }));
     }
-  }, []); // Empty dependency array stops the infinite loop safely
+  }, []); 
 
   const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;

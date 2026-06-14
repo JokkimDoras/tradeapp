@@ -9,7 +9,7 @@ export default function DashBoard() {
 
   const handleLogout = () => {
     const userToken = localStorage.getItem("token");
-    logout(userToken);
+    if(userToken) logout(userToken)
   };
   
   const fullName = localStorage.getItem("fullname");

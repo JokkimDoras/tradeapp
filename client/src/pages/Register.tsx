@@ -57,7 +57,7 @@ export default function Register() {
       localStorage.setItem("email", response.data.data.email);
       navigate('/login')
       // Optional: Add redirect logic or success state notification here
-    } catch (err) {
+    } catch (err:any) {
       const backendMessage = err.response?.data?.message || err.message;
       console.log("Server rejected transaction:", backendMessage);
       setError(backendMessage);

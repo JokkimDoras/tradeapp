@@ -1,11 +1,13 @@
-import { useState } from "react";
+import {  useState } from "react";
 import logOutUserApi from "../services/authApi";
 import { useNavigate } from "react-router";
 
 export default function useAuth() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const navigate = useNavigate();
+  const navigate = useNavigate()
+
+
 
   const logout = async (token) => {
     setLoading(true); // 1. Turn on loading state here!
@@ -17,7 +19,7 @@ export default function useAuth() {
     } finally {
       localStorage.removeItem("token");
       setLoading(false);
-      navigate("/login");
+      navigate('/login')
     }
   }; 
 

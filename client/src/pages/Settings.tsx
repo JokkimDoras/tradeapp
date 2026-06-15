@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { useSidebar } from "../hooks/useSidebar";
-import axios from "axios";
 
 const tabs = ["General", "Trading", "Security"] as const;
 type Tab = typeof tabs[number];
 
+const fullname = localStorage.getItem("fullname");
 export default function Settings() {
-  const { isOpen, toggleSidebar } = useSidebar();
+  const { toggleSidebar } = useSidebar();
   const [activeTab, setActiveTab] = useState<Tab>("General");
   const [formProfile,setFormProfile] = useState({
     fullname:'',
@@ -14,10 +14,9 @@ export default function Settings() {
     bio:''
   })
 
-  const fullname = localStorage.getItem("fullname");
   const email = localStorage.getItem("email");
   const initials = fullname ? fullname.split(" ").map((n) => n[0]).join("").toUpperCase().slice(0, 2) : "OP";
-const handleChange = (e) => {
+const handleChange = (e:any) => {
     const { name,value } =e.target;
     setFormProfile((prev) => ({
         ...prev,
@@ -27,9 +26,9 @@ const handleChange = (e) => {
 }
 
 const handleSubmit = async() => {
- const res =  await axios.post('http://localhost:8000/updateuser',formProfile)
- const data = await res.json();
- console.log(data)
+//  const res =  await axios.post('http://localhost:8000/updateuser',formProfile)
+//  const data = await res.json();
+//  console.log(data)
 }
   return (
     <div className="flex flex-col w-full min-h-screen bg-black">
@@ -104,7 +103,7 @@ const handleSubmit = async() => {
               <input
                 onChange={e => handleChange(e)}
                 name="fullname"
-                value={formProfile.fullname || fullname}
+                value={formProfile.fullname}
                 type="text"
                 placeholder="Your full name"
                 className="w-64 h-9 bg-zinc-950 border border-zinc-800 hover:border-zinc-700 focus:border-zinc-600 rounded-lg px-3 text-sm text-white placeholder-zinc-700 focus:outline-none transition-all"
@@ -154,9 +153,8 @@ const handleSubmit = async() => {
           </div>
         )}
 
-        {/* ══════════════════════════
-            TRADING TAB
-        ══════════════════════════ */}
+            {/* TRADING TAB */}
+      
         {activeTab === "Trading" && (
           <div className="flex flex-col gap-px">
 

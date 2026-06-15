@@ -2,28 +2,28 @@ import React, { useState } from 'react';
 import { ArrowUpRight, Menu, X } from 'lucide-react';
 import { Link, useNavigate } from 'react-router';
 
-const quotes = [
-  {
-    text: "It's not about predicting what the market will do next. It's about protecting your capital when it does what you didn't expect.",
-    author: "Market Axiom",
-    sub: "Risk Management"
-  },
-  {
-    text: "The goal of a successful trader is to make the best trades. Money is secondary.",
-    author: "Alexander Elder",
-    sub: "Trading Psychology"
-  },
-  {
-    text: "In trading, the man who can be wrong the least amount of time wins.",
-    author: "Jesse Livermore",
-    sub: "Speculation"
-  },
-  {
-    text: "Every trader has strengths and weakness. Some are good holders of winners, but may hold their losers a little too long.",
-    author: "Steve Cohen",
-    sub: "Risk Discipline"
-  },
-];
+// const quotes = [
+//   {
+//     text: "It's not about predicting what the market will do next. It's about protecting your capital when it does what you didn't expect.",
+//     author: "Market Axiom",
+//     sub: "Risk Management"
+//   },
+//   {
+//     text: "The goal of a successful trader is to make the best trades. Money is secondary.",
+//     author: "Alexander Elder",
+//     sub: "Trading Psychology"
+//   },
+//   {
+//     text: "In trading, the man who can be wrong the least amount of time wins.",
+//     author: "Jesse Livermore",
+//     sub: "Speculation"
+//   },
+//   {
+//     text: "Every trader has strengths and weakness. Some are good holders of winners, but may hold their losers a little too long.",
+//     author: "Steve Cohen",
+//     sub: "Risk Discipline"
+//   },
+// ];
 
 export default function TradeVaultLanding() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);

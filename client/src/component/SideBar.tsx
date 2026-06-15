@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router";
 import { useSidebar } from "../hooks/useSidebar";
+import { useUser } from "../hooks/useUser";
 
 const navigation = [
   {
@@ -48,7 +49,7 @@ const navigation = [
 
 export default function SideBar() {
   const { closeSidebar, currentPath, setCurrentPath } = useSidebar();
-  const fullname = localStorage.getItem("fullname");
+  const { fullname } = useUser();
   const navigate = useNavigate();
 
   const initials = fullname

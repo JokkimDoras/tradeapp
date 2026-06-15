@@ -1,11 +1,17 @@
 import { useState } from "react";
+import useProfile from "../hooks/useProfile";
+import type { formProfileDetails } from "../types/profileUpdate";
+import { useUser } from "../hooks/useUser";
 
 export default function GeneralSetting() {
-  const [formProfile, setFormProfile] = useState({
+  const [formProfile, setFormProfile] = useState<formProfileDetails>({
     fullname: "",
     country: "",
     bio: "",
   });
+  const { updateProfile } = useProfile();
+  const { setFullName } = useUser();
+
 
   const handleChange = (e: any) => {
     const { name, value } = e.target;
@@ -24,6 +30,17 @@ export default function GeneralSetting() {
         .toUpperCase()
         .slice(0, 2)
     : "OP";
+
+    const handleClick = async () => {
+      try {
+        await updateProfile(formProfile);
+    
+        setFullName(formProfile.fullname);
+        localStorage.setItem("fullname", formProfile.fullname);
+      } catch (error) {
+        console.error(error);
+      }
+    };
 
   return (
     <div className="flex flex-col gap-px">
@@ -102,7 +119,7 @@ export default function GeneralSetting() {
 
       {/* Save */}
       <div className="flex justify-end pt-6">
-        <button className="h-9 px-5 bg-white hover:bg-zinc-200 text-black text-sm font-medium rounded-lg transition-all">
+        <button onClick={handleClick} className="h-9 px-5 bg-white hover:bg-zinc-200 text-black text-sm font-medium rounded-lg transition-all">
           Save changes
         </button>
       </div>

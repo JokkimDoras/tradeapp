@@ -9,8 +9,10 @@ const tabs = ["General", "Trading", "Security"] as const;
 type Tab = (typeof tabs)[number];
 
 export default function Settings() {
-  const { toggleSidebar } = useSidebar();
   const [activeTab, setActiveTab] = useState<Tab>("General");
+  const { toggleSidebar } = useSidebar();
+
+
  
 
   return (
@@ -68,10 +70,7 @@ export default function Settings() {
           ))}
         </div>
 
-        {activeTab === "General" && (
-          <GeneralSetting/>
-        )}
-        
+        {activeTab === "General" && <GeneralSetting/>}
         {activeTab === "Trading" && <TradingSetting />}
         {activeTab === "Security" && <SecuritySetting/>}
       </div>

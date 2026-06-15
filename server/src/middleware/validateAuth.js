@@ -16,6 +16,7 @@ const validateRegisterInput = (req, res, next) => {
   
     next();
   };
+
   
   const validateLoginInput = (req, res, next) => {
     const { email, password } = req.body;

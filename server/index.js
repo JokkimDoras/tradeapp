@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const authRoutes = require('./src/routes/authRoutes');
-const userProfileUpdate = require('./src/routes/userRoutes');
+const userRoutes = require('./src/routes/userRoutes')
 
 const app = express();
 
@@ -13,7 +13,7 @@ app.get('/', (req, res) => {
 });
 
 app.use('/auth', authRoutes);
-app.use('/', userProfileUpdate);
+app.use('/user',userRoutes)
 
 const PORT = process.env.PORT || 8000;
 

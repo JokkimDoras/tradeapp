@@ -1,4 +1,3 @@
-// src/component/SideBar.tsx
 import { useNavigate } from 'react-router';
 import { FaArrowLeft } from "react-icons/fa";
 import { useSidebar } from '../hooks/useSidebar';
@@ -16,21 +15,17 @@ const accountItems = [
 ];
 
 export default function SideBar() {
-    const { isOpen, closeSidebar } = useSidebar();
+    const { isOpen, closeSidebar, currentPath, setCurrentPath } = useSidebar();
     const fullname = localStorage.getItem('fullname');
     const navigate = useNavigate();
-
-    const handlebutton = () => {
-        console.log(isOpen)
-        console.log('hello')
-    }
     
-    const handleNavigation = (path: string) => {
-        if (path) {
-            navigate(path);
-            closeSidebar();
+    const handleNavigation = (item: { id: number; name: string; path: string }) => {
+        if (item.id) {
+            setCurrentPath(item.name);
+            navigate(item.path);
         }
     };
+    console.log(isOpen)
 
     return (
         <div className="flex flex-col w-64 h-screen bg-[#121212] text-gray-100 p-4 border-r border-neutral-800">
@@ -42,9 +37,8 @@ export default function SideBar() {
                 </span>
                 
                 <button 
-                    onClick={handlebutton}
-                    className=" text-zinc-400 hover:text-white p-2 rounded transition-colors duration-150 "
-                    aria-label="Close navigation menu"
+                    onClick={closeSidebar}
+                    className="text-zinc-400 hover:text-white p-2 rounded transition-colors duration-150 cursor-pointer"
                 >
                     <FaArrowLeft className="w-4 h-4" />
                 </button>
@@ -60,8 +54,13 @@ export default function SideBar() {
                 {overviewItems.map((item) => (
                     <button 
                         key={item.id} 
-                        className="text-left px-3 py-2 rounded-md text-sm font-medium text-neutral-300 hover:bg-neutral-900 hover:text-white transition-colors"
-                        onClick={() => handleNavigation(item.path)}
+                        className={`text-left px-3 py-2 rounded-md text-sm font-medium transition-colors
+                          ${currentPath === item.name 
+                            ? 'bg-indigo-600 text-white' 
+                            : 'text-neutral-300 hover:bg-neutral-900 hover:text-white'
+                          }
+                        `}
+                        onClick={() => handleNavigation(item)}
                     >
                         {item.name}
                     </button>
@@ -76,8 +75,13 @@ export default function SideBar() {
                 {accountItems.map((item) => (
                     <button 
                         key={item.id} 
-                        className="text-left px-3 py-2 rounded-md text-sm font-medium text-neutral-300 hover:bg-neutral-900 hover:text-white transition-colors"
-                        onClick={() => handleNavigation(item.path)}
+                        className={`text-left px-3 py-2 rounded-md text-sm font-medium transition-colors
+                          ${currentPath === item.name 
+                            ? 'bg-indigo-600 text-white' 
+                            : 'text-neutral-300 hover:bg-neutral-900 hover:text-white'
+                          }
+                        `}
+                        onClick={() => handleNavigation(item)} 
                     >
                         {item.name}
                     </button>

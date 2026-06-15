@@ -8,9 +8,10 @@ import DashboardLayout from "./component/DashboardLayout.tsx";
 import History from "./pages/History.tsx";
 import Strategies from "./pages/Strategies.tsx";
 import TradeJournal from "./pages/TradeJournal.tsx";
+import Profile from "./pages/Profile.tsx";
+import Settings from "./pages/Settings.tsx";
 
-const Profile = () => <div className="text-zinc-300">Profile Node Configuration</div>;
-const Settings = () => <div className="text-zinc-300">System Terminal Settings</div>;
+
 
 const router = createBrowserRouter([
   {

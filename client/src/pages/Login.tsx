@@ -118,7 +118,7 @@ export default function Login() {
         {/* Footer */}
         <div className="flex items-center gap-1.5">
           <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-          <span className="text-xs text-zinc-600">Secured by Supabase</span>
+          <span className="text-xs text-zinc-600">Backed by Supabase</span>
         </div>
       </div>
 

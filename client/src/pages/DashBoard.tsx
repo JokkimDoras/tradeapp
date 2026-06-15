@@ -46,37 +46,7 @@ export default function DashBoard() {
         </button>
       </div>
 
-      {/* CORE CANVAS ENVIRONMENT WORKSPACE */}
-      <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-6">
-        
-        {/* Sample Metric Terminal Card 1 */}
-        <div className="bg-zinc-900 border border-zinc-800 p-6 rounded-md">
-          <h3 className="text-xs font-semibold text-zinc-500 tracking-widest uppercase font-mono">System Integrity</h3>
-          <p className="text-2xl font-bold mt-2 text-emerald-400 font-mono">SECURE_98%</p>
-        </div>
-
-        {/* Sample Metric Terminal Card 2 */}
-        <div className="bg-zinc-900 border border-zinc-800 p-6 rounded-md">
-          <h3 className="text-xs font-semibold text-zinc-500 tracking-widest uppercase font-mono">Active Streams</h3>
-          <p className="text-2xl font-bold mt-2 text-indigo-400 font-mono">4_NODES_ONLINE</p>
-        </div>
-
-        {/* Sample Metric Terminal Card 3 */}
-        <div className="bg-zinc-900 border border-zinc-800 p-6 rounded-md">
-          <h3 className="text-xs font-semibold text-zinc-500 tracking-widest uppercase font-mono">Session Uptime</h3>
-          <p className="text-2xl font-bold mt-2 text-zinc-300 font-mono">02:45:12</p>
-        </div>
-
-      </div>
-
-      <div className="mt-6">
-        <div className="bg-zinc-900 border border-zinc-800 p-6 rounded-md">
-          <h2 className="text-sm font-bold text-zinc-300 mb-2 font-mono uppercase">// Operational Logs</h2>
-          <p className="text-sm text-zinc-400 leading-relaxed font-mono">
-            Secure Environment Access Granted. All trading systems are synced to the primary datastore cluster. Toggle the navigation layout stream anytime using the workspace header control node above.
-          </p>
-        </div>
-      </div>
+      
     </>
   );
 }

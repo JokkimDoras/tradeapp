@@ -5,6 +5,10 @@ interface AuthContextType {
   setFullName: React.Dispatch<React.SetStateAction<string>>;
   email: string;
   setEmail: React.Dispatch<React.SetStateAction<string>>;
+  country:string;
+  setCountry: React.Dispatch<React.SetStateAction<string>>;
+  bio:string;
+  setBio: React.Dispatch<React.SetStateAction<string>>;
 }
 
 export const AuthContext = createContext<AuthContextType | undefined>(
@@ -18,7 +22,10 @@ export function AuthProvider({
 }) {
   const [fullname, setFullName] = useState("");
   const [email, setEmail] = useState("");
+  const[country,setCountry] = useState('')
+  const [bio,setBio] = useState('')
 
+  console.log(fullname,'from authcontext')
   return (
     <AuthContext.Provider
       value={{
@@ -26,6 +33,10 @@ export function AuthProvider({
         setFullName,
         email,
         setEmail,
+        country,
+        setCountry,
+        bio,
+        setBio
       }}
     >
       {children}

@@ -17,6 +17,7 @@ export default function useProfile() {
             setLoading(false)
             setError(err)
             console.log('From useProfile:',err)
+            throw err
         }finally{
             setLoading(false)
         }

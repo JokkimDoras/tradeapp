@@ -11,7 +11,7 @@ import TradeJournal from "./pages/TradeJournal.tsx";
 import Profile from "./pages/Profile.tsx";
 import Settings from "./pages/Settings.tsx";
 import { AuthProvider } from "./context/AuthContext.tsx";
-
+import { Toaster } from "sonner";
 
 
 const router = createBrowserRouter([
@@ -68,8 +68,11 @@ const router = createBrowserRouter([
 
 export default function App() {
   return(
+    <>
+    <Toaster/>
 <AuthProvider>
   <RouterProvider router={router} />
 </AuthProvider>
+    </>
   );
 }

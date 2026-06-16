@@ -1,4 +1,46 @@
+import {  useState } from "react";
+import useProfile from "../hooks/useProfile";
+import { toast } from "sonner";
+import { useUser } from "../hooks/useUser";
 export default function TradingSetting() {
+  const { updateProfile } = useProfile();
+  const { setUser,user } = useUser()
+  
+  const [formTrade, setFormTrade] = useState({
+    account_currency: user.account_currency,
+    default_lot_size: user.default_lot_size,
+    risk_per_trade: user.risk_per_trade,
+    trading_experience: user.trading_experience,
+    timezone: user.timezone,
+  });
+
+  const handleChange = (e:any) => {
+    const { value,name } = e.target;
+
+    setFormTrade((prev) => ({
+      ...prev,
+      [name]:value
+    }))
+
+  }
+  const handleSubmit = async() => {
+    try{
+      await updateProfile(formTrade)
+      setUser((prev) => ({
+        ...prev,
+        ...formTrade
+      }))
+    }catch(error:any){
+      const serverMessage = error?.response?.data?.message;
+      const generalMessage = error?.message;
+
+      toast.error(
+        serverMessage || generalMessage || "An unexpected error occurred"
+      )
+    }
+  }
+
+
    return (
         <div className="flex flex-col gap-px">
 
@@ -7,7 +49,7 @@ export default function TradingSetting() {
               label: "Account currency",
               desc: "Base currency used for all P&L calculations.",
               control: (
-                <select className="w-64 h-9 bg-zinc-950 border border-zinc-800 hover:border-zinc-700 focus:border-zinc-600 rounded-lg px-3 text-sm text-white focus:outline-none transition-all appearance-none">
+                <select name="account_currency" onChange={e => handleChange(e)} value={formTrade.account_currency} className="w-64 h-9 bg-zinc-950 border border-zinc-800 hover:border-zinc-700 focus:border-zinc-600 rounded-lg px-3 text-sm text-white focus:outline-none transition-all appearance-none">
                   <option>USD — US Dollar</option>
                   <option>EUR — Euro</option>
                   <option>GBP — British Pound</option>
@@ -20,7 +62,7 @@ export default function TradingSetting() {
               label: "Timezone",
               desc: "Timestamps and sessions are displayed in this timezone.",
               control: (
-                <select className="w-64 h-9 bg-zinc-950 border border-zinc-800 hover:border-zinc-700 focus:border-zinc-600 rounded-lg px-3 text-sm text-white focus:outline-none transition-all appearance-none">
+                <select name="timezone" onChange={e => handleChange(e)} value={formTrade.timezone} className="w-64 h-9 bg-zinc-950 border border-zinc-800 hover:border-zinc-700 focus:border-zinc-600 rounded-lg px-3 text-sm text-white focus:outline-none transition-all appearance-none">
                   <option>Asia/Kolkata (IST)</option>
                   <option>Europe/London (GMT)</option>
                   <option>America/New_York (EST)</option>
@@ -34,8 +76,10 @@ export default function TradingSetting() {
               desc: "Pre-filled when you create a new trade.",
               control: (
                 <input
+                name="default_lot_size"
+                onChange={e => handleChange(e)}
+                  value={formTrade.default_lot_size}
                   type="number"
-                  defaultValue="0.01"
                   step="0.01"
                   className="w-64 h-9 bg-zinc-950 border border-zinc-800 hover:border-zinc-700 focus:border-zinc-600 rounded-lg px-3 text-sm text-white focus:outline-none transition-all"
                 />
@@ -47,8 +91,10 @@ export default function TradingSetting() {
               control: (
                 <div className="flex items-center gap-2">
                   <input
+                    onChange={e => handleChange(e)}
+                    name="risk_per_trade"
+                    value={formTrade.risk_per_trade}
                     type="number"
-                    defaultValue="1"
                     step="0.5"
                     className="w-56 h-9 bg-zinc-950 border border-zinc-800 hover:border-zinc-700 focus:border-zinc-600 rounded-lg px-3 text-sm text-white focus:outline-none transition-all"
                   />
@@ -60,7 +106,7 @@ export default function TradingSetting() {
               label: "Trading experience",
               desc: "Helps TradeVault tailor insights for your level.",
               control: (
-                <select className="w-64 h-9 bg-zinc-950 border border-zinc-800 hover:border-zinc-700 focus:border-zinc-600 rounded-lg px-3 text-sm text-white focus:outline-none transition-all appearance-none">
+                <select onChange={e => handleChange(e)} name="trading_experience" value={formTrade.trading_experience} className="w-64 h-9 bg-zinc-950 border border-zinc-800 hover:border-zinc-700 focus:border-zinc-600 rounded-lg px-3 text-sm text-white focus:outline-none transition-all appearance-none">
                   <option>Beginner</option>
                   <option>Intermediate</option>
                   <option>Advanced</option>
@@ -82,7 +128,7 @@ export default function TradingSetting() {
             <button className="text-sm text-zinc-600 hover:text-zinc-400 transition-all">
               Reset to defaults
             </button>
-            <button className="h-9 px-5 bg-white hover:bg-zinc-200 text-black text-sm font-medium rounded-lg transition-all">
+            <button onClick={handleSubmit} className="h-9 px-5 bg-white hover:bg-zinc-200 text-black text-sm font-medium rounded-lg transition-all">
               Save settings
             </button>
           </div>

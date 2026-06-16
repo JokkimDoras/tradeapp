@@ -20,9 +20,9 @@ export default function useAuth() {
       setToken(payload.access_token);
       setUser((prev) => ({
         ...prev,
-        fullname:payload.user.full_name
+        ...payload.user
       }));
-      console.log('fullname from useAuth:',user.fullname)
+      console.log('fullname from useAuth:',user.full_name)
       navigate("/dashboard");
     } catch (err: any) {
       const errMsg = err.response?.data?.message || "AUTHENTICATION_FAILED: Access denied.";
@@ -43,7 +43,7 @@ export default function useAuth() {
       console.log(payload,'from useAuth')
       setUser((prev) => ({
         ...prev,
-        fullname:payload.user?.full_name
+        full_name:payload.user?.full_name
       }))
       
       navigate("/dashboard");
@@ -68,7 +68,7 @@ export default function useAuth() {
       setToken(null);
       setUser((prev) => ({
         ...prev,
-        fullname:''
+        full_name:''
       }));
       
       setLoading(false);

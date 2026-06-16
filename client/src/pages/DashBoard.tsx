@@ -6,7 +6,9 @@ import { useUser } from "../hooks/useUser";
 export default function DashBoard() {
   const { token, loading, logout } = useAuth();
   const { user } = useUser();
-  const fullname = user.fullname
+  const fullname = user.full_name
+  console.log(fullname)
+  console.log(user,'from dashboard')
   
   // Hook directly into your global sidebar context engine
   const { isOpen, toggleSidebar } = useSidebar(); 

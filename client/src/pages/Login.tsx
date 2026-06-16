@@ -20,7 +20,8 @@ export default function Login() {
     e.preventDefault();
     if (!formData.email || !formData.password) return;
     try {
-      await login(formData);
+       await login(formData);
+     
     } catch {}
   };
 

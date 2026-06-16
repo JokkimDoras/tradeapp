@@ -2,14 +2,13 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import logOutUserApi, { loginUserApi, registerUserApi } from "../services/authApi";
+import { useUser } from "./useUser";
 
 export default function useAuth() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  
   const [token, setToken] = useState<string | null>(() => localStorage.getItem("token"));
-  const [fullname, setFullname] = useState<string | null>(() => localStorage.getItem("fullname"));
-  
+  const { fullname, setFullName } = useUser(); 
   const navigate = useNavigate();
 
   const login = async (formData: any) => {
@@ -17,10 +16,10 @@ export default function useAuth() {
     setError(null);
     try {
       const payload = await loginUserApi(formData);
-      
+      console.log(payload,'from here')
       setToken(payload.access_token);
-      setFullname(payload.user.full_name);
-      
+      setFullName(payload.user.full_name);
+      console.log('fullname from useAuth:',fullname)
       navigate("/dashboard");
     } catch (err: any) {
       const errMsg = err.response?.data?.message || "AUTHENTICATION_FAILED: Access denied.";
@@ -38,7 +37,7 @@ export default function useAuth() {
       const payload = await registerUserApi(formData);
       
       setToken(payload.access_token);
-      setFullname(payload.user.full_name);
+      setFullName(payload.user.full_name);
       
       navigate("/dashboard");
     } catch (err: any) {
@@ -62,7 +61,7 @@ export default function useAuth() {
       localStorage.removeItem("fullname");
       
       setToken(null);
-      setFullname(null);
+      setFullName('');
       
       setLoading(false);
       navigate("/login");

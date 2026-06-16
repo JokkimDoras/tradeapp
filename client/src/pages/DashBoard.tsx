@@ -1,9 +1,11 @@
 // src/pages/DashBoard.tsx
 import useAuth from "../hooks/useAuth";
 import { useSidebar } from "../hooks/useSidebar";
+import { useUser } from "../hooks/useUser";
 
 export default function DashBoard() {
-  const { token, fullname, loading, logout } = useAuth();
+  const { token, loading, logout } = useAuth();
+  const { fullname } = useUser();
   
   // Hook directly into your global sidebar context engine
   const { isOpen, toggleSidebar } = useSidebar(); 

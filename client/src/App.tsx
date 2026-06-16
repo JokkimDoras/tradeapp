@@ -10,6 +10,7 @@ import Strategies from "./pages/Strategies.tsx";
 import TradeJournal from "./pages/TradeJournal.tsx";
 import Profile from "./pages/Profile.tsx";
 import Settings from "./pages/Settings.tsx";
+import { AuthProvider } from "./context/AuthContext.tsx";
 
 
 
@@ -66,5 +67,9 @@ const router = createBrowserRouter([
 ]);
 
 export default function App() {
-  return <RouterProvider router={router} />;
+  return(
+<AuthProvider>
+  <RouterProvider router={router} />
+</AuthProvider>
+  );
 }

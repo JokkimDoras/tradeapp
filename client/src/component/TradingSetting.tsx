@@ -137,7 +137,6 @@ export default function TradingSetting() {
         >
           {loading ? (
             <>
-              {/* This is a standard Tailwind animated spinner */}
               <svg
                 className="animate-spin h-4 w-4 text-zinc-500"
                 xmlns="http://www.w3.org/2000/svg"

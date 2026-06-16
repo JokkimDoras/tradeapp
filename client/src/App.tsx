@@ -12,6 +12,8 @@ import Profile from "./pages/Profile.tsx";
 import Settings from "./pages/Settings.tsx";
 import { AuthProvider } from "./context/AuthContext.tsx";
 import { Toaster } from "sonner";
+import Analytics from "./pages/Analytics.tsx";
+
 
 
 const router = createBrowserRouter([
@@ -56,9 +58,13 @@ const router = createBrowserRouter([
             element:<Strategies/>
           },
           {
-            path:'journal',
+            path:'/journal',
             element:<TradeJournal/>
           },
+          {
+            path:'/analytics',
+            element:<Analytics/>
+          }
           
         ]
       }

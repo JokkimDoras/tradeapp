@@ -1,8 +1,8 @@
-// src/component/DashboardLayout.tsx
 import { Outlet } from "react-router";
 import SideBar from "./SideBar";
 import { useSidebar } from "../hooks/useSidebar";
 import { SidebarProvider } from "../context/SidebarContext";
+import TradeProvider from "../context/TradeContext";
 
 function DashboardLayoutContent() {
   const { isOpen } = useSidebar();
@@ -31,8 +31,10 @@ function DashboardLayoutContent() {
 
 export default function DashboardLayout() {
   return (
-      <SidebarProvider>
+    <SidebarProvider>
+      <TradeProvider>
         <DashboardLayoutContent />
-      </SidebarProvider>
+      </TradeProvider>
+    </SidebarProvider>
   );
 }

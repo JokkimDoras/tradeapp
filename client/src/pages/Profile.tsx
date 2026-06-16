@@ -1,13 +1,16 @@
 import { useSidebar } from "../hooks/useSidebar";
+import { useUser } from "../hooks/useUser";
 
 export default function Profile() {
   const { toggleSidebar } = useSidebar();
+  const {user} = useUser()
+
+  const fullname = user.fullname
+  const country = user.country
+  const bio = user.bio
   
-  // Fetching mock or actual data from localStorage
-  const fullname = localStorage.getItem("fullname") || "John Doe";
   const email = localStorage.getItem("email") || "trader@tradevault.app";
-  const bio = localStorage.getItem("bio") || "London session breakout trader. Focused on risk discipline and scaling edge.";
-  const country = localStorage.getItem("country") || "United States";
+
   
   // Dynamic initials generator
   const initials = fullname
@@ -74,13 +77,13 @@ export default function Profile() {
               {/* Trading Bio */}
               <div className="grid grid-cols-1 sm:grid-cols-3 pb-4 items-start gap-2">
                 <span className="text-zinc-500 font-medium">Trading Bio</span>
-                <span className="sm:col-span-2 text-zinc-300 text-xs sm:text-sm leading-relaxed">{bio}</span>
+                <span className="sm:col-span-2 text-zinc-300 text-xs sm:text-sm leading-relaxed">{bio || 'ADD BIO'}</span>
               </div>
 
               {/* Country */}
               <div className="grid grid-cols-1 sm:grid-cols-3 py-4 gap-2">
                 <span className="text-zinc-500 font-medium">Location</span>
-                <span className="sm:col-span-2 text-zinc-300">{country}</span>
+                <span className="sm:col-span-2 text-zinc-300">{country || "ADD LOCATION"}</span>
               </div>
 
               {/* Preferences Info */}

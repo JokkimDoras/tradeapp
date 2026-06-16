@@ -8,7 +8,7 @@ export default function useAuth() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [token, setToken] = useState<string | null>(() => localStorage.getItem("token"));
-  const { fullname, setFullName } = useUser(); 
+  const { user, setUser } = useUser(); 
   const navigate = useNavigate();
 
   const login = async (formData: any) => {
@@ -18,8 +18,11 @@ export default function useAuth() {
       const payload = await loginUserApi(formData);
       console.log(payload,'from here')
       setToken(payload.access_token);
-      setFullName(payload.user.full_name);
-      console.log('fullname from useAuth:',fullname)
+      setUser((prev) => ({
+        ...prev,
+        fullname:payload.user.full_name
+      }));
+      console.log('fullname from useAuth:',user.fullname)
       navigate("/dashboard");
     } catch (err: any) {
       const errMsg = err.response?.data?.message || "AUTHENTICATION_FAILED: Access denied.";
@@ -37,7 +40,11 @@ export default function useAuth() {
       const payload = await registerUserApi(formData);
       
       setToken(payload.access_token);
-      setFullName(payload.user.full_name);
+      console.log(payload,'from useAuth')
+      setUser((prev) => ({
+        ...prev,
+        fullname:payload.user?.full_name
+      }))
       
       navigate("/dashboard");
     } catch (err: any) {
@@ -57,11 +64,12 @@ export default function useAuth() {
       console.error("Hook runtime message: Server-side route invalidation bypassed.", err.message);
     } finally {
       // Storage registers wiped clean safely
-      localStorage.removeItem("token");
-      localStorage.removeItem("fullname");
-      
+      localStorage.removeItem("token");      
       setToken(null);
-      setFullName('');
+      setUser((prev) => ({
+        ...prev,
+        fullname:''
+      }));
       
       setLoading(false);
       navigate("/login");
@@ -70,7 +78,6 @@ export default function useAuth() {
 
   return {
     token,
-    fullname, 
     loading,
     error,
     login,

@@ -1,17 +1,24 @@
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import useProfile from "../hooks/useProfile";
-import type { formProfileDetails } from "../types/profileUpdate";
 import { useUser } from "../hooks/useUser";
 import { toast } from "sonner";
 
 export default function GeneralSetting() {
-  const [formProfile, setFormProfile] = useState<formProfileDetails>({
-    fullname: "",
-    country: "",
-    bio: "",
+  const { user,setUser } = useUser();
+  const [formProfile, setFormProfile] = useState({
+    fullname: user.fullname,
+    country: user.country,
+    bio: user.bio,
   });
   const { updateProfile, loading } = useProfile();
-  const { setFullName } = useUser();
+
+  useEffect(() => {
+    setFormProfile({
+      fullname: user.fullname,
+      country: user.country,
+      bio: user.bio,
+    });
+  }, [user]);
 
   const handleChange = (e: any) => {
     const { name, value } = e.target;
@@ -20,10 +27,9 @@ export default function GeneralSetting() {
       [name]: value,
     }));
   };
-  const fullname = localStorage.getItem("fullname");
 
-  const initials = fullname
-    ? fullname
+  const initials = user.fullname
+    ? user.fullname
         .split(" ")
         .map((n) => n[0])
         .join("")
@@ -34,7 +40,10 @@ export default function GeneralSetting() {
   const handleClick = async () => {
     try {
       await updateProfile(formProfile);
-      setFullName(formProfile.fullname);
+      setUser((prev) => ({
+        ...prev,
+        ...formProfile,
+      }));
       toast.success("Changed Successfully");
     } catch (error:any) {
       const serverMessage = error?.response?.data?.message;

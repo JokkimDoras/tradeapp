@@ -1,5 +1,5 @@
 import { useState,useEffect } from "react";
-import useProfile from "../hooks/useProfile";
+import useProfile from "../hooks/useUserSettings";
 import { useUser } from "../hooks/useUser";
 import { toast } from "sonner";
 
@@ -10,7 +10,7 @@ export default function GeneralSetting() {
     country: user.country,
     bio: user.bio,
   });
-  const { updateProfile, loading } = useProfile();
+  const { updateSettings, loading } = useProfile();
 
   useEffect(() => {
     setFormProfile({
@@ -39,7 +39,7 @@ export default function GeneralSetting() {
 
   const handleClick = async () => {
     try {
-      await updateProfile(formProfile);
+      await updateSettings(formProfile);
       setUser((prev) => ({
         ...prev,
         ...formProfile,

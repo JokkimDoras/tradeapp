@@ -7,7 +7,7 @@ export default function useProfile() {
     const [loading,setLoading]=useState(false)
     const[error,setError] = useState(null)
 
-    const updateProfile = async(formProfile:any) => {
+    const updateSettings = async(formProfile:any) => {
         console.log(formProfile,'from hook')
         try{
             setLoading(true)
@@ -24,7 +24,7 @@ export default function useProfile() {
     }
 
     return {
-        updateProfile,
+        updateSettings,
         loading,
         error
     }

@@ -17,7 +17,7 @@ export default function Settings() {
   return (
     <div className="flex flex-col flex-1 min-h-screen bg-black font-sans antialiased selection:bg-zinc-800 selection:text-white">
       {/* ── TOPBAR ── */}
-      <header className="h-16 border-b border-zinc-900 flex items-center justify-between px-8 shrink-0">
+      <header className="h-16  border-b border-zinc-900 flex items-center justify-between px-8 shrink-0">
         <div className="flex items-center gap-3">
           <button
             onClick={toggleSidebar}

@@ -1,10 +1,10 @@
-import { useState,useEffect } from "react";
+import { useState, useEffect } from "react";
 import useProfile from "../hooks/useUserSettings";
 import { useUser } from "../hooks/useUser";
 import { toast } from "sonner";
 
 export default function GeneralSetting() {
-  const { user,setUser } = useUser();
+  const { user, setUser } = useUser();
   const [formProfile, setFormProfile] = useState({
     full_name: user.full_name,
     country: user.country,
@@ -45,7 +45,7 @@ export default function GeneralSetting() {
         ...formProfile,
       }));
       toast.success("Changed Successfully");
-    } catch (error:any) {
+    } catch (error: any) {
       const serverMessage = error?.response?.data?.message;
       const generalMessage = error?.message;
 

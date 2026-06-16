@@ -5,9 +5,10 @@ export default function Profile() {
   const { toggleSidebar } = useSidebar();
   const {user} = useUser()
 
-  const fullname = user.fullname
+  const fullname = user.full_name
   const country = user.country
   const bio = user.bio
+  console.log(user)
   
   const email = localStorage.getItem("email") || "trader@tradevault.app";
 
@@ -89,17 +90,17 @@ export default function Profile() {
               {/* Preferences Info */}
               <div className="grid grid-cols-1 sm:grid-cols-3 py-4 gap-2">
                 <span className="text-zinc-500 font-medium">Base Currency</span>
-                <span className="sm:col-span-2 text-zinc-300 font-mono text-xs tracking-wide">USD ($)</span>
+                <span className="sm:col-span-2 text-zinc-300 font-mono text-xs tracking-wide">{user.account_currency}</span>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-3 py-4 gap-2">
                 <span className="text-zinc-500 font-medium">Preferred Timezone</span>
-                <span className="sm:col-span-2 text-zinc-300">{window.Intl?.DateTimeFormat().resolvedOptions().timeZone || "Asia/Kolkata (IST)"}</span>
+                <span className="sm:col-span-2 text-zinc-300">{user.timezone || "Asia/Kolkata (IST)"}</span>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-3 py-4 gap-2">
                 <span className="text-zinc-500 font-medium">Experience Level</span>
-                <span className="sm:col-span-2 text-zinc-300">Intermediate Setup</span>
+                <span className="sm:col-span-2 text-zinc-300">{user.trading_experience}</span>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-3 pt-4 gap-2">

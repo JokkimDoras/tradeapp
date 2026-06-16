@@ -92,6 +92,10 @@ const loginUser = async (req, res) => {
           country: profile.country,
           avatar_url: profile.avatar_url,
           email_verified: !!data.user.email_confirmed_at,
+          timezone:profile.timezone,
+          default_lot_size:profile.default_lot_size,
+          trading_experience:profile.trading_experience,
+          risk_per_trade:profile.risk_per_trade,
         },
       },
     });

@@ -52,8 +52,8 @@ export default function SideBar() {
   const { user } = useUser();
   const navigate = useNavigate();
 
-  const initials = user.fullname
-    ? user.fullname.split(" ").map((n) => n[0]).join("").toUpperCase().slice(0, 2)
+  const initials = user.full_name
+    ? user.full_name.split(" ").map((n) => n[0]).join("").toUpperCase().slice(0, 2)
     : "TV";
 
   const handleNavigation = (item: { id: number; name: string; path: string }) => {
@@ -112,7 +112,7 @@ export default function SideBar() {
           </div>
           <div className="flex flex-col min-w-0">
             <span className="text-sm font-medium text-white truncate leading-tight">
-              {user.fullname || "Guest"}
+              {user.full_name || "Guest"}
             </span>
             <span className="text-[11px] text-zinc-600 leading-tight">Free plan</span>
           </div>

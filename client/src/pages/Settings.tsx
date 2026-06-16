@@ -3,6 +3,7 @@ import { useSidebar } from "../hooks/useSidebar";
 import TradingSetting from "../component/TradingSetting";
 import GeneralSetting from "../component/GeneralSetting";
 import SecuritySetting from "../component/SecuritySetting";
+import { useUser } from "../hooks/useUser";
 
 
 const tabs = ["General", "Trading", "Security"] as const;
@@ -11,6 +12,8 @@ type Tab = (typeof tabs)[number];
 export default function Settings() {
   const [activeTab, setActiveTab] = useState<Tab>("General");
   const { toggleSidebar } = useSidebar();
+  const { user } = useUser();
+  console.log(user,'from setting')
 
 
  

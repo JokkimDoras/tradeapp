@@ -6,7 +6,7 @@ import { toast } from "sonner";
 export default function GeneralSetting() {
   const { user,setUser } = useUser();
   const [formProfile, setFormProfile] = useState({
-    fullname: user.fullname,
+    full_name: user.full_name,
     country: user.country,
     bio: user.bio,
   });
@@ -14,7 +14,7 @@ export default function GeneralSetting() {
 
   useEffect(() => {
     setFormProfile({
-      fullname: user.fullname,
+      full_name: user.full_name,
       country: user.country,
       bio: user.bio,
     });
@@ -28,8 +28,8 @@ export default function GeneralSetting() {
     }));
   };
 
-  const initials = user.fullname
-    ? user.fullname
+  const initials = user.full_name
+    ? user.full_name
         .split(" ")
         .map((n) => n[0])
         .join("")
@@ -80,8 +80,8 @@ export default function GeneralSetting() {
         </div>
         <input
           onChange={(e) => handleChange(e)}
-          name="fullname"
-          value={formProfile.fullname}
+          name="full_name"
+          value={formProfile.full_name}
           type="text"
           placeholder="Your full name"
           className="w-64 h-9 bg-zinc-950 border border-zinc-800 hover:border-zinc-700 focus:border-zinc-600 rounded-lg px-3 text-sm text-white placeholder-zinc-700 focus:outline-none transition-all"

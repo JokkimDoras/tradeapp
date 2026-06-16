@@ -1,10 +1,15 @@
 import { createContext, useState } from "react";
 
 interface User {
-  fullname: string;
+  full_name: string;
   email: string;
   country: string;
   bio: string;
+  account_currency: string;
+  default_lot_size: number;
+  risk_per_trade: number;
+  trading_experience: string;
+  timezone:string;
 }
 
 interface AuthContextType {
@@ -16,16 +21,17 @@ export const AuthContext = createContext<AuthContextType | undefined>(
   undefined
 );
 
-export function AuthProvider({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User>({
-    fullname: "",
+    full_name: "",
     email: "",
     country: "",
     bio: "",
+    account_currency: "",
+    default_lot_size: 0,
+    risk_per_trade: 0,
+    trading_experience: "",
+    timezone:""
   });
 
   return (

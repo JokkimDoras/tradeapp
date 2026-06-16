@@ -2,10 +2,19 @@ const { supabase } = require('../config/supabase')
 
 const authenticatUser = async(req,res,next) => {
     const value = req.headers.authorization;
-    const {fullname,bio,country} = req.body
+    const {
+        fullname,
+        bio,
+        country,
+        account_currency,
+        default_lot_size,
+        risk_per_trade,
+        trading_experience,
+        timezone
+      } = req.body;
     const token = value.split(' ')[1]
 
-    if (!fullname && !bio && !country) {
+    if (!fullname && !bio && !country && !account_currency && !default_lot_size && !risk_per_trade && !trading_experience && !timezone ) {
         return res.status(400).json({
           success: false,
           message: 'At least one field should be provided'

@@ -1,14 +1,15 @@
 import { createContext, useState } from "react";
 
-interface AuthContextType {
+interface User {
   fullname: string;
-  setFullName: React.Dispatch<React.SetStateAction<string>>;
   email: string;
-  setEmail: React.Dispatch<React.SetStateAction<string>>;
-  country:string;
-  setCountry: React.Dispatch<React.SetStateAction<string>>;
-  bio:string;
-  setBio: React.Dispatch<React.SetStateAction<string>>;
+  country: string;
+  bio: string;
+}
+
+interface AuthContextType {
+  user: User;
+  setUser: React.Dispatch<React.SetStateAction<User>>;
 }
 
 export const AuthContext = createContext<AuthContextType | undefined>(
@@ -20,23 +21,18 @@ export function AuthProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const [fullname, setFullName] = useState("");
-  const [email, setEmail] = useState("");
-  const[country,setCountry] = useState('')
-  const [bio,setBio] = useState('')
+  const [user, setUser] = useState<User>({
+    fullname: "",
+    email: "",
+    country: "",
+    bio: "",
+  });
 
-  console.log(fullname,'from authcontext')
   return (
     <AuthContext.Provider
       value={{
-        fullname,
-        setFullName,
-        email,
-        setEmail,
-        country,
-        setCountry,
-        bio,
-        setBio
+        user,
+        setUser,
       }}
     >
       {children}

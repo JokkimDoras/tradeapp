@@ -4,6 +4,7 @@ import { useNavigate } from "react-router";
 import logOutUserApi, { loginUserApi, registerUserApi } from "../services/authApi";
 import { useUser } from "./useUser";
 
+
 export default function useAuth() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -15,12 +16,15 @@ export default function useAuth() {
     setError(null);
     try {
       const payload = await loginUserApi(formData);
+       
       console.log(payload,'from here')
       setUser((prev) => ({
         ...prev,
         ...payload.user
       }));
       localStorage.setItem("token", payload.access_token);
+      // const decoded = jwtDecode(accesToken)
+      // console.log('decoded',decoded)
       navigate("/dashboard");
     } catch (err: any) {
       const errMsg = err.response?.data?.message || "AUTHENTICATION_FAILED: Access denied.";

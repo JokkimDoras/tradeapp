@@ -1,4 +1,4 @@
-const {supabase} = require('../config/supabase')
+const { supabase } = require("../config/supabase");
 const validateAddTrade = async (req, res, next) => {
   const authHeader = req.headers.authorization;
 
@@ -38,7 +38,7 @@ const validateAddTrade = async (req, res, next) => {
       });
     }
     req.userId = user.id;
-    req.token = token
+    req.token = token;
 
     if (!currency_pair || !trade_type || !status || !entry_price || !lot_size) {
       return res.status(400).json({
@@ -61,13 +61,46 @@ const validateAddTrade = async (req, res, next) => {
         });
       }
     }
-    next()
+    next();
   } catch (err) {
     return res.status(500).json({
-        success:false,
-        message:'Internal server error during trade validation'
-    })
+      success: false,
+      message: "Internal server error during trade validation",
+    });
   }
 };
 
-module.exports = { validateAddTrade };
+const validateGetTrade = async (req, res, next) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith("Bearer")) {
+    return res.status(401).json({
+      success: false,
+      message: "Unauthorized Invaild token",
+    });
+  }
+  const token = authHeader.split(" ")[1];
+  try {
+    const {
+      data: { user },
+      error,
+    } = await supabase.auth.getUser(token);
+    if (error || !user) {
+      return res.status(401).json({
+        success: false,
+        message: "Unauthorized Invalid token",
+        error
+      });
+    }
+
+    req.user_id = user.id;
+    
+    next();
+
+  } catch (err) {
+    return res.status(400).json({
+      success: false,
+      message: "Internal server Error",
+    });
+  }
+};
+module.exports = { validateAddTrade, validateGetTrade };

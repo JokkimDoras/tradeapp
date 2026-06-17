@@ -13,11 +13,11 @@ export interface TradeFormData {
     notes: string;
     trade_date: string;
   }
-
+const token = localStorage.getItem('token')
 const URL = import.meta.env.VITE_API_URL
 export async function createTradeApi (formData:TradeFormData,token:string) {
     try{
-      const response = await axios.post(`${URL}/trade/addtrade`,formData,{
+      const response = await axios.post(`${URL}/api/trades/addtrade`,formData,{
         headers:{Authorization:`Bearer ${token}`}
        })
        console.log(response.data)
@@ -26,4 +26,18 @@ export async function createTradeApi (formData:TradeFormData,token:string) {
        console.error('Error from trade Api',err)
        throw err;
     }
+}
+
+export async function getTrade () {
+  try{
+    const response = await axios.get(`${URL}/api/trades/gettrade`,{
+      headers:{
+        Authorization:`Bearer ${token}`
+      }
+    })
+     return response.data
+  }catch(err:any){
+   console.log('from getTrade',err)
+   throw err
+  }
 }

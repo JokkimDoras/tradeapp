@@ -18,7 +18,7 @@ interface AuthBackendPayload {
 
 export async function loginUserApi(formData: any) {
   try {
-    const response = await axios.post<AuthBackendPayload>(`${API_URL}/auth/login`, formData);
+    const response = await axios.post<AuthBackendPayload>(`${API_URL}/api/auth/login`, formData);
     const payload = response.data.data; 
 
     if (payload?.access_token) localStorage.setItem("token", payload.access_token);
@@ -34,7 +34,7 @@ export async function loginUserApi(formData: any) {
 
 export async function registerUserApi(formData: any) {
   try {
-    const response = await axios.post<AuthBackendPayload>(`${API_URL}/auth/register`, {
+    const response = await axios.post<AuthBackendPayload>(`${API_URL}/api/auth/register`, {
       email: formData.email,
       password: formData.password,
       full_name: formData.fullName, 
@@ -54,7 +54,7 @@ console.log(payload)
 
 export default async function logOutUserApi(token: string) {
   try {
-    await axios.post(`${API_URL}/auth/logout`, {}, {
+    await axios.post(`${API_URL}/api/auth/logout`, {}, {
       headers: { Authorization: `Bearer ${token}` },
     });
   } catch (err) {

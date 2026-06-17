@@ -4,6 +4,7 @@ import AssetSelectionPanel from "./addtrade/AssetSelectionPanel";
 import PricingPanel from "./addtrade/PricingPanel";
 import RiskConfigurationPanel from "./addtrade/RiskConfigurationPanel";
 import useTrade from "../hooks/useTrade";
+import { toast } from "sonner";
 
 type TradeType = "buy" | "sell";
 type TradeStatus = "open" | "closed";
@@ -82,10 +83,13 @@ export default function AddTrade({ setIsOpen }: AddTradeProps) {
       setLoading(true);
       await addTrade(payload, token);
       console.log('Terminal Registry Updated Successfully:', payload);
-      
+      toast.success('Added')
+
       handleCancel();
     } catch (err) {
       console.error("Database ingestion sequence rejected:", err);
+      console.log(err,'form test')
+      toast.error("A closed trade must include exit_price and pips.")
     } finally {
       setLoading(false);
     }

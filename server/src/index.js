@@ -13,9 +13,9 @@ app.get('/', (req, res) => {
     res.send('Server Running');
 });
 
-app.use('/auth', authRoutes);
-app.use('/user',userRoutes)
-app.use('/trade',tradeRoutes)
+app.use('/api/auth', authRoutes);
+app.use('/api/user',userRoutes)
+app.use('/api/trades',tradeRoutes)
 
 const PORT = process.env.PORT || 8000;
 

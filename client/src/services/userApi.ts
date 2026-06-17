@@ -6,7 +6,7 @@ const API_URL = import.meta.env.VITE_API_URL
 export async function userDetailsUpdate(formData:any){
     const token = getToken();
     try{
-        const response = await axios.post(`${API_URL}/user/update`,formData,{
+        const response = await axios.post(`${API_URL}/api/user/update`,formData,{
             headers:{
                 Authorization:`Bearer ${token}`
             }

@@ -53,33 +53,42 @@ export default function AddTrade({ setIsOpen }: AddTradeProps) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    try{
-      setLoading(true);
-      await addTrade(formData,token)
-      console.log('from addTrade.tsx',formData,token)
-    }catch(err){
-      console.log(err)
-      throw err
-    }finally{
-      setLoading(false)
-    }
-    // if (!formData.currency_pair) return alert("Please select or enter an asset pair.");
-    
-    // setLoading(true);
-    // const payload = {
-    //   ...formData,
-    //   entry_price: parseFloat(formData.entry_price),
-    //   exit_price: formData.status === "closed" && formData.exit_price ? parseFloat(formData.exit_price) : null,
-    //   stop_loss: formData.stop_loss ? parseFloat(formData.stop_loss) : null,
-    //   take_profit: formData.take_profit ? parseFloat(formData.take_profit) : null,
-    //   lot_size: parseFloat(formData.lot_size),
-    //   risk_percentage: formData.risk_percentage ? parseFloat(formData.risk_percentage) : null,
-    //   pips: formData.pips ? parseFloat(formData.pips) : null,
-    // };
 
-    // console.log("Submitting Payload:", payload);
-    // await new Promise((resolve) => setTimeout(resolve, 1000));
-    // setLoading(false);
+    // 1. Validation guard: Prevent submitting empty assets
+    if (!formData.currency_pair || formData.currency_pair.trim() === "") {
+      return;
+    }
+
+    // 2. Helper function to safely parse values without generating NaN
+    const safeParseNumeric = (value: string) => {
+      if (!value || value.trim() === "") return null;
+      const num = parseFloat(value);
+      return isNaN(num) ? null : num;
+    };
+
+    // 3. Assemble the sanitized database payload map
+    const payload = {
+      ...formData,
+      entry_price: safeParseNumeric(formData.entry_price),
+      exit_price: formData.status === "closed" ? safeParseNumeric(formData.exit_price) : null,
+      stop_loss: safeParseNumeric(formData.stop_loss),
+      take_profit: safeParseNumeric(formData.take_profit),
+      lot_size: safeParseNumeric(formData.lot_size),
+      risk_percentage: safeParseNumeric(formData.risk_percentage),
+      pips: safeParseNumeric(formData.pips),
+    };
+
+    try {
+      setLoading(true);
+      await addTrade(payload, token);
+      console.log('Terminal Registry Updated Successfully:', payload);
+      
+      handleCancel();
+    } catch (err) {
+      console.error("Database ingestion sequence rejected:", err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (

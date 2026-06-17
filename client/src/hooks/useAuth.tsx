@@ -7,8 +7,7 @@ import { useUser } from "./useUser";
 export default function useAuth() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [token, setToken] = useState<string | null>(() => localStorage.getItem("token"));
-  const { user, setUser } = useUser(); 
+  const { setUser } = useUser(); 
   const navigate = useNavigate();
 
   const login = async (formData: any) => {
@@ -17,12 +16,11 @@ export default function useAuth() {
     try {
       const payload = await loginUserApi(formData);
       console.log(payload,'from here')
-      setToken(payload.access_token);
       setUser((prev) => ({
         ...prev,
         ...payload.user
       }));
-      console.log('fullname from useAuth:',user.full_name)
+      localStorage.setItem("token", payload.access_token);
       navigate("/dashboard");
     } catch (err: any) {
       const errMsg = err.response?.data?.message || "AUTHENTICATION_FAILED: Access denied.";
@@ -39,12 +37,12 @@ export default function useAuth() {
     try {
       const payload = await registerUserApi(formData);
       
-      setToken(payload.access_token);
       console.log(payload,'from useAuth')
       setUser((prev) => ({
         ...prev,
         full_name:payload.user?.full_name
       }))
+      localStorage.setItem("token", payload.access_token);
       
       navigate("/dashboard");
     } catch (err: any) {
@@ -65,7 +63,6 @@ export default function useAuth() {
     } finally {
       // Storage registers wiped clean safely
       localStorage.removeItem("token");      
-      setToken(null);
       setUser((prev) => ({
         ...prev,
         full_name:''
@@ -77,7 +74,6 @@ export default function useAuth() {
   }; 
 
   return {
-    token,
     loading,
     error,
     login,

@@ -17,9 +17,10 @@ export interface TradeFormData {
 const URL = import.meta.env.VITE_API_URL
 export async function createTradeApi (formData:TradeFormData,token:string) {
     try{
-      const response = await axios.post(`${URL}/addtrade`,formData,{
+      const response = await axios.post(`${URL}/trade/addtrade`,formData,{
         headers:{Authorization:`Bearer ${token}`}
        })
+       console.log(response.data)
        return response.data
     }catch(err:any){
        console.error('Error from trade Api',err)

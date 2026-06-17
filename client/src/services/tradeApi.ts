@@ -1,4 +1,5 @@
 import axios from "axios";
+import { getToken } from "../utils/auth";
 
 export interface TradeFormData {
     currency_pair: string;
@@ -13,7 +14,8 @@ export interface TradeFormData {
     notes: string;
     trade_date: string;
   }
-const token = localStorage.getItem('token')
+const token = getToken();
+
 const URL = import.meta.env.VITE_API_URL
 export async function createTradeApi (formData:TradeFormData,token:string) {
     try{
@@ -35,9 +37,23 @@ export async function getTrade () {
         Authorization:`Bearer ${token}`
       }
     })
+    console.log(response.data)
      return response.data
   }catch(err:any){
    console.log('from getTrade',err)
    throw err
+  }
+}
+
+export async function deleteTrade(tradeId:number) {
+  try{
+    await axios.delete(`${URL}/api/trade/deletetrade/${tradeId}`,{
+      headers:{
+        Authorization:`Bearer ${token}`
+      }
+    })
+  }catch(err:any){
+    console.log(err)
+    throw err;
   }
 }

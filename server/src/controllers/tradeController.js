@@ -62,4 +62,8 @@ const addTrade = async (req, res) => {
   }
 };
 
-module.exports = { addTrade,getTrade };
+const deleteTrade = async(req,res) => {
+
+}
+
+module.exports = { addTrade,getTrade ,deleteTrade};

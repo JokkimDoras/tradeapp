@@ -8,7 +8,6 @@ export default function Profile() {
   const fullname = user.full_name;
   const country = user.country;
   const bio = user.bio;
-  console.log(user);
   
   const email = localStorage.getItem("email") || "trader@tradevault.app";
 

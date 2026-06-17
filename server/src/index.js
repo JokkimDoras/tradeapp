@@ -1,7 +1,8 @@
 const express = require('express');
 const cors = require('cors');
-const authRoutes = require('./src/routes/authRoutes');
-const userRoutes = require('./src/routes/userRoutes')
+const authRoutes = require('./routes/authRoutes');
+const userRoutes = require('./routes/userRoutes')
+const tradeRoutes = require('./routes/tradeRoutes')
 
 const app = express();
 
@@ -14,6 +15,7 @@ app.get('/', (req, res) => {
 
 app.use('/auth', authRoutes);
 app.use('/user',userRoutes)
+app.use('/trade',tradeRoutes)
 
 const PORT = process.env.PORT || 8000;
 

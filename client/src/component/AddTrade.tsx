@@ -3,6 +3,7 @@ import { useSidebar } from "../hooks/useSidebar";
 import AssetSelectionPanel from "./addtrade/AssetSelectionPanel";
 import PricingPanel from "./addtrade/PricingPanel";
 import RiskConfigurationPanel from "./addtrade/RiskConfigurationPanel";
+import useTrade from "../hooks/useTrade";
 
 type TradeType = "buy" | "sell";
 type TradeStatus = "open" | "closed";
@@ -16,7 +17,8 @@ export default function AddTrade({ setIsOpen }: AddTradeProps) {
   const [loading, setLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-
+  const token = localStorage.getItem('token') ?? ''
+  const { addTrade } = useTrade()
   const [formData, setFormData] = useState({
     currency_pair: "",
     trade_type: "buy" as TradeType,
@@ -51,23 +53,33 @@ export default function AddTrade({ setIsOpen }: AddTradeProps) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formData.currency_pair) return alert("Please select or enter an asset pair.");
+    try{
+      setLoading(true);
+      await addTrade(formData,token)
+      console.log('from addTrade.tsx',formData,token)
+    }catch(err){
+      console.log(err)
+      throw err
+    }finally{
+      setLoading(false)
+    }
+    // if (!formData.currency_pair) return alert("Please select or enter an asset pair.");
     
-    setLoading(true);
-    const payload = {
-      ...formData,
-      entry_price: parseFloat(formData.entry_price),
-      exit_price: formData.status === "closed" && formData.exit_price ? parseFloat(formData.exit_price) : null,
-      stop_loss: formData.stop_loss ? parseFloat(formData.stop_loss) : null,
-      take_profit: formData.take_profit ? parseFloat(formData.take_profit) : null,
-      lot_size: parseFloat(formData.lot_size),
-      risk_percentage: formData.risk_percentage ? parseFloat(formData.risk_percentage) : null,
-      pips: formData.pips ? parseFloat(formData.pips) : null,
-    };
+    // setLoading(true);
+    // const payload = {
+    //   ...formData,
+    //   entry_price: parseFloat(formData.entry_price),
+    //   exit_price: formData.status === "closed" && formData.exit_price ? parseFloat(formData.exit_price) : null,
+    //   stop_loss: formData.stop_loss ? parseFloat(formData.stop_loss) : null,
+    //   take_profit: formData.take_profit ? parseFloat(formData.take_profit) : null,
+    //   lot_size: parseFloat(formData.lot_size),
+    //   risk_percentage: formData.risk_percentage ? parseFloat(formData.risk_percentage) : null,
+    //   pips: formData.pips ? parseFloat(formData.pips) : null,
+    // };
 
-    console.log("Submitting Payload:", payload);
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    setLoading(false);
+    // console.log("Submitting Payload:", payload);
+    // await new Promise((resolve) => setTimeout(resolve, 1000));
+    // setLoading(false);
   };
 
   return (

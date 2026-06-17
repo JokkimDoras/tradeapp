@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import useAuth from "../hooks/useAuth";
 
 export default function Register() {
@@ -8,6 +8,8 @@ export default function Register() {
     email: "",
     password: "",
   });
+
+  const navigate = useNavigate();
   const { register, loading, error } = useAuth();
 
   const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -20,6 +22,7 @@ export default function Register() {
     if (!formData.fullName.trim() || !formData.email.trim() || !formData.password.trim()) return;
     try {
       await register(formData);
+      navigate('/login')
     } catch {}
   };
 

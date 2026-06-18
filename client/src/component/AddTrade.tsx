@@ -10,28 +10,32 @@ type TradeType = "buy" | "sell";
 type TradeStatus = "open" | "closed";
 
 interface AddTradeProps {
-  setIsOpen: (isOpen: boolean) => void;
+  setIsOpen: (isOpen: boolean | any) => void; 
+  editData?: any;
 }
 
-export default function AddTrade({ setIsOpen }: AddTradeProps) {
+export default function AddTrade({ setIsOpen, editData }: AddTradeProps) {
   const { toggleSidebar } = useSidebar();
   const [loading, setLoading] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
+  
+  const [searchQuery, setSearchQuery] = useState(editData?.currency_pair || "");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const token = localStorage.getItem('token') ?? ''
-  const { addTrade } = useTrade()
+  
+  
+  const { addTrade,updateTrade } = useTrade();
+
   const [formData, setFormData] = useState({
-    currency_pair: "",
-    trade_type: "buy" as TradeType,
-    status: "open" as TradeStatus,
-    entry_price: "",
-    exit_price: "",
-    stop_loss: "",
-    take_profit: "",
-    lot_size: "",
-    risk_percentage: "",
-    pips: "",
-    notes: "",
+    currency_pair: editData?.currency_pair || "",
+    trade_type: (editData?.trade_type?.toLowerCase() as TradeType) || ("buy" as TradeType),
+    status: (editData?.status?.toLowerCase() as TradeStatus) || ("open" as TradeStatus),
+    entry_price: editData?.entry_price ?? "",
+    exit_price: editData?.exit_price ?? "",
+    stop_loss: editData?.stop_loss ?? "",
+    take_profit: editData?.take_profit ?? "",
+    lot_size: editData?.lot_size ?? "",
+    risk_percentage: editData?.risk_percentage ?? "",
+    pips: editData?.pips ?? "",
+    notes: editData?.notes || "",
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -61,9 +65,9 @@ export default function AddTrade({ setIsOpen }: AddTradeProps) {
     }
 
     // 2. Helper function to safely parse values without generating NaN
-    const safeParseNumeric = (value: string) => {
-      if (!value || value.trim() === "") return null;
-      const num = parseFloat(value);
+    const safeParseNumeric = (value: any) => {
+      if (value === null || value === undefined || String(value).trim() === "") return null;
+      const num = parseFloat(String(value));
       return isNaN(num) ? null : num;
     };
 
@@ -81,15 +85,26 @@ export default function AddTrade({ setIsOpen }: AddTradeProps) {
 
     try {
       setLoading(true);
-      await addTrade(payload, token);
-      console.log('Terminal Registry Updated Successfully:', payload);
-      toast.success('Added')
+
+      if (editData && editData.id) {
+        // ── UPDATE EXISTING TRADE SEQUENCE ──
+        if (typeof updateTrade === "function") {
+          await updateTrade(editData.id, payload);
+          toast.success('Updated Succesfully')
+        } else {
+          console.warn("updateTrade method not found in hook registry.");
+        }
+        console.log('Terminal Registry Updated Successfully:', payload);
+      } else {
+        // ── COMMIT FRESH NEW POSITION NODE ──
+        await addTrade(payload);
+        toast.success('New Trade was Created')
+        console.log('Terminal Registry Ingested Successfully:', payload);
+      }
 
       handleCancel();
     } catch (err) {
       console.error("Database ingestion sequence rejected:", err);
-      console.log(err,'form test')
-      toast.error("A closed trade must include exit_price and pips.")
     } finally {
       setLoading(false);
     }
@@ -118,9 +133,14 @@ export default function AddTrade({ setIsOpen }: AddTradeProps) {
       {/* ── MAIN WORKSPACE CONTAINER ── */}
       <div className="w-full flex-1 px-8 py-12 flex flex-col items-center gap-10 overflow-y-auto">
         <div className="flex flex-col gap-2 w-full max-w-5xl text-left">
-          <h1 className="text-3xl font-bold text-zinc-50 tracking-tight sm:text-4xl">New Position Node</h1>
+          <h1 className="text-3xl font-bold text-zinc-50 tracking-tight sm:text-4xl">
+            {editData ? "Modify Position Node" : "New Position Node"}
+          </h1>
           <p className="text-base text-zinc-400 font-normal">
-            Commit an active or closed ledger sequence to secure vault database analytics.
+            {editData 
+              ? "Update parameters for this specific system configuration data stream node." 
+              : "Commit an active or closed ledger sequence to secure vault database analytics."
+            }
           </p>
         </div>
 
@@ -171,7 +191,7 @@ export default function AddTrade({ setIsOpen }: AddTradeProps) {
                 Cancel
               </button>
               <button type="submit" disabled={loading} className="bg-zinc-50 text-black hover:bg-zinc-200 disabled:bg-zinc-800 disabled:text-zinc-600 font-sans font-bold text-xs px-4 py-2 rounded-md transition-colors cursor-pointer">
-                {loading ? "Vaulting Core..." : "Commit"}
+                {loading ? "Vaulting Core..." : editData ? "Save Changes" : "Commit"}
               </button>
             </div>
           </div>

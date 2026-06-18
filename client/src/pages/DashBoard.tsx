@@ -3,11 +3,15 @@ import AddTrade from "../component/AddTrade";
 import { useState } from "react";
 import useTrade from "../hooks/useTrade";
 import Navbar from "../component/NavBar";
-import { FiPlus, FiEdit2, FiTrash2 } from "react-icons/fi"; // Added Edit & Trash icons
+import { FiPlus, FiEdit2, FiTrash2 } from "react-icons/fi";
 
 export default function Dashboard() {
   const { toggleSidebar } = useSidebar();
-  const [isOpen, setIsOpen] = useState(false);
+  
+  // ── WORKFLOW STATE SWITCHER ──
+  // false = closed | true = fresh creation | object = edit configuration data node
+  const [formState, setFormState] = useState<boolean | any>(false);
+  
   const { trades, removeTrade } = useTrade();
 
   const handleDelete = async (idToDel: number) => {
@@ -19,14 +23,23 @@ export default function Dashboard() {
     }
   };
 
-  if (isOpen) return <AddTrade setIsOpen={setIsOpen} />;
+  // ── CONDITIONAL ROUTER INTERCEPT ──
+  if (formState) {
+    return (
+      <AddTrade 
+        setIsOpen={setFormState} 
+        editData={typeof formState === "object" ? formState : null} 
+      />
+    );
+  }
 
   return (
     <div className="flex flex-col flex-1 min-h-screen bg-black text-zinc-100 font-sans antialiased selection:bg-zinc-800 selection:text-white relative">
-      <Navbar toggleSidebar={toggleSidebar}  />
+      <Navbar toggleSidebar={toggleSidebar} />
 
       {/* ── MAIN LAYOUT CONTAINER ── */}
       <div className="flex flex-col gap-8 w-full max-w-7xl mx-auto flex-1 p-6 pb-24">
+        
         {/* ── TOP: 4 METRIC BOXES ── */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 w-full">
           <div className="p-5 rounded-lg border border-zinc-900 bg-zinc-950 flex flex-col gap-2 shadow-sm">
@@ -166,23 +179,24 @@ export default function Dashboard() {
                         )}
                       </div>
 
-                      {/* 7. Dedicated Actions */}
+                      {/* 7. Actions Controller Block */}
                       <div className="flex items-center justify-end gap-2 text-right">
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
-                            console.log("Edit requested for ID:", trade.id);
+                            setFormState(trade); // Passes the target object payload directly into terminal configuration view
                           }}
-                          className="w-7 h-7 flex items-center justify-center rounded border border-zinc-800 bg-zinc-950 text-zinc-400 hover:text-white hover:border-zinc-700 transition-all active:scale-90"
+                          className="w-7 h-7 flex items-center justify-center rounded border border-zinc-800 bg-zinc-950 text-zinc-400 hover:text-white hover:border-zinc-700 transition-all active:scale-90 cursor-pointer"
                           title="Edit"
                         >
                           <FiEdit2 size={12} />
                         </button>
                         <button
-                          onClick={() => {
+                          onClick={(e) => {
+                            e.stopPropagation();
                             handleDelete(trade.id);
                           }}
-                          className="w-7 h-7 flex items-center justify-center rounded border border-zinc-800 bg-zinc-950 text-zinc-500 hover:text-rose-400 hover:border-rose-950/60 transition-all active:scale-90"
+                          className="w-7 h-7 flex items-center justify-center rounded border border-zinc-800 bg-zinc-950 text-zinc-500 hover:text-rose-400 hover:border-rose-950/60 transition-all active:scale-90 cursor-pointer"
                           title="Delete"
                         >
                           <FiTrash2 size={12} />
@@ -201,8 +215,8 @@ export default function Dashboard() {
       {/* ── FIXED RIGHT BOTTOM FLOATING ACTION BUTTON (FAB) ── */}
       <div className="fixed bottom-6 right-6 z-50">
         <button
-          onClick={() => setIsOpen(true)}
-          className="h-12 px-5 bg-white hover:bg-zinc-200 text-black font-bold text-xs rounded-full shadow-2xl shadow-white/10 flex items-center gap-2 transition-all duration-200 ease-out hover:scale-105 active:scale-95 border border-zinc-200"
+          onClick={() => setFormState(true)} // Sets state to true -> Blank new node flow triggers
+          className="h-12 px-5 bg-white hover:bg-zinc-200 text-black font-bold text-xs rounded-full shadow-2xl shadow-white/10 flex items-center gap-2 transition-all duration-200 ease-out hover:scale-105 active:scale-95 border border-zinc-200 cursor-pointer"
         >
           <FiPlus size={16} strokeWidth={3} />
           <span>New Trade</span>

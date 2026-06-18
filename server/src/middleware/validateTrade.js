@@ -133,9 +133,7 @@ const tradeID = req.params.id
   .single()
 
   if(dbError || !trade){
-    console.log("tradeID:", tradeID);
-console.log("dbError:", dbError);
-console.log("trade:", trade);
+
     return res.status(444).json({
       success:false,
       message:'Trade not Found',
@@ -163,4 +161,61 @@ console.log("trade:", trade);
   
 
 }
-module.exports = { validateAddTrade, validateGetTrade,validateDeleteTrade };
+
+const validateUpdateTrade = async (req, res, next) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith('Bearer')) {
+    return res.status(401).json({
+      success: false,
+      message: 'Unauthorized: Invalid Token'
+    });
+  }
+
+  const token = authHeader.split(' ')[1];
+  const tradeID = req.params.id;
+
+  try {
+    const { data, error: authError } = await supabaseAdmin.auth.getUser(token);
+    if (authError || !data?.user) {
+      return res.status(401).json({
+        success: false,
+        message: 'Unauthorized: Cant get the user info',
+        error: authError 
+      });
+    }
+
+    const user = data.user;
+
+    const { data: trade, error: tradeError } = await supabaseAdmin
+      .from('trades')
+      .select('user_id')
+      .eq('id', tradeID)
+      .single();
+
+    if (tradeError || !trade) {
+      return res.status(400).json({
+        success: false,
+        message: 'Cant get the trade info',
+        tradeError
+      });
+    }
+
+    if (trade.user_id !== user.id) {
+      return res.status(403).json({ 
+        success: false,
+        message: 'You Dont Own this trade'
+      });
+    }
+
+    req.user = user;
+
+    next();
+  } catch (err) {
+    return res.status(500).json({
+      success: false,
+      message: 'Oops Something went wrong',
+      err: err.message || err
+    });
+  }
+};
+module.exports = { validateAddTrade, validateGetTrade,validateDeleteTrade,validateUpdateTrade };

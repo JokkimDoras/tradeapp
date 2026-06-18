@@ -120,17 +120,11 @@ export default function TradeVaultLanding() {
       {/* ── SOCIAL PROOF STRIP ── */}
       <section className="border-b border-zinc-900 py-5 px-6 bg-zinc-950">
         <div className="max-w-5xl mx-auto flex items-center justify-between gap-8 overflow-x-auto text-xs text-zinc-600 whitespace-nowrap">
-          <span>React 19</span>
           <span className="text-zinc-800">·</span>
-          <span>Node.js</span>
           <span className="text-zinc-800">·</span>
-          <span>PostgreSQL</span>
           <span className="text-zinc-800">·</span>
-          <span>Supabase</span>
           <span className="text-zinc-800">·</span>
-          <span>End-to-end encrypted</span>
           <span className="text-zinc-800">·</span>
-          <span>SOC 2 ready</span>
         </div>
       </section>
 

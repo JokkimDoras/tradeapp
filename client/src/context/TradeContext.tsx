@@ -35,9 +35,9 @@ export default function TradeProvider({ children }: TradeProviderProps) {
         const { data } = await getTradeApi();
         console.log(data,'from effect')
         setTrades(data);
-        fetchInitialState();
-      
-    };
+        
+      };
+      fetchInitialState();
   }, []);
 
   const addTrade = async (formData: TradeFormData) => {

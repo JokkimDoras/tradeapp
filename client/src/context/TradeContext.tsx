@@ -16,7 +16,7 @@ interface TradeContextType {
   addTrade: (formData: any) => Promise<void>;
   removeTrade: (idToDel: number) => Promise<void>;
   updateTrade: (idToUpdate: number, formData: any) => Promise<void>;
-  loading:boolean;
+  loading: boolean;
 }
 
 export const TradeContext = createContext<TradeContextType | null>(null);
@@ -31,10 +31,13 @@ export default function TradeProvider({ children }: TradeProviderProps) {
 
   useEffect(() => {
     const fetchInitialState = async () => {
-      const { data } = await getTradeApi();
-      setTrades(data);
+      console.log('effect running')
+        const { data } = await getTradeApi();
+        console.log(data,'from effect')
+        setTrades(data);
+        fetchInitialState();
+      
     };
-    fetchInitialState();
   }, []);
 
   const addTrade = async (formData: TradeFormData) => {
@@ -67,7 +70,7 @@ export default function TradeProvider({ children }: TradeProviderProps) {
     }
   };
 
-  const updateTrade = async (idToUpdate:number, formData:any) => {
+  const updateTrade = async (idToUpdate: number, formData: any) => {
     try {
       setLoading(true);
 
@@ -82,7 +85,7 @@ export default function TradeProvider({ children }: TradeProviderProps) {
 
   return (
     <TradeContext.Provider
-      value={{ trades, setTrades, addTrade, removeTrade, updateTrade ,loading}}
+      value={{ trades, setTrades, addTrade, removeTrade, updateTrade, loading }}
     >
       {children}
     </TradeContext.Provider>

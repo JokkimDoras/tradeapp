@@ -5,28 +5,29 @@ import useTrade from "../hooks/useTrade";
 import Navbar from "../component/NavBar";
 import { FiPlus, FiEdit2, FiTrash2 } from "react-icons/fi";
 import { toast } from "sonner";
+// import DashboardSkeleton from "../component/skeltons/DashBoardSkelton";
 
 export default function Dashboard() {
   const { toggleSidebar } = useSidebar();
   
-  // ── WORKFLOW STATE SWITCHER ──
-  // false = closed | true = fresh creation | object = edit configuration data node
   const [formState, setFormState] = useState<boolean | any>(false);
+  const [deleteingId, setDeleleteingId] = useState<null | number>(null);
   
   const { trades, removeTrade } = useTrade();
 
   const handleDelete = async (idToDel: number) => {
     try {
+      setDeleleteingId(idToDel);
       await removeTrade(idToDel);
-      toast.success('Deleted Succesfully')
+      toast.success('Deleted Successfully');
     } catch (err: any) {
       console.log(err);
-      toast.error('Faided To Delete')
-      throw err;
+      toast.error('Failed To Delete');
+    } finally {
+      setDeleleteingId(null);
     }
   };
 
-  // ── CONDITIONAL ROUTER INTERCEPT ──
   if (formState) {
     return (
       <AddTrade 
@@ -40,10 +41,8 @@ export default function Dashboard() {
     <div className="flex flex-col flex-1 min-h-screen bg-black text-zinc-100 font-sans antialiased selection:bg-zinc-800 selection:text-white relative">
       <Navbar toggleSidebar={toggleSidebar} />
 
-      {/* ── MAIN LAYOUT CONTAINER ── */}
       <div className="flex flex-col gap-8 w-full max-w-7xl mx-auto flex-1 p-6 pb-24">
         
-        {/* ── TOP: 4 METRIC BOXES ── */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 w-full">
           <div className="p-5 rounded-lg border border-zinc-900 bg-zinc-950 flex flex-col gap-2 shadow-sm">
             <span className="text-xs font-mono text-zinc-500 uppercase tracking-widest">Total Executions</span>
@@ -63,7 +62,6 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* ── MIDDLE: SMALL ANALYSIS PANEL ── */}
         <div className="w-full p-5 rounded-lg border border-zinc-900 bg-zinc-950 flex flex-col gap-3">
           <span className="text-xs font-mono text-zinc-400 uppercase tracking-widest font-semibold">System Analysis</span>
           <div className="text-sm font-mono text-zinc-400 min-h-[50px] flex items-center leading-relaxed">
@@ -74,7 +72,6 @@ export default function Dashboard() {
           </div>
         </div>
   
-        {/* ── BOTTOM: LINE-BY-LINE TRADES LEDGER ── */}
         <div className="w-full flex-1 flex flex-col">
           <span className="text-xs font-mono text-zinc-400 uppercase tracking-widest font-semibold mb-4">
             Execution History
@@ -86,7 +83,6 @@ export default function Dashboard() {
             </div>
           ) : (
             <div className="w-full border border-zinc-900 bg-zinc-950 rounded-lg overflow-hidden shadow-md">
-              {/* Header Titles (7 Columns) */}
               <div className="grid grid-cols-7 p-4 border-b border-zinc-900 text-xs font-mono text-zinc-500 uppercase tracking-wider font-semibold bg-zinc-950">
                 <div>Asset / Risk</div>
                 <div>Action / Size</div>
@@ -97,16 +93,19 @@ export default function Dashboard() {
                 <div className="text-right">Actions</div>
               </div>
 
-              {/* Trade Rows Line-by-Line */}
               <div className="divide-y divide-zinc-900">
                 {trades.map((trade: any, idx: number) => {
                   const isBuy = trade.trade_type?.toLowerCase() === "buy";
+                  
+                  const isDeleting = deleteingId === trade.id;
+
                   return (
                     <div
                       key={trade.id || idx}
-                      className="grid grid-cols-7 p-4 items-center hover:bg-zinc-900/50 transition-colors font-mono text-sm"
+                      className={`grid grid-cols-7 p-4 items-center hover:bg-zinc-900/50 transition-colors font-mono text-sm ${
+                        isDeleting ? "opacity-35 pointer-events-none select-none" : ""
+                      }`}
                     >
-                      {/* 1. Asset & Risk */}
                       <div className="flex flex-col gap-0.5">
                         <span className="font-bold text-white tracking-wide text-base">
                           {trade.currency_pair || "—"}
@@ -116,7 +115,6 @@ export default function Dashboard() {
                         </span>
                       </div>
 
-                      {/* 2. Action & Size */}
                       <div className="flex flex-col gap-1 items-start">
                         <span
                           className={`text-[10px] px-2 py-0.5 rounded font-bold uppercase tracking-wide ${
@@ -130,7 +128,6 @@ export default function Dashboard() {
                         </span>
                       </div>
 
-                      {/* 3. Entry & Exit Price */}
                       <div className="flex flex-col gap-0.5">
                         <span className="text-zinc-300 font-medium">
                           En: {trade.entry_price ?? "—"}
@@ -140,13 +137,11 @@ export default function Dashboard() {
                         </span>
                       </div>
 
-                      {/* 4. SL / TP */}
                       <div className="flex flex-col gap-0.5 text-xs">
                         <span className="text-rose-400">SL: {trade.stop_loss ?? "—"}</span>
                         <span className="text-emerald-400">TP: {trade.take_profit ?? "—"}</span>
                       </div>
 
-                      {/* 5. PnL & Pips */}
                       <div className="flex flex-col gap-0.5">
                         <span
                           className={`font-semibold text-base ${
@@ -166,7 +161,6 @@ export default function Dashboard() {
                         </span>
                       </div>
 
-                      {/* 6. Status & Notes */}
                       <div className="flex flex-col gap-0.5 items-start">
                         <span
                           className={`text-xs font-medium uppercase tracking-wider ${
@@ -182,27 +176,32 @@ export default function Dashboard() {
                         )}
                       </div>
 
-                      {/* 7. Actions Controller Block */}
                       <div className="flex items-center justify-end gap-2 text-right">
                         <button
+                          disabled={isDeleting}
                           onClick={(e) => {
                             e.stopPropagation();
-                            setFormState(trade); // Passes the target object payload directly into terminal configuration view
+                            setFormState(trade);
                           }}
-                          className="w-7 h-7 flex items-center justify-center rounded border border-zinc-800 bg-zinc-950 text-zinc-400 hover:text-white hover:border-zinc-700 transition-all active:scale-90 cursor-pointer"
+                          className="w-7 h-7 flex items-center justify-center rounded border border-zinc-800 bg-zinc-950 text-zinc-400 hover:text-white hover:border-zinc-700 transition-all active:scale-90 cursor-pointer disabled:opacity-30"
                           title="Edit"
                         >
                           <FiEdit2 size={12} />
                         </button>
                         <button
+                          disabled={isDeleting}
                           onClick={(e) => {
                             e.stopPropagation();
                             handleDelete(trade.id);
                           }}
-                          className="w-7 h-7 flex items-center justify-center rounded border border-zinc-800 bg-zinc-950 text-zinc-500 hover:text-rose-400 hover:border-rose-950/60 transition-all active:scale-90 cursor-pointer"
+                          className="w-7 h-7 flex items-center justify-center rounded border border-zinc-800 bg-zinc-950 text-zinc-500 hover:text-rose-400 hover:border-rose-950/60 transition-all active:scale-90 cursor-pointer disabled:opacity-30"
                           title="Delete"
                         >
-                          <FiTrash2 size={12} />
+                          {isDeleting ? (
+                            <div className="w-3 h-3 border-2 border-zinc-500 border-t-transparent rounded-full animate-spin" />
+                          ) : (
+                            <FiTrash2 size={12} />
+                          )}
                         </button>
                       </div>
 
@@ -215,10 +214,9 @@ export default function Dashboard() {
         </div>
       </div>
 
-      {/* ── FIXED RIGHT BOTTOM FLOATING ACTION BUTTON (FAB) ── */}
       <div className="fixed bottom-6 right-6 z-50">
         <button
-          onClick={() => setFormState(true)} // Sets state to true -> Blank new node flow triggers
+          onClick={() => setFormState(true)}
           className="h-12 px-5 bg-white hover:bg-zinc-200 text-black font-bold text-xs rounded-full shadow-2xl shadow-white/10 flex items-center gap-2 transition-all duration-200 ease-out hover:scale-105 active:scale-95 border border-zinc-200 cursor-pointer"
         >
           <FiPlus size={16} strokeWidth={3} />

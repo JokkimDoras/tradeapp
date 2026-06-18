@@ -5,11 +5,12 @@ import useTrade from "../hooks/useTrade";
 import Navbar from "../component/NavBar";
 import { FiPlus, FiEdit2, FiTrash2 } from "react-icons/fi";
 import { toast } from "sonner";
+import DashboardSkeleton from "../component/skeltons/DashBoardSkelton";
 // import DashboardSkeleton from "../component/skeltons/DashBoardSkelton";
 
 export default function Dashboard() {
   const { toggleSidebar } = useSidebar();
-  
+  const{ loading } = useTrade()
   const [formState, setFormState] = useState<boolean | any>(false);
   const [deleteingId, setDeleleteingId] = useState<null | number>(null);
   
@@ -27,6 +28,8 @@ export default function Dashboard() {
       setDeleleteingId(null);
     }
   };
+
+  if(loading) return <DashboardSkeleton/>
 
   if (formState) {
     return (

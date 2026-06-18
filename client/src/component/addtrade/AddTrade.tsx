@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { useSidebar } from "../hooks/useSidebar";
-import AssetSelectionPanel from "./addtrade/AssetSelectionPanel";
-import PricingPanel from "./addtrade/PricingPanel";
-import RiskConfigurationPanel from "./addtrade/RiskConfigurationPanel";
-import useTrade from "../hooks/useTrade";
+import { useSidebar } from "../../hooks/useSidebar";
+import AssetSelectionPanel from "./AssetSelectionPanel";
+import PricingPanel from "./PricingPanel";
+import RiskConfigurationPanel from "./RiskConfigurationPanel";
+import useTrade from "../../hooks/useTrade";
 import { toast } from "sonner";
 
 type TradeType = "buy" | "sell";

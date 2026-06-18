@@ -38,8 +38,8 @@ export default function TradeProvider({ children }: TradeProviderProps) {
       try{
        const {data} = await createTradeApi(formData,token)
         setTrades((prev) => ([
-          ...prev,
-          data
+          data,
+          ...prev
         ]))
       }catch(err:any){
         console.log('error from tradeContext',err)
@@ -52,6 +52,8 @@ export default function TradeProvider({ children }: TradeProviderProps) {
 
       try{
         await deleteTrade(idToDel)
+        const filtered = trades.filter((trade) => trade.id !== idToDel)
+        setTrades(filtered)
       }catch(err:any){
         console.log(err)
         throw err

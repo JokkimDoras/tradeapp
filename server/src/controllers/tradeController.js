@@ -1,4 +1,4 @@
-const { supabaseAdmin } = require("../config/supabase");
+const { supabaseAdmin, supabase } = require("../config/supabase");
 
 const getTrade = async (req, res) => {
   const user_id = req.user_id;
@@ -64,6 +64,34 @@ const addTrade = async (req, res) => {
 
 const deleteTrade = async(req,res) => {
 
+  const tradeId = req.params.id;
+  console.log(tradeId)
+  try{
+   const {data,error } = await supabaseAdmin
+    .from('trades')
+    .delete()
+    .eq('id',tradeId)
+console.log(data,": from tradeconroller")
+console.log(error,":from tradecontroller")
+    if(error){
+    return  res.status(400).json({
+        success:false,
+        message:'Cant able to Delete',
+        error
+      })
+    }
+    return res.status(200).json({
+      success:true,
+      message:'Deleted Successfully'
+    })
+  }catch(err){
+
+    return res.status(400).json({
+      success:false,
+      message:'Cant able to Delete',
+      err
+    })
+  }
 }
 
 module.exports = { addTrade,getTrade ,deleteTrade};

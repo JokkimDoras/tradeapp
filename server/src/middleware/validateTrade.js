@@ -1,4 +1,4 @@
-const { supabase } = require("../config/supabase");
+const { supabase, supabaseAdmin } = require("../config/supabase");
 const validateAddTrade = async (req, res, next) => {
   const authHeader = req.headers.authorization;
 
@@ -126,23 +126,27 @@ const validateDeleteTrade = async(req,res,next) => {
     })
   }
 const tradeID = req.params.id
-  const {data:trade,error:dbError} = await supabase
+  const {data:trade,error:dbError} = await supabaseAdmin
   .from('trades')
   .select('user_id')
   .eq('id',tradeID)
   .single()
 
   if(dbError || !trade){
+    console.log("tradeID:", tradeID);
+console.log("dbError:", dbError);
+console.log("trade:", trade);
     return res.status(444).json({
       success:false,
-      message:'Trade not Found'
+      message:'Trade not Found',
+      dbError
     })
   }
 
   if(trade.user_id !== user.id ){
     return res.status(404).json({
       success:false,
-      message:'You Dont Acces to Delte this Trade'
+      message:'You Dont Acces to Delete this Trade'
     })
   }
   next()

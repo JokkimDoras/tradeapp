@@ -103,4 +103,60 @@ const validateGetTrade = async (req, res, next) => {
     });
   }
 };
-module.exports = { validateAddTrade, validateGetTrade };
+
+const validateDeleteTrade = async(req,res,next) => {
+
+  const authHeader = req.headers.authorization;
+
+  if(!authHeader || !authHeader.startsWith('Bearer')){
+    return res.status(401).json({
+      success:false,
+      message:'Unauthorized Invalid Token'
+    })
+  }
+  const token = authHeader.split(' ')[1]
+
+  try{
+  const { data:{user},error:authError } = await supabase.auth.getUser(token)
+
+  if(authError || !user){
+    return res.status(401).json({
+      success:false,
+      message:'Unauthorized Invaild Token'
+    })
+  }
+const tradeID = req.params.id
+  const {data:trade,error:dbError} = await supabase
+  .from('trades')
+  .select('user_id')
+  .eq('id',tradeID)
+  .single()
+
+  if(dbError || !trade){
+    return res.status(444).json({
+      success:false,
+      message:'Trade not Found'
+    })
+  }
+
+  if(trade.user_id !== user.id ){
+    return res.status(404).json({
+      success:false,
+      message:'You Dont Acces to Delte this Trade'
+    })
+  }
+  next()
+
+
+  }catch(err){
+    console.log(err)
+    return res.status(500).json({
+      success:false,
+      message:'Unauthorized Invaild Token'
+    })
+
+  }
+  
+
+}
+module.exports = { validateAddTrade, validateGetTrade,validateDeleteTrade };

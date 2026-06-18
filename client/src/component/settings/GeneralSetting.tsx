@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import useProfile from "../hooks/useUserSettings";
-import { useUser } from "../hooks/useUser";
+import useProfile from "../../hooks/useUserSettings";
+import { useUser } from "../../hooks/useUser";
 import { toast } from "sonner";
 
 export default function GeneralSetting() {

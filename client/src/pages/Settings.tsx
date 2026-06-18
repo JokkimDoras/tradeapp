@@ -1,9 +1,8 @@
 import { useState } from "react";
 import { useSidebar } from "../hooks/useSidebar";
-import TradingSetting from "../component/TradingSetting";
-import GeneralSetting from "../component/GeneralSetting";
-import SecuritySetting from "../component/SecuritySetting";
-import { useUser } from "../hooks/useUser";
+import TradingSetting from "../component/settings/TradingSetting";
+import GeneralSetting from "../component/settings/GeneralSetting";
+import SecuritySetting from "../component/settings/SecuritySetting";
 
 const tabs = ["General", "Trading", "Security"] as const;
 type Tab = (typeof tabs)[number];
@@ -11,8 +10,6 @@ type Tab = (typeof tabs)[number];
 export default function Settings() {
   const [activeTab, setActiveTab] = useState<Tab>("General");
   const { toggleSidebar } = useSidebar();
-  const { user } = useUser();
-  console.log(user, 'from setting')
 
   return (
     <div className="flex flex-col flex-1 min-h-screen bg-black font-sans antialiased selection:bg-zinc-800 selection:text-white">

@@ -40,7 +40,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       try{
        const {data} =  await getUser();
        setUser(data)
-       console.log(data,'the info is comeing form authContext')
       }catch(err){
         console.log(err,'from also authContext useEffect')
         throw err

@@ -17,14 +17,12 @@ export default function useAuth() {
     try {
       const payload = await loginUserApi(formData);
        
-      console.log(payload,'from here')
       setUser((prev) => ({
         ...prev,
         ...payload.user
       }));
       localStorage.setItem("token", payload.access_token);
-      // const decoded = jwtDecode(accesToken)
-      // console.log('decoded',decoded)
+
       navigate("/dashboard");
     } catch (err: any) {
       const errMsg = err.response?.data?.message || "AUTHENTICATION_FAILED: Access denied.";

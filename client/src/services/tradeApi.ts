@@ -40,20 +40,18 @@ export async function getTrade () {
     console.log(response.data)
      return response.data
   }catch(err:any){
-   console.log('from getTrade',err)
    throw err
   }
 }
 
 export async function deleteTrade(tradeId:number) {
   try{
-    await axios.delete(`${URL}/api/trade/deletetrade/${tradeId}`,{
+    await axios.delete(`${URL}/api/trades/deletetrade/${tradeId}`,{
       headers:{
         Authorization:`Bearer ${token}`
       }
     })
   }catch(err:any){
-    console.log(err)
     throw err;
   }
 }

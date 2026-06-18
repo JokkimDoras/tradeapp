@@ -14,16 +14,18 @@ const getTrade = async (req, res) => {
         .json({ success: false, message: "Failed to get user Trade Info" });
     return res
       .status(200)
-      .json(
-        { success: true, message: "Fetch the trade table succesfully",data }
-      );
+      .json({
+        success: true,
+        message: "Fetch the trade table succesfully",
+        data,
+      });
   } catch (err) {
-    console.log(err)
+    console.log(err);
     return res.status(400).json({
-        success:false,
-        message:'Faied',
-        err
-    })
+      success: false,
+      message: "Faied",
+      err,
+    });
   }
 };
 
@@ -62,36 +64,77 @@ const addTrade = async (req, res) => {
   }
 };
 
-const deleteTrade = async(req,res) => {
-
+const deleteTrade = async (req, res) => {
   const tradeId = req.params.id;
-  console.log(tradeId)
-  try{
-   const {data,error } = await supabaseAdmin
-    .from('trades')
-    .delete()
-    .eq('id',tradeId)
-console.log(data,": from tradeconroller")
-console.log(error,":from tradecontroller")
-    if(error){
-    return  res.status(400).json({
-        success:false,
-        message:'Cant able to Delete',
-        error
-      })
+  console.log(tradeId);
+  try {
+    const { data, error } = await supabaseAdmin
+      .from("trades")
+      .delete()
+      .eq("id", tradeId);
+
+    if (error) {
+      return res.status(400).json({
+        success: false,
+        message: "Cant able to Delete",
+        error,
+      });
     }
     return res.status(200).json({
-      success:true,
-      message:'Deleted Successfully'
-    })
-  }catch(err){
-
+      success: true,
+      message: "Deleted Successfully",
+    });
+  } catch (err) {
     return res.status(400).json({
-      success:false,
-      message:'Cant able to Delete',
-      err
-    })
+      success: false,
+      message: "Cant able to Delete",
+      err,
+    });
   }
-}
+};
+const updateTrade = async (req, res) => {
+  const tradeID = req.params.id;
+  const updateData = req.body; // This is the payload sent from AddTrade
 
-module.exports = { addTrade,getTrade ,deleteTrade};
+  try {
+    const { data, error } = await supabaseAdmin
+      .from("trades")
+      .update({
+        currency_pair: updateData.currency_pair,
+        trade_type: updateData.trade_type,
+        status: updateData.status,
+        entry_price: updateData.entry_price,
+        exit_price: updateData.exit_price,
+        stop_loss: updateData.stop_loss,
+        take_profit: updateData.take_profit,
+        lot_size: updateData.lot_size,
+        risk_percentage: updateData.risk_percentage,
+        pips: updateData.pips,
+        notes: updateData.notes,
+      })
+      .eq("id", tradeID)
+      .select()
+      .single();
+
+    if (error) {
+      return res.status(400).json({
+        success: false,
+        message: "Failed to update trade record in Supabase",
+        error,
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Terminal Registry Updated Successfully",
+      data,
+    });
+  } catch (err) {
+    return res.status(500).json({
+      success: false,
+      message: "Server error during update routine execution",
+      error: err.message || err,
+    });
+  }
+};
+module.exports = { addTrade, getTrade, deleteTrade,updateTrade };

@@ -17,7 +17,7 @@ export interface TradeFormData {
 const token = getToken();
 
 const URL = import.meta.env.VITE_API_URL
-export async function createTradeApi (formData:TradeFormData,token:string) {
+export async function createTradeApi (formData:TradeFormData) {
     try{
       const response = await axios.post(`${URL}/api/trades/addtrade`,formData,{
         headers:{Authorization:`Bearer ${token}`}
@@ -37,7 +37,6 @@ export async function getTrade () {
         Authorization:`Bearer ${token}`
       }
     })
-    console.log(response.data)
      return response.data
   }catch(err:any){
    throw err
@@ -46,12 +45,28 @@ export async function getTrade () {
 
 export async function deleteTrade(tradeId:number) {
   try{
-    await axios.delete(`${URL}/api/trades/deletetrade/${tradeId}`,{
+    const response = await axios.delete(`${URL}/api/trades/deletetrade/${tradeId}`,{
       headers:{
         Authorization:`Bearer ${token}`
       }
     })
+
+    return response.data
   }catch(err:any){
     throw err;
+  }
+}
+
+export async function modifyTrade(tradeId:number,formData:any){
+  try{
+   const response = await axios.put(`${URL}/api/trades/updatetrade/${tradeId}`,formData,{
+      headers:{
+        Authorization:`Bearer ${token}`
+      }
+    })
+
+    return response.data
+  }catch(err:any){
+    throw err
   }
 }

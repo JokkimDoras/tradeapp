@@ -1,16 +1,23 @@
-import { createContext, useState, type ReactNode,type  Dispatch, type SetStateAction, useEffect } from "react";
-import { createTradeApi } from "../services/tradeApi";
+import {
+  createContext,
+  useState,
+  type ReactNode,
+  type Dispatch,
+  type SetStateAction,
+  useEffect,
+} from "react";
+import { createTradeApi, modifyTrade } from "../services/tradeApi";
 import { deleteTrade, type TradeFormData } from "../services/tradeApi";
 import { getTrade } from "../services/tradeApi";
 
-
 interface TradeContextType {
-  trades: any[]; 
+  trades: any[];
   setTrades: Dispatch<SetStateAction<any[]>>;
-  addTrade: (formData: any, token: string  ) => Promise<void>; 
-  removeTrade:(idToDel:number) =>Promise<void>
+  addTrade: (formData: any) => Promise<void>;
+  removeTrade: (idToDel: number) => Promise<void>;
+  updateTrade: (idToUpdate: number, formData: any) => Promise<void>;
+  loading:boolean;
 }
-
 
 export const TradeContext = createContext<TradeContextType | null>(null);
 
@@ -18,51 +25,65 @@ interface TradeProviderProps {
   children: ReactNode;
 }
 
-
-
-
-
 export default function TradeProvider({ children }: TradeProviderProps) {
   const [trades, setTrades] = useState<any[]>([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchInitialState = async () => {
-      const {data} = await getTrade();
-      setTrades(data)
+      const { data } = await getTrade();
+      setTrades(data);
+    };
+    fetchInitialState();
+  }, []);
+
+  const addTrade = async (formData: TradeFormData) => {
+    try {
+      setLoading(true);
+      const { data } = await createTradeApi(formData);
+      setTrades((prev) => [data, ...prev]);
+      setLoading(false);
+    } catch (err: any) {
+      setLoading(false);
+      console.log("error from tradeContext", err);
+      throw err;
     }
-    fetchInitialState()
+  };
 
-  },[])
+  const removeTrade = async (idToDel: number) => {
+    try {
+      setLoading(true);
 
-   const addTrade = async(formData:TradeFormData,token:string  ) => {
-      try{
-       const {data} = await createTradeApi(formData,token)
-        setTrades((prev) => ([
-          data,
-          ...prev
-        ]))
-      }catch(err:any){
-        console.log('error from tradeContext',err)
-        throw err
+      const response = await deleteTrade(idToDel);
+      if (response.success) {
+        setTrades((prev) => prev.filter((trade) => trade.id !== idToDel));
       }
-  
+      setLoading(false);
+    } catch (err: any) {
+      setLoading(false);
+
+      console.log(err);
+      throw err;
     }
+  };
 
-    const removeTrade = async(idToDel:number) => {
+  const updateTrade = async (idToUpdate:number, formData:any) => {
+    try {
+      setLoading(true);
 
-      try{
-        await deleteTrade(idToDel)
-        const filtered = trades.filter((trade) => trade.id !== idToDel)
-        setTrades(filtered)
-      }catch(err:any){
-        console.log(err)
-        throw err
-      }
-
+      const { data } = await modifyTrade(idToUpdate, formData);
+      setTrades((prev) => prev.map((t) => (t.id === idToUpdate ? data : t)));
+      setLoading(false);
+    } catch (err) {
+      setLoading(false);
+      throw err;
     }
+  };
 
   return (
-    <TradeContext.Provider value={{ trades, setTrades,addTrade,removeTrade }}>
+    <TradeContext.Provider
+      value={{ trades, setTrades, addTrade, removeTrade, updateTrade ,loading}}
+    >
       {children}
     </TradeContext.Provider>
   );

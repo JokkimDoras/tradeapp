@@ -4,6 +4,7 @@ import { useState } from "react";
 import useTrade from "../hooks/useTrade";
 import Navbar from "../component/NavBar";
 import { FiPlus, FiEdit2, FiTrash2 } from "react-icons/fi";
+import { toast } from "sonner";
 
 export default function Dashboard() {
   const { toggleSidebar } = useSidebar();
@@ -17,8 +18,10 @@ export default function Dashboard() {
   const handleDelete = async (idToDel: number) => {
     try {
       await removeTrade(idToDel);
+      toast.success('Deleted Succesfully')
     } catch (err: any) {
       console.log(err);
+      toast.error('Faided To Delete')
       throw err;
     }
   };

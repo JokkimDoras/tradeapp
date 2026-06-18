@@ -6,9 +6,9 @@ import {
   type SetStateAction,
   useEffect,
 } from "react";
-import { createTradeApi, modifyTrade } from "../services/tradeApi";
-import { deleteTrade, type TradeFormData } from "../services/tradeApi";
-import { getTrade } from "../services/tradeApi";
+import { createTradeApi, updateTradeApi } from "../services/tradeApi";
+import { deleteTradeApi, type TradeFormData } from "../services/tradeApi";
+import { getTradeApi } from "../services/tradeApi";
 
 interface TradeContextType {
   trades: any[];
@@ -31,7 +31,7 @@ export default function TradeProvider({ children }: TradeProviderProps) {
 
   useEffect(() => {
     const fetchInitialState = async () => {
-      const { data } = await getTrade();
+      const { data } = await getTradeApi();
       setTrades(data);
     };
     fetchInitialState();
@@ -54,7 +54,7 @@ export default function TradeProvider({ children }: TradeProviderProps) {
     try {
       setLoading(true);
 
-      const response = await deleteTrade(idToDel);
+      const response = await deleteTradeApi(idToDel);
       if (response.success) {
         setTrades((prev) => prev.filter((trade) => trade.id !== idToDel));
       }
@@ -71,7 +71,7 @@ export default function TradeProvider({ children }: TradeProviderProps) {
     try {
       setLoading(true);
 
-      const { data } = await modifyTrade(idToUpdate, formData);
+      const { data } = await updateTradeApi(idToUpdate, formData);
       setTrades((prev) => prev.map((t) => (t.id === idToUpdate ? data : t)));
       setLoading(false);
     } catch (err) {

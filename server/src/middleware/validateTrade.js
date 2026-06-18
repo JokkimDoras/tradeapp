@@ -49,15 +49,10 @@ const validateAddTrade = async (req, res, next) => {
     }
 
     if (status.toLowerCase() === "closed") {
-      if (
-        exit_price === undefined ||
-        exit_price === null ||
-        pips === undefined ||
-        pips === null
-      ) {
+      if (exit_price === undefined || exit_price === null) {
         return res.status(400).json({
           success: false,
-          message: "A closed trade must include exit_price and pips.",
+          message: "A closed trade must include exit_price.",
         });
       }
     }

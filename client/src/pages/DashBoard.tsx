@@ -179,7 +179,7 @@ export default function Dashboard() {
                           <FiEdit2 size={12} />
                         </button>
                         <button
-                          onClick={(e) => {
+                          onClick={() => {
                             handleDelete(trade.id);
                           }}
                           className="w-7 h-7 flex items-center justify-center rounded border border-zinc-800 bg-zinc-950 text-zinc-500 hover:text-rose-400 hover:border-rose-950/60 transition-all active:scale-90"

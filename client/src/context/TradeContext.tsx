@@ -9,6 +9,7 @@ import {
 import { createTradeApi, updateTradeApi } from "../services/tradeApi";
 import { deleteTradeApi, type TradeFormData } from "../services/tradeApi";
 import { getTradeApi } from "../services/tradeApi";
+import { useUser } from "../hooks/useUser";
 
 interface TradeContextType {
   trades: any[];
@@ -28,17 +29,27 @@ interface TradeProviderProps {
 export default function TradeProvider({ children }: TradeProviderProps) {
   const [trades, setTrades] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
+  const { user } = useUser();
 
   useEffect(() => {
     const fetchInitialState = async () => {
-      console.log('effect running')
+      try {
+        setLoading(true);
+        console.log("effect running");
         const { data } = await getTradeApi();
-        console.log(data,'from effect')
+        console.log(data, "from effect");
         setTrades(data);
-        
-      };
-      fetchInitialState();
-  }, []);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (!user) return;
+
+    fetchInitialState();
+  }, [user]);
 
   const addTrade = async (formData: TradeFormData) => {
     try {

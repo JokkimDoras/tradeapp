@@ -20,6 +20,23 @@ export default function HistoryRow({
   const isBuy = trade.trade_type?.toLowerCase() === "buy";
   const isOpen = trade.status?.toLowerCase() === "open";
 
+  // Helper to format the creation time nicely if it exists
+  const formatTime = (dateString: string) => {
+    if (!dateString) return "—";
+    try {
+      const date = new Date(dateString);
+      return date.toLocaleDateString("en-US", {
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false
+      });
+    } catch {
+      return dateString;
+    }
+  };
+
   return (
     <div
       onClick={() => onRowClick(trade.id)}
@@ -27,14 +44,17 @@ export default function HistoryRow({
         isDeleting ? "opacity-35 pointer-events-none select-none" : ""
       }`}
     >
-      {/* Asset / Risk */}
+      {/* Asset / Risk & Created Time */}
       <div className="flex flex-col gap-0.5">
         <span className="font-bold text-white tracking-wide text-base">
           {trade.currency_pair || "—"}
         </span>
-        <span className="text-xs text-zinc-500">
-          Risk: {trade.risk_percentage != null ? `${trade.risk_percentage}%` : "—"}
-        </span>
+        <div className="flex flex-col text-xs text-zinc-500 gap-0.5">
+          <span>Risk: {trade.risk_percentage != null ? `${trade.risk_percentage}%` : "—"}</span>
+          <span className="text-[11px] text-zinc-600">
+            {trade.created_at ? formatTime(trade.created_at) : "—"}
+          </span>
+        </div>
       </div>
 
       {/* Action / Size */}

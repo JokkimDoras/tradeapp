@@ -13,7 +13,7 @@ import Settings from "./pages/Settings.tsx";
 import { AuthProvider } from "./context/AuthContext.tsx";
 import { Toaster } from "sonner";
 import Analytics from "./pages/Analytics.tsx";
-import HistoryDetails from "./pages/HistoryDetails.tsx";
+import TradeDetails from "./pages/TradeDetails.tsx";
 
 
 
@@ -68,7 +68,7 @@ const router = createBrowserRouter([
           },
           {
             path:'/trade/:id',
-            element:<HistoryDetails/>
+            element:<TradeDetails/>
           }
           
         ]

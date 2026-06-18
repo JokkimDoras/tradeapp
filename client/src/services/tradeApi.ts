@@ -30,20 +30,21 @@ export async function createTradeApi (formData:TradeFormData) {
     }
 }
 
-export async function getTrade () {
+export async function getTradeApi () {
   try{
     const response = await axios.get(`${URL}/api/trades/gettrade`,{
       headers:{
         Authorization:`Bearer ${token}`
       }
     })
+    console.log(response.data.data)
      return response.data
   }catch(err:any){
    throw err
   }
 }
 
-export async function deleteTrade(tradeId:number) {
+export async function deleteTradeApi(tradeId:number) {
   try{
     const response = await axios.delete(`${URL}/api/trades/deletetrade/${tradeId}`,{
       headers:{
@@ -57,7 +58,7 @@ export async function deleteTrade(tradeId:number) {
   }
 }
 
-export async function modifyTrade(tradeId:number,formData:any){
+export async function updateTradeApi(tradeId:number,formData:any){
   try{
    const response = await axios.put(`${URL}/api/trades/updatetrade/${tradeId}`,formData,{
       headers:{

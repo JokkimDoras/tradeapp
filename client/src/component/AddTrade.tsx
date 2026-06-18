@@ -10,19 +10,18 @@ type TradeType = "buy" | "sell";
 type TradeStatus = "open" | "closed";
 
 interface AddTradeProps {
-  setIsOpen: (isOpen: boolean | any) => void; 
+  setIsOpen: (isOpen: boolean | any) => void;
   editData?: any;
 }
 
 export default function AddTrade({ setIsOpen, editData }: AddTradeProps) {
   const { toggleSidebar } = useSidebar();
   const [loading, setLoading] = useState(false);
-  
+
   const [searchQuery, setSearchQuery] = useState(editData?.currency_pair || "");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  
-  
-  const { addTrade,updateTrade } = useTrade();
+
+  const { addTrade, updateTrade } = useTrade();
 
   const [formData, setFormData] = useState({
     currency_pair: editData?.currency_pair || "",
@@ -34,7 +33,6 @@ export default function AddTrade({ setIsOpen, editData }: AddTradeProps) {
     take_profit: editData?.take_profit ?? "",
     lot_size: editData?.lot_size ?? "",
     risk_percentage: editData?.risk_percentage ?? "",
-    pips: editData?.pips ?? "",
     notes: editData?.notes || "",
   });
 
@@ -51,7 +49,7 @@ export default function AddTrade({ setIsOpen, editData }: AddTradeProps) {
     setFormData({
       currency_pair: "", trade_type: "buy", status: "open", entry_price: "",
       exit_price: "", stop_loss: "", take_profit: "", lot_size: "",
-      risk_percentage: "", pips: "", notes: ""
+      risk_percentage: "", notes: ""
     });
     setIsOpen(false);
   };
@@ -59,19 +57,32 @@ export default function AddTrade({ setIsOpen, editData }: AddTradeProps) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // 1. Validation guard: Prevent submitting empty assets
-    if (!formData.currency_pair || formData.currency_pair.trim() === "") {
-      return;
+    if(!formData.currency_pair ||
+       !formData.trade_type || 
+       !formData.entry_price || 
+       !formData.lot_size || 
+       !formData.stop_loss || 
+       !formData.take_profit || 
+       !formData.risk_percentage){
+
+        toast.error('All Inputs Must be Filled')
+        return
+
     }
 
-    // 2. Helper function to safely parse values without generating NaN
+    if (formData.status === "closed" && !formData.exit_price) {
+      toast.error("Enter Exit Price.");
+      return; 
+    }
+
+
+
     const safeParseNumeric = (value: any) => {
       if (value === null || value === undefined || String(value).trim() === "") return null;
       const num = parseFloat(String(value));
       return isNaN(num) ? null : num;
     };
 
-    // 3. Assemble the sanitized database payload map
     const payload = {
       ...formData,
       entry_price: safeParseNumeric(formData.entry_price),
@@ -80,25 +91,23 @@ export default function AddTrade({ setIsOpen, editData }: AddTradeProps) {
       take_profit: safeParseNumeric(formData.take_profit),
       lot_size: safeParseNumeric(formData.lot_size),
       risk_percentage: safeParseNumeric(formData.risk_percentage),
-      pips: safeParseNumeric(formData.pips),
+      // pips removed from payload — backend calculates and returns it
     };
 
     try {
       setLoading(true);
 
       if (editData && editData.id) {
-        // ── UPDATE EXISTING TRADE SEQUENCE ──
         if (typeof updateTrade === "function") {
           await updateTrade(editData.id, payload);
-          toast.success('Updated Succesfully')
+          toast.success('Updated Succesfully');
         } else {
           console.warn("updateTrade method not found in hook registry.");
         }
         console.log('Terminal Registry Updated Successfully:', payload);
       } else {
-        // ── COMMIT FRESH NEW POSITION NODE ──
         await addTrade(payload);
-        toast.success('New Trade was Created')
+        toast.success('New Trade was Created');
         console.log('Terminal Registry Ingested Successfully:', payload);
       }
 
@@ -112,7 +121,6 @@ export default function AddTrade({ setIsOpen, editData }: AddTradeProps) {
 
   return (
     <div className="flex flex-col flex-1 min-h-screen bg-black text-zinc-100 font-sans antialiased selection:bg-zinc-800 selection:text-white">
-      {/* ── TOPBAR ── */}
       <header className="h-16 border-b border-zinc-900 flex items-center justify-between px-8 shrink-0 bg-black">
         <div className="flex items-center gap-3">
           <button
@@ -130,25 +138,23 @@ export default function AddTrade({ setIsOpen, editData }: AddTradeProps) {
         </div>
       </header>
 
-      {/* ── MAIN WORKSPACE CONTAINER ── */}
       <div className="w-full flex-1 px-8 py-12 flex flex-col items-center gap-10 overflow-y-auto">
         <div className="flex flex-col gap-2 w-full max-w-5xl text-left">
           <h1 className="text-3xl font-bold text-zinc-50 tracking-tight sm:text-4xl">
             {editData ? "Modify Position Node" : "New Position Node"}
           </h1>
           <p className="text-base text-zinc-400 font-normal">
-            {editData 
-              ? "Update parameters for this specific system configuration data stream node." 
+            {editData
+              ? "Update parameters for this specific system configuration data stream node."
               : "Commit an active or closed ledger sequence to secure vault database analytics."
             }
           </p>
         </div>
 
-        {/* ── TERMINAL FORM GRID ── */}
         <form onSubmit={handleSubmit} className="w-full max-w-5xl border border-zinc-900 rounded-xl bg-zinc-950/40 backdrop-blur-sm overflow-hidden shadow-2xl shadow-black/50">
           <div className="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-r divide-zinc-900">
-            
-            <AssetSelectionPanel 
+
+            <AssetSelectionPanel
               tradeType={formData.trade_type}
               status={formData.status}
               searchQuery={searchQuery}
@@ -166,7 +172,6 @@ export default function AddTrade({ setIsOpen, editData }: AddTradeProps) {
 
           </div>
 
-          {/* LOWER ANALYSIS TEXTAREA CONTAINER */}
           <div className="border-t border-zinc-900 p-6 bg-black/40">
             <div className="flex flex-col gap-2">
               <label className="text-xs font-semibold uppercase tracking-wider font-mono text-zinc-500">
@@ -183,7 +188,6 @@ export default function AddTrade({ setIsOpen, editData }: AddTradeProps) {
             </div>
           </div>
 
-          {/* LOWER TERMINAL METADATA ACTION BAR */}
           <div className="border-t border-zinc-900 px-6 py-4 bg-zinc-950/80 flex items-center justify-between text-xs font-medium text-zinc-500 font-mono">
             <span>Terminal Registry Stream Node</span>
             <div className="flex items-center gap-4">

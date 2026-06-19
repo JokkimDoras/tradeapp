@@ -1,6 +1,7 @@
 import { createContext, useEffect, useState } from "react";
 import { getUser } from "../services/userApi";
 
+
 interface User {
   full_name: string;
   email: string;
@@ -35,18 +36,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     timezone:""
   });
 
- useEffect(() => {
+  
+  useEffect(() => {
     const restoreuser = async() => {
       try{
-       const {data} =  await getUser();
-       setUser(data)
+        const {data} =  await getUser();
+        setUser(data)
       }catch(err){
         console.log(err,'from also authContext useEffect')
         throw err
       }
     }
     restoreuser()
- },[])
+  },[])
+  
+
+
 
   return (
     <AuthContext.Provider

@@ -1,5 +1,5 @@
 import { useSidebar } from "../hooks/useSidebar";
-import AddTrade from "../component/AddTrade";
+import AddTrade from "../component/addtrade/AddTrade";
 import { useState, useMemo } from "react";
 import useTrade from "../hooks/useTrade";
 import Navbar from "../component/NavBar";

@@ -14,6 +14,7 @@ import { AuthProvider } from "./context/AuthContext.tsx";
 import { Toaster } from "sonner";
 import Analytics from "./pages/Analytics.tsx";
 import TradeDetails from "./pages/TradeDetails.tsx";
+import News from "./pages/News.tsx";
 
 
 
@@ -69,6 +70,10 @@ const router = createBrowserRouter([
           {
             path:'/trade/:id',
             element:<TradeDetails/>
+          },
+          {
+            path:'/news',
+            element:<News/>
           }
           
         ]

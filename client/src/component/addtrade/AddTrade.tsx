@@ -5,6 +5,7 @@ import PricingPanel from "./PricingPanel";
 import RiskConfigurationPanel from "./RiskConfigurationPanel";
 import useTrade from "../../hooks/useTrade";
 import { toast } from "sonner";
+import { useUser } from "../../hooks/useUser";
 
 type TradeType = "buy" | "sell";
 type TradeStatus = "open" | "closed";
@@ -17,6 +18,7 @@ interface AddTradeProps {
 export default function AddTrade({ setIsOpen, editData }: AddTradeProps) {
   const { toggleSidebar } = useSidebar();
   const [loading, setLoading] = useState(false);
+  const { user} = useUser()
 
   const [searchQuery, setSearchQuery] = useState(editData?.currency_pair || "");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -31,8 +33,8 @@ export default function AddTrade({ setIsOpen, editData }: AddTradeProps) {
     exit_price: editData?.exit_price ?? "",
     stop_loss: editData?.stop_loss ?? "",
     take_profit: editData?.take_profit ?? "",
-    lot_size: editData?.lot_size ?? "",
-    risk_percentage: editData?.risk_percentage ?? "",
+    lot_size: editData?.lot_size ? editData?.lot_size : user.default_lot_size,
+    risk_percentage: editData?.risk_percentage ? editData?.risk_percentage:user.risk_per_trade,
     notes: editData?.notes || "",
   });
 

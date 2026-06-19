@@ -6,6 +6,7 @@ import Navbar from "../component/NavBar";
 import { FiPlus, FiEdit2, FiTrash2 } from "react-icons/fi";
 import { toast } from "sonner";
 import DashboardSkeleton from "../component/skeltons/DashBoardSkelton";
+import { useNavigate } from "react-router";
 // import DashboardSkeleton from "../component/skeltons/DashBoardSkelton";
 
 export default function Dashboard() {
@@ -15,6 +16,9 @@ export default function Dashboard() {
   const [deleteingId, setDeleleteingId] = useState<null | number>(null);
   
   const { trades, removeTrade } = useTrade();
+
+  const recentTrade = trades.slice(0,5)
+  const navigate = useNavigate();
 
   const handleDelete = async (idToDel: number) => {
     try {
@@ -97,13 +101,14 @@ export default function Dashboard() {
               </div>
 
               <div className="divide-y divide-zinc-900">
-                {trades.map((trade: any, idx: number) => {
+                {recentTrade.map((trade: any, idx: number) => {
                   const isBuy = trade.trade_type?.toLowerCase() === "buy";
                   
                   const isDeleting = deleteingId === trade.id;
 
                   return (
                     <div
+                    onClick={() => navigate(`/trade/${trade.id}`)}
                       key={trade.id || idx}
                       className={`grid grid-cols-7 p-4 items-center hover:bg-zinc-900/50 transition-colors font-mono text-sm ${
                         isDeleting ? "opacity-35 pointer-events-none select-none" : ""

@@ -7,6 +7,7 @@ import {
   FiUser, 
   FiSettings 
 } from "react-icons/fi";
+import { FaRegNewspaper } from "react-icons/fa";
 import { useNavigate } from "react-router";
 import { useSidebar } from "../hooks/useSidebar";
 import { useUser } from "../hooks/useUser";
@@ -21,6 +22,8 @@ const navigation = [
       { id: 3, name: "Analytics", path: "/analytics", icon: <FiBarChart2 size={14} strokeWidth={1.75} /> },
       { id: 4, name: "History", path: "/history", icon: <FiClock size={14} strokeWidth={1.75} /> },
       { id: 5, name: "Strategies", path: "/strategies", icon: <FiLayers size={14} strokeWidth={1.75} /> },
+      { id: 6, name: "News", path: "/news", icon: <FaRegNewspaper size={14} strokeWidth={1.75} /> },
+
     ],
   },
   {

@@ -1,41 +1,6 @@
-const { supabaseAdmin, supabase } = require("../config/supabase");
+const { supabaseAdmin } = require("../config/supabase");
+const { calculatePerformanceMetrics } = require("../services/analyticsService");
 
-  const calculateTradeMetrics = (trade) => {
-    const { entry_price, exit_price, stop_loss, take_profit, trade_type, lot_size, currency_pair } = trade;
-  
-    let pips = null;
-    let profit_loss = null;
-    let risk_reward_ratio = null;
-    let result = null;
-  
-    const isJpyPair = currency_pair?.includes("JPY");
-    const pipMultiplier = isJpyPair ? 100 : 10000;
-  
-    if (entry_price && exit_price) {
-      pips = trade_type === "buy"
-        ? (exit_price - entry_price) * pipMultiplier
-        : (entry_price - exit_price) * pipMultiplier;
-  
-      profit_loss = pips * lot_size * 10;
-  
-      if (profit_loss > 0) result = "win";
-      else if (profit_loss < 0) result = "loss";
-      else result = "breakeven";
-    }
-  
-    if (entry_price && stop_loss && take_profit) {
-      const risk = Math.abs(entry_price - stop_loss);
-      const reward = Math.abs(take_profit - entry_price);
-      risk_reward_ratio = risk > 0 ? reward / risk : null;
-    }
-  
-    return {
-      pips: pips !== null ? parseFloat(pips.toFixed(2)) : null,
-      profit_loss: profit_loss !== null ? parseFloat(profit_loss.toFixed(2)) : null,
-      risk_reward_ratio: risk_reward_ratio !== null ? parseFloat(risk_reward_ratio.toFixed(2)) : null,
-      result,
-    };
-  };
 const getTrade = async (req, res) => {
   const user_id = req.user_id;
 
@@ -183,4 +148,45 @@ const updateTrade = async (req, res) => {
   }
 };
 
-module.exports = { addTrade, getTrade, deleteTrade, updateTrade };
+const getTradingAnalytics = async (req, res) => {
+  const user_id = req.user_id;
+
+  try {
+    const { data: trade, error: tradeError } = await supabaseAdmin
+      .from('trades')
+      .select('*')
+      .eq('user_id', user_id);
+
+    // FIXED: Changed 'if (error || !tradeError)' to look ONLY at tradeError
+    if (tradeError) {
+      return res.status(400).json({
+        success: false,
+        message: 'Trades not Found',
+        tradeError: tradeError.message || tradeError
+      });
+    }
+
+    // Pass the fetched trades into your analytics engine utility
+    const performanceData = calculatePerformanceMetrics(trade || []);
+
+    return res.status(200).json({
+      success: true,
+      message: 'Success',
+      data: performanceData
+    });
+
+  } catch (err) {
+    // This is the catch block where your code was landing because of the reference error
+    return res.status(500).json({
+      success: false,
+      message: 'Failed to fetch Trade',
+      err: err.message || err
+    });
+  }
+};
+
+module.exports = {
+  getTradingAnalytics
+};
+
+module.exports = { addTrade, getTrade, deleteTrade, updateTrade,getTradingAnalytics };

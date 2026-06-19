@@ -7,7 +7,11 @@ vi.mock("../hooks/useSidebar", () => ({
     toggleSidebar: vi.fn(),
   }),
 }));
-
+vi.mock("../hooks/useUser", () => ({
+  useUser: () => ({
+    user: vi.fn(),
+  }),
+}));
 vi.mock("../hooks/useTrade", () => ({
   default: () => ({
     addTrade: vi.fn(),
@@ -18,7 +22,5 @@ vi.mock("../hooks/useTrade", () => ({
 test("renders add trade page", () => {
   render(<AddTrade setIsOpen={() => {}} />);
 
-  expect(
-    screen.getByText(/New Position Node/i)
-  ).toBeTruthy();
+  expect(screen.getByText(/New Position Node/i)).toBeTruthy();
 });

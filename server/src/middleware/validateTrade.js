@@ -232,6 +232,7 @@ const validateStats = async (req, res, next) => {
     // 3. Directly inject your test user UUID so the controller can fetch their trades
 
     //here is the test user id
+    // req.user_id = '.....'
     
     // 4. Proceed straight to the controller
     next();

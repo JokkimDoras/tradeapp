@@ -35,7 +35,6 @@ export default function TradeProvider({ children }: TradeProviderProps) {
     const fetchInitialState = async () => {
       try {
         setLoading(true);
-        console.log("effect running");
         const { data } = await getTradeApi();
         console.log(data, "from effect");
         setTrades(data);

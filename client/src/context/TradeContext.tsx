@@ -48,7 +48,13 @@ export default function TradeProvider({ children }: TradeProviderProps) {
 
     if (!user) return;
 
-    fetchInitialState();
+
+    const timer = setTimeout(() => {
+      fetchInitialState()
+    },1000)
+
+    return () => clearTimeout(timer)
+   
   }, [user]);
 
   const addTrade = async (formData: TradeFormData) => {

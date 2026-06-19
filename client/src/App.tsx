@@ -15,6 +15,7 @@ import { Toaster } from "sonner";
 import Analytics from "./pages/Analytics.tsx";
 import TradeDetails from "./pages/TradeDetails.tsx";
 import News from "./pages/News.tsx";
+import AnalyticsProvider from "./context/AnalyticsContext.tsx";
 
 
 
@@ -87,7 +88,9 @@ export default function App() {
     <>
     <Toaster/>
 <AuthProvider>
+  <AnalyticsProvider>
   <RouterProvider router={router} />
+  </AnalyticsProvider>
 </AuthProvider>
     </>
   );

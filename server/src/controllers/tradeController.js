@@ -1,5 +1,5 @@
 const { supabaseAdmin } = require("../config/supabase");
-const { calculatePerformanceMetrics } = require("../services/analyticsService");
+const { calculatePerformanceMetrics,calculateTradeMetrics } = require("../services/analyticsService");
 
 const getTrade = async (req, res) => {
   const user_id = req.user_id;

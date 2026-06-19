@@ -7,7 +7,6 @@ import { FiPlus, FiEdit2, FiTrash2 } from "react-icons/fi";
 import { toast } from "sonner";
 import DashboardSkeleton from "../component/skeltons/DashBoardSkelton";
 import { useNavigate } from "react-router";
-// import DashboardSkeleton from "../component/skeltons/DashBoardSkelton";
 
 export default function Dashboard() {
   const { toggleSidebar } = useSidebar();
@@ -16,6 +15,9 @@ export default function Dashboard() {
   const [deleteingId, setDeleleteingId] = useState<null | number>(null);
   
   const { trades, removeTrade } = useTrade();
+
+
+
 
   const recentTrade = trades.slice(0,5)
   const navigate = useNavigate();

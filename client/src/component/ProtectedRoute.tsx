@@ -5,7 +5,7 @@ export default function ProtectedRoute() {
   const userToken = localStorage.getItem("token");
   const { user } = useUser()
 
-  if (!user || userToken) {
+  if (!user || !userToken) {
     return <Navigate to="/login" replace />;
   }
 

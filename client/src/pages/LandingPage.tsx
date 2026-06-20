@@ -32,7 +32,6 @@ export default function TradeVaultLanding() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (emailInput.trim()) localStorage.setItem("email", emailInput.trim());
     navigate('/login');
   };
 

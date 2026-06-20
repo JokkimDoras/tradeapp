@@ -63,6 +63,8 @@ export default function Analytics() {
     getAnalyticsData();
   }, []);
 
+  console.log(analyticsData)
+
   if (loading) return <AnalyticsSkeleton />;
 
   const summary = (analyticsData?.summary || {}) as AnalyticsSummary;

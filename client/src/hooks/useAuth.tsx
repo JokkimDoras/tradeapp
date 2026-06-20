@@ -21,7 +21,6 @@ export default function useAuth() {
         ...prev,
         ...payload.user
       }));
-      localStorage.setItem("token", payload.access_token);
 
       navigate("/dashboard");
     } catch (err: any) {

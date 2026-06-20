@@ -1,7 +1,6 @@
 import { createContext, useEffect, useState } from "react";
 import { getUser } from "../services/userApi";
 
-
 interface User {
   full_name: string;
   email: string;
@@ -35,6 +34,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     trading_experience: "",
     timezone:""
   });
+
 
   
   useEffect(() => {

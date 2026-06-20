@@ -16,15 +16,22 @@ interface AddTradeProps {
 }
 
 export default function AddTrade({ setIsOpen, editData }: AddTradeProps) {
-  const { toggleSidebar } = useSidebar();
   const [loading, setLoading] = useState(false);
-  const { user } = useUser();
-
   const [searchQuery, setSearchQuery] = useState(editData?.currency_pair || "");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  
+  const { toggleSidebar } = useSidebar();
+  const { user } = useUser();
 
-  const { addTrade, updateTrade, setPreviews, setImages, images, previews } =
-    useTrade();
+  const {
+    addTrade,
+    updateTrade,
+    setPreviews,
+    setImages,
+    images,
+    previews,
+    addScreenshot,
+  } = useTrade();
 
   const [formData, setFormData] = useState({
     currency_pair: editData?.currency_pair || "",
@@ -94,19 +101,23 @@ export default function AddTrade({ setIsOpen, editData }: AddTradeProps) {
     e.target.value = "";
   };
 
-  const handleDeleteLocalImage = (idToDel:number) => {
-    const filtered = images.filter((_,i) => {
-      return i !== idToDel
-    })
-    const deletePreview = previews.filter((_,i) => i !== idToDel)
+  const handleDeleteLocalImage = (idToDel: number) => {
+    const filtered = images.filter((_, i) => {
+      return i !== idToDel;
+    });
+    const deletePreview = previews.filter((_, i) => i !== idToDel);
 
+    setImages(filtered);
+    setPreviews(deletePreview);
+  };
 
-    setImages(filtered)
-    setPreviews(deletePreview)
-
-
-
-  }
+  const submitImage = async (id: number,imageData:FormData) => {
+    try {
+      await addScreenshot(id,imageData);
+    } catch (err: any) {
+      console.error(err?.message || err);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -162,9 +173,17 @@ export default function AddTrade({ setIsOpen, editData }: AddTradeProps) {
         }
         console.log("Terminal Registry Updated Successfully:", payload);
       } else {
-        await addTrade(payload);
-        toast.success("New Trade was Created");
-        console.log("Terminal Registry Ingested Successfully:", payload);
+        // if the editData or editData.id is not true it will run the addTrade
+        const trade: any = await addTrade(payload);
+        if(images.length === 0) return toast.success("New Trade was Created");
+
+        return;
+        const imageData = new FormData();
+
+        images.forEach((image) => {
+          imageData.append('screenshots',image)
+        })
+       await submitImage(trade.id,imageData);
       }
 
       handleCancel();
@@ -236,7 +255,12 @@ export default function AddTrade({ setIsOpen, editData }: AddTradeProps) {
             />
             {previews?.map((img, index) => (
               <div key={index}>
-                <div className="relative left-29 top-3 text-red-500  w-4 h-4" onClick={() => handleDeleteLocalImage(index)}>x</div>
+                <div
+                  className="relative left-29 top-3 text-red-500  w-4 h-4"
+                  onClick={() => handleDeleteLocalImage(index)}
+                >
+                  x
+                </div>
                 <img
                   src={img}
                   alt={`preview-${index}`}

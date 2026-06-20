@@ -6,7 +6,7 @@ import {
   type SetStateAction,
   useEffect,
 } from "react";
-import { createTradeApi, updateTradeApi } from "../services/tradeApi";
+import { createScreenshotApi, createTradeApi, updateTradeApi } from "../services/tradeApi";
 import { deleteTradeApi, type TradeFormData } from "../services/tradeApi";
 import { getTradeApi } from "../services/tradeApi";
 import { useUser } from "../hooks/useUser";
@@ -22,6 +22,7 @@ interface TradeContextType {
   setImages: Dispatch<SetStateAction<any[]>>;
   previews: any[];
   setPreviews: Dispatch<SetStateAction<any[]>>;
+  addScreenshot:(id:number,imageData:any) => Promise<void>;
 }
 
 export const TradeContext = createContext<TradeContextType | null>(null);
@@ -65,14 +66,22 @@ export default function TradeProvider({ children }: TradeProviderProps) {
       setLoading(true);
       const { data } = await createTradeApi(formData);
       setTrades((prev) => [data, ...prev]);
-      setLoading(false);
+      setLoading(false)
+      return data;
     } catch (err: any) {
       setLoading(false);
       console.log("error from tradeContext", err);
       throw err;
     }
   };
-
+const addScreenshot = async (id:number,imageData:any) => {
+  try{
+     await createScreenshotApi(id,imageData)
+  }catch(err:any){
+    console.error(err?.message || 'Failed in addScreenshot in tradeContext')
+    throw err
+  }
+}
   const removeTrade = async (idToDel: number) => {
     try {
       setLoading(true);
@@ -116,6 +125,7 @@ export default function TradeProvider({ children }: TradeProviderProps) {
         setImages,
         previews,
         setPreviews,
+        addScreenshot
       }}
     >
       {children}

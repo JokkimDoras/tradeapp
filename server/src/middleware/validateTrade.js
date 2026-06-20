@@ -210,12 +210,10 @@ const validateUpdateTrade = async (req, res, next) => {
 };
 
 const validateStats = async (req, res, next) => {
-  // 1. Commented out the token extraction lines so Postman doesn't crash on missing headers
-  // const authHeader = req.headers.authorization;
-  // const token = authHeader.split(" ")[1];
+  const authHeader = req.headers.authorization;
+  const token = authHeader.split(" ")[1];
 
   try {
-    /* // 2. Commented out the Supabase authentication call during your testing phase
     const {
       data: { user },
       error: authError,
@@ -227,12 +225,12 @@ const validateStats = async (req, res, next) => {
         authError,
       });
     }
-    */
+  
 
     // 3. Directly inject your test user UUID so the controller can fetch their trades
 
     //here is the test user id
-    // req.user_id = '.....'
+    req.user_id = user.id
     
     // 4. Proceed straight to the controller
     next();

@@ -6,27 +6,27 @@ import AnalyticsSkeleton from "../component/skeltons/AnalyticsSkelton";
 import MetricCardGrid from "../component/analytics/MetricCardGrid";
 import PerformanceCharts from "../component/analytics/PerformanceCharts";
 import RiskAnalysisMatrix from "../component/analytics/RiskAnalysisMatrix";
-
+import type { Summary } from "../types/analytics.types";
 
 import { FiActivity, FiArrowUpRight, FiArrowDownRight } from "react-icons/fi";
 
-interface AnalyticsSummary {
-  total_trades: number;
-  closed_trades_count: number;
-  open_trades: number;
-  net_profit_loss: number;
-  overall_wins: number;
-  overall_losses: number;
-  profit_factor: string;
-  win_rate: string;
-  average_win: string;
-  average_loss: string;
-  best_trade: number;
-  worst_trade: number;
-  max_drawdown: number;
-  max_win_streak: number;
-  max_loss_streak: number;
-}
+// interface AnalyticsSummary {
+//   total_trades: number;
+//   closed_trades_count: number;
+//   open_trades: number;
+//   net_profit_loss: number;
+//   overall_wins: number;
+//   overall_losses: number;
+//   profit_factor: string;
+//   win_rate: string;
+//   average_win: string;
+//   average_loss: string;
+//   best_trade: number;
+//   worst_trade: number;
+//   max_drawdown: number;
+//   max_win_streak: number;
+//   max_loss_streak: number;
+// }
 
 const formatCurrency = (val: number | string) => {
   const num = Number(val || 0);
@@ -63,11 +63,10 @@ export default function Analytics() {
     getAnalyticsData();
   }, []);
 
-  console.log(analyticsData)
 
   if (loading) return <AnalyticsSkeleton />;
 
-  const summary = (analyticsData?.summary || {}) as AnalyticsSummary;
+  const summary = (analyticsData?.summary || {}) as Summary;
   const timelineData = analyticsData?.chart_data || [];
 
   return (

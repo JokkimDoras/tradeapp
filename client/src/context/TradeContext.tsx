@@ -18,6 +18,10 @@ interface TradeContextType {
   removeTrade: (idToDel: number) => Promise<void>;
   updateTrade: (idToUpdate: number, formData: any) => Promise<void>;
   loading: boolean;
+  images: any[];
+  setImages: Dispatch<SetStateAction<any[]>>;
+  previews: any[];
+  setPreviews: Dispatch<SetStateAction<any[]>>;
 }
 
 export const TradeContext = createContext<TradeContextType | null>(null);
@@ -29,6 +33,8 @@ interface TradeProviderProps {
 export default function TradeProvider({ children }: TradeProviderProps) {
   const [trades, setTrades] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
+  const [images, setImages] = useState<any[]>([]);
+  const [previews, setPreviews] = useState<any[]>([]);
   const { user } = useUser();
 
   useEffect(() => {
@@ -47,13 +53,11 @@ export default function TradeProvider({ children }: TradeProviderProps) {
 
     if (!user) return;
 
-
     const timer = setTimeout(() => {
-      fetchInitialState()
-    },1000)
+      fetchInitialState();
+    }, 1000);
 
-    return () => clearTimeout(timer)
-   
+    return () => clearTimeout(timer);
   }, [user]);
 
   const addTrade = async (formData: TradeFormData) => {
@@ -101,7 +105,18 @@ export default function TradeProvider({ children }: TradeProviderProps) {
 
   return (
     <TradeContext.Provider
-      value={{ trades, setTrades, addTrade, removeTrade, updateTrade, loading }}
+      value={{
+        trades,
+        setTrades,
+        addTrade,
+        removeTrade,
+        updateTrade,
+        loading,
+        images,
+        setImages,
+        previews,
+        setPreviews,
+      }}
     >
       {children}
     </TradeContext.Provider>

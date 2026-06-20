@@ -18,69 +18,120 @@ interface AddTradeProps {
 export default function AddTrade({ setIsOpen, editData }: AddTradeProps) {
   const { toggleSidebar } = useSidebar();
   const [loading, setLoading] = useState(false);
-  const { user} = useUser()
+  const { user } = useUser();
 
   const [searchQuery, setSearchQuery] = useState(editData?.currency_pair || "");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
-  const { addTrade, updateTrade } = useTrade();
+  const { addTrade, updateTrade, setPreviews, setImages, images, previews } =
+    useTrade();
 
   const [formData, setFormData] = useState({
     currency_pair: editData?.currency_pair || "",
-    trade_type: (editData?.trade_type?.toLowerCase() as TradeType) || ("buy" as TradeType),
-    status: (editData?.status?.toLowerCase() as TradeStatus) || ("open" as TradeStatus),
+    trade_type:
+      (editData?.trade_type?.toLowerCase() as TradeType) ||
+      ("buy" as TradeType),
+    status:
+      (editData?.status?.toLowerCase() as TradeStatus) ||
+      ("open" as TradeStatus),
     entry_price: editData?.entry_price ?? "",
     exit_price: editData?.exit_price ?? "",
     stop_loss: editData?.stop_loss ?? "",
     take_profit: editData?.take_profit ?? "",
     lot_size: editData?.lot_size ? editData?.lot_size : user.default_lot_size,
-    risk_percentage: editData?.risk_percentage ? editData?.risk_percentage:user.risk_per_trade,
+    risk_percentage: editData?.risk_percentage
+      ? editData?.risk_percentage
+      : user.risk_per_trade,
     notes: editData?.notes || "",
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const setType = (type: TradeType) => setFormData((p) => ({ ...p, trade_type: type }));
-  const setStatus = (status: TradeStatus) => setFormData((p) => ({ ...p, status }));
+  const setType = (type: TradeType) =>
+    setFormData((p) => ({ ...p, trade_type: type }));
+  const setStatus = (status: TradeStatus) =>
+    setFormData((p) => ({ ...p, status }));
 
   const handleCancel = () => {
     setSearchQuery("");
     setFormData({
-      currency_pair: "", trade_type: "buy", status: "open", entry_price: "",
-      exit_price: "", stop_loss: "", take_profit: "", lot_size: "",
-      risk_percentage: "", notes: ""
+      currency_pair: "",
+      trade_type: "buy",
+      status: "open",
+      entry_price: "",
+      exit_price: "",
+      stop_loss: "",
+      take_profit: "",
+      lot_size: "",
+      risk_percentage: "",
+      notes: "",
     });
     setIsOpen(false);
   };
 
+  const handleImage = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (images.length >= 3) {
+      toast.error("Max images reached");
+      return;
+    }
+
+    const file = e.target.files?.[0];
+
+    if (!file || (file.type !== "image/png" && "image/jpeg"))
+      return toast.error("Invaild file fotmat");
+
+    setImages((prev) => [...prev, file]);
+
+    const previewUrl = URL.createObjectURL(file);
+
+    setPreviews((prev) => [...prev, previewUrl]);
+
+    e.target.value = "";
+  };
+
+  const handleDeleteLocalImage = (idToDel:number) => {
+    const filtered = images.filter((_,i) => {
+      return i !== idToDel
+    })
+    const deletePreview = previews.filter((_,i) => i !== idToDel)
+
+
+    setImages(filtered)
+    setPreviews(deletePreview)
+
+
+
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if(!formData.currency_pair ||
-       !formData.trade_type || 
-       !formData.entry_price || 
-       !formData.lot_size || 
-       !formData.stop_loss || 
-       !formData.take_profit || 
-       !formData.risk_percentage){
-
-        toast.error('All Inputs Must be Filled')
-        return
-
+    if (
+      !formData.currency_pair ||
+      !formData.trade_type ||
+      !formData.entry_price ||
+      !formData.lot_size ||
+      !formData.stop_loss ||
+      !formData.take_profit ||
+      !formData.risk_percentage
+    ) {
+      toast.error("All Inputs Must be Filled");
+      return;
     }
 
     if (formData.status === "closed" && !formData.exit_price) {
       toast.error("Enter Exit Price.");
-      return; 
+      return;
     }
 
-
-
     const safeParseNumeric = (value: any) => {
-      if (value === null || value === undefined || String(value).trim() === "") return null;
+      if (value === null || value === undefined || String(value).trim() === "")
+        return null;
       const num = parseFloat(String(value));
       return isNaN(num) ? null : num;
     };
@@ -88,7 +139,10 @@ export default function AddTrade({ setIsOpen, editData }: AddTradeProps) {
     const payload = {
       ...formData,
       entry_price: safeParseNumeric(formData.entry_price),
-      exit_price: formData.status === "closed" ? safeParseNumeric(formData.exit_price) : null,
+      exit_price:
+        formData.status === "closed"
+          ? safeParseNumeric(formData.exit_price)
+          : null,
       stop_loss: safeParseNumeric(formData.stop_loss),
       take_profit: safeParseNumeric(formData.take_profit),
       lot_size: safeParseNumeric(formData.lot_size),
@@ -102,15 +156,15 @@ export default function AddTrade({ setIsOpen, editData }: AddTradeProps) {
       if (editData && editData.id) {
         if (typeof updateTrade === "function") {
           await updateTrade(editData.id, payload);
-          toast.success('Updated Succesfully');
+          toast.success("Updated Succesfully");
         } else {
           console.warn("updateTrade method not found in hook registry.");
         }
-        console.log('Terminal Registry Updated Successfully:', payload);
+        console.log("Terminal Registry Updated Successfully:", payload);
       } else {
         await addTrade(payload);
-        toast.success('New Trade was Created');
-        console.log('Terminal Registry Ingested Successfully:', payload);
+        toast.success("New Trade was Created");
+        console.log("Terminal Registry Ingested Successfully:", payload);
       }
 
       handleCancel();
@@ -131,7 +185,12 @@ export default function AddTrade({ setIsOpen, editData }: AddTradeProps) {
             className="w-9 h-9 flex items-center justify-center rounded-md border border-zinc-800 hover:border-zinc-700 hover:bg-zinc-900 text-zinc-400 hover:text-zinc-100 transition-all cursor-pointer"
           >
             <svg width="16" height="16" viewBox="0 0 15 15" fill="none">
-              <path d="M2 4.5h11M2 7.5h11M2 10.5h11" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
+              <path
+                d="M2 4.5h11M2 7.5h11M2 10.5h11"
+                stroke="currentColor"
+                strokeWidth="1.2"
+                strokeLinecap="round"
+              />
             </svg>
           </button>
           <div className="flex items-center gap-2 text-base font-medium tracking-tight text-zinc-400">
@@ -148,14 +207,15 @@ export default function AddTrade({ setIsOpen, editData }: AddTradeProps) {
           <p className="text-base text-zinc-400 font-normal">
             {editData
               ? "Update parameters for this specific system configuration data stream node."
-              : "Commit an active or closed ledger sequence to secure vault database analytics."
-            }
+              : "Commit an active or closed ledger sequence to secure vault database analytics."}
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="w-full max-w-5xl border border-zinc-900 rounded-xl bg-zinc-950/40 backdrop-blur-sm overflow-hidden shadow-2xl shadow-black/50">
+        <form
+          onSubmit={handleSubmit}
+          className="w-full max-w-5xl border border-zinc-900 rounded-xl bg-zinc-950/40 backdrop-blur-sm overflow-hidden shadow-2xl shadow-black/50"
+        >
           <div className="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-r divide-zinc-900">
-
             <AssetSelectionPanel
               tradeType={formData.trade_type}
               status={formData.status}
@@ -170,8 +230,21 @@ export default function AddTrade({ setIsOpen, editData }: AddTradeProps) {
 
             <PricingPanel formData={formData} handleChange={handleChange} />
 
-            <RiskConfigurationPanel formData={formData} handleChange={handleChange} />
-
+            <RiskConfigurationPanel
+              formData={formData}
+              handleChange={handleChange}
+            />
+            {previews?.map((img, index) => (
+              <div key={index}>
+                <div className="relative left-29 top-3 text-red-500  w-4 h-4" onClick={() => handleDeleteLocalImage(index)}>x</div>
+                <img
+                  src={img}
+                  alt={`preview-${index}`}
+                  className="w-32 h-32 object-cover"
+                />
+              </div>
+            ))}
+            <input type="file" onChange={(e) => handleImage(e)} />
           </div>
 
           <div className="border-t border-zinc-900 p-6 bg-black/40">
@@ -189,15 +262,26 @@ export default function AddTrade({ setIsOpen, editData }: AddTradeProps) {
               />
             </div>
           </div>
-
           <div className="border-t border-zinc-900 px-6 py-4 bg-zinc-950/80 flex items-center justify-between text-xs font-medium text-zinc-500 font-mono">
             <span>Terminal Registry Stream Node</span>
             <div className="flex items-center gap-4">
-              <button type="button" onClick={handleCancel} className="hover:text-zinc-300 transition-colors text-red-500 cursor-pointer">
+              <button
+                type="button"
+                onClick={handleCancel}
+                className="hover:text-zinc-300 transition-colors text-red-500 cursor-pointer"
+              >
                 Cancel
               </button>
-              <button type="submit" disabled={loading} className="bg-zinc-50 text-black hover:bg-zinc-200 disabled:bg-zinc-800 disabled:text-zinc-600 font-sans font-bold text-xs px-4 py-2 rounded-md transition-colors cursor-pointer">
-                {loading ? "Vaulting Core..." : editData ? "Save Changes" : "Commit"}
+              <button
+                type="submit"
+                disabled={loading}
+                className="bg-zinc-50 text-black hover:bg-zinc-200 disabled:bg-zinc-800 disabled:text-zinc-600 font-sans font-bold text-xs px-4 py-2 rounded-md transition-colors cursor-pointer"
+              >
+                {loading
+                  ? "Vaulting Core..."
+                  : editData
+                  ? "Save Changes"
+                  : "Commit"}
               </button>
             </div>
           </div>

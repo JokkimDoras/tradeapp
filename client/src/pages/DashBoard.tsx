@@ -15,12 +15,11 @@ export default function Dashboard() {
   const [deleteingId, setDeleleteingId] = useState<null | number>(null);
   
   const { trades, removeTrade } = useTrade();
-
-
+  
+   const navigate = useNavigate();
 
 
   const recentTrade = trades.slice(0,5)
-  const navigate = useNavigate();
 
   const handleDelete = async (idToDel: number) => {
     try {

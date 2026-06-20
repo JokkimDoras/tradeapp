@@ -18,6 +18,7 @@ const token = getToken();
 
 const URL = import.meta.env.VITE_API_URL
 export async function createTradeApi (formData:TradeFormData) {
+  console.log(token)
     try{
       const response = await axios.post(`${URL}/api/trades/addtrade`,formData,{
         headers:{Authorization:`Bearer ${token}`}

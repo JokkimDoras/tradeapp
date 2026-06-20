@@ -1,46 +1,12 @@
 import { createContext, useState } from "react";
 import { getAnalyticsDataApi } from "../services/analyticsApi";
-interface Summary {
-  total_trades: number;
-  closed_trades_count: number;
-  open_trades: number;
-  net_profit_loss: number;
-  overall_wins: number;
-  overall_losses: number;
-  profit_factor: string;
-  win_rate: string;
-  average_win: string;
-  average_loss: string;
-  best_trade: number;
-  worst_trade: number;
-  max_drawdown: number;
-  max_win_streak: number;
-  max_loss_streak: number;
-}
-
-interface ChartData {
-  date: string;
-  daily_pnl: number;
-  equity_curve: number;
-}
-
-interface AnalyticsDataType {
-  summary: Summary;
-  chart_data: ChartData[];
-}
-
-interface AnalyticsContextType {
-  analyticsData: AnalyticsDataType | null;
-  loading: boolean;
-  error: string | null;
-  getAnalyticsData: () => Promise<void>;
-}
+import type { AnalyticsDataType,AnalyticsContextType } from "../types/analytics.types";
 
 export const AnalyticsContext = createContext<AnalyticsContextType | null>(
   null
 );
 
-export default function AnalyticsProvider({ children }:{ children: React.ReactNode }) {
+export default function AnalyticsProvider({ children }: { children: React.ReactNode }) {
   const [analyticsData, setAnalyticsData] = useState<AnalyticsDataType | null>(
     null
   );

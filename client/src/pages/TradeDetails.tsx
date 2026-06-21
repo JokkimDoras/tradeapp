@@ -1,18 +1,25 @@
 import { useParams, useNavigate } from "react-router";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import useTrade from "../hooks/useTrade";
 import { useSidebar } from "../hooks/useSidebar";
 import Navbar from "../component/NavBar";
 import StatCard from "../component/tradeDetails/StatCard"; // Import here
 import DataRow from "../component/tradeDetails/DataRow";   // Import here
 import { FiArrowLeft, FiClock, FiActivity, FiLayers, FiShield } from "react-icons/fi";
+import useScreenshot from "../hooks/useScreenshot";
 
 export default function TradeDetails() {
-  const { id } = useParams();
+  const { id = '' } = useParams();
   const navigate = useNavigate();
   const { toggleSidebar } = useSidebar();
   const { trades } = useTrade();
+  const { fetchScreenshots } = useScreenshot();
 
+  useEffect(() => {
+     
+    fetchScreenshots(id)
+
+  },[])
   const trade = useMemo(() => {
     return trades.find((t: any) => String(t.id) === String(id));
   }, [trades, id]);

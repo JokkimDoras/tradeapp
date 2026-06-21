@@ -20,8 +20,8 @@ export default function AddTrade({ setIsOpen, editData }: AddTradeProps) {
   const [loading, setLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState(editData?.currency_pair || "");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-    const [images, setImages] = useState<any[]>([]);
-    const [previews, setPreviews] = useState<any[]>([]);
+  const [images, setImages] = useState<any[]>([]);
+  const [previews, setPreviews] = useState<any[]>([]);
   
   const { toggleSidebar } = useSidebar();
   const { user } = useUser();

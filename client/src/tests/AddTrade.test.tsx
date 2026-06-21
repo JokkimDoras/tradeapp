@@ -7,17 +7,20 @@ vi.mock("../hooks/useSidebar", () => ({
     toggleSidebar: vi.fn(),
   }),
 }));
+
 vi.mock("../hooks/useUser", () => ({
   useUser: () => ({
     user: vi.fn(),
   }),
 }));
+
 vi.mock("../hooks/useTrade", () => ({
   default: () => ({
     addTrade: vi.fn(),
     updateTrade: vi.fn(),
   }),
 }));
+
 vi.mock("../hooks/useScreenshot", () => ({
   default: () => ({
     uploadScreenshots: vi.fn(),

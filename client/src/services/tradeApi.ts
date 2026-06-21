@@ -18,7 +18,6 @@ const token = getToken();
 
 const URL = import.meta.env.VITE_API_URL
 export async function createTradeApi (formData:TradeFormData) {
-  console.log(token)
     try{
       const response = await axios.post(`${URL}/api/trades/addtrade`,formData,{
         headers:{Authorization:`Bearer ${token}`}
@@ -29,13 +28,14 @@ export async function createTradeApi (formData:TradeFormData) {
        throw err;
     }
 }
-
+ 
 
 export async function getTradeApi () {
+  const tokenToFix = getToken();
   try{
     const response = await axios.get(`${URL}/api/trades/gettrade`,{
       headers:{
-        Authorization:`Bearer ${token}`
+        Authorization:`Bearer ${tokenToFix}`
       }
     })
     console.log(response.data.data)

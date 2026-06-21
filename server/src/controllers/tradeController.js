@@ -1,5 +1,8 @@
 const { supabaseAdmin } = require("../config/supabase");
-const { calculatePerformanceMetrics,calculateTradeMetrics } = require("../services/analyticsService");
+const {
+  calculatePerformanceMetrics,
+  calculateTradeMetrics,
+} = require("../services/analyticsService");
 
 const getTrade = async (req, res) => {
   const user_id = req.user_id;
@@ -13,13 +16,11 @@ const getTrade = async (req, res) => {
       return res
         .status(400)
         .json({ success: false, message: "Failed to get user Trade Info" });
-    return res
-      .status(200)
-      .json({
-        success: true,
-        message: "Fetch the trade table succesfully",
-        data,
-      });
+    return res.status(200).json({
+      success: true,
+      message: "Fetch the trade table succesfully",
+      data,
+    });
   } catch (err) {
     console.log(err);
     return res.status(400).json({
@@ -40,7 +41,7 @@ const addTrade = async (req, res) => {
     ...metrics,
   };
   console.log("METRICS CALCULATED:", metrics);
-console.log("RAW BODY RECEIVED:", req.body);
+  console.log("RAW BODY RECEIVED:", req.body);
 
   try {
     const { data, error } = await supabaseAdmin
@@ -66,6 +67,91 @@ console.log("RAW BODY RECEIVED:", req.body);
     return res.status(400).json({
       success: false,
       message: "Internal server Error",
+    });
+  }
+};
+
+const { createClient } = require('@supabase/supabase-js');
+
+const supabase = createClient(
+  process.env.SUPABASE_URL, 
+  process.env.SUPABASE_ANON_KEY
+);
+
+const addScreenshot = async (req, res) => {
+  try {
+    const tradeId = req.tradeId; 
+    const userId = req.user.id;  
+    const files = req.files;
+
+    if (!files || files.length === 0) {
+      return res.status(200).json({
+        success: true,
+        message: "Trade processed successfully (No screenshots attached)",
+        data: []
+      });
+    }
+
+    const uploadResults = [];
+
+    for (const file of files) {
+      const fileExtension = file.mimetype.split('/')[1];
+      const uniqueFileName = `${Date.now()}-${Math.random().toString(36).substring(2, 7)}.${fileExtension}`;
+      const filePath = `${userId}/${tradeId}/${uniqueFileName}`;
+
+      const { data: storageData, error: storageError } = await supabaseAdmin.storage
+        .from('trade-screenshots') 
+        .upload(filePath, file.buffer, {
+          contentType: file.mimetype,
+          upsert: false
+        });
+
+      if (storageError) {
+        throw new Error(`Storage Error: ${storageError.message}`);
+      }
+
+      const { data: urlData } = supabaseAdmin.storage
+        .from('trade-screenshots')
+        .getPublicUrl(filePath);
+
+      const publicUrl = urlData.publicUrl;
+
+      const { data: dbData, error: dbError } = await supabase
+        .from('trade_screenshots')
+        .insert([
+          {
+            trade_id: tradeId,
+            user_id: userId,
+            file_path: storageData.path,     
+            file_name: file.originalname,   
+            file_size: file.size,
+          }
+        ])
+        .select();
+
+      if (dbError) {
+        await supabase.storage.from('trade-screenshots').remove([filePath]);
+        throw new Error(`Database Error: ${dbError.message}`);
+      }
+
+      const finalResult = {
+        ...dbData[0],
+        public_url: publicUrl
+      };
+
+      uploadResults.push(finalResult);
+    }
+
+    return res.status(201).json({
+      success: true,
+      message: "Screenshots uploaded and recorded successfully",
+      data: uploadResults
+    });
+
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message || "An unexpected error occurred in the controller"
     });
   }
 };
@@ -153,40 +239,43 @@ const getTradingAnalytics = async (req, res) => {
 
   try {
     const { data: trade, error: tradeError } = await supabaseAdmin
-      .from('trades')
-      .select('*')
-      .eq('user_id', user_id);
+      .from("trades")
+      .select("*")
+      .eq("user_id", user_id);
 
-    // FIXED: Changed 'if (error || !tradeError)' to look ONLY at tradeError
     if (tradeError) {
       return res.status(400).json({
         success: false,
-        message: 'Trades not Found',
-        tradeError: tradeError.message || tradeError
+        message: "Trades not Found",
+        tradeError: tradeError.message || tradeError,
       });
     }
 
-    // Pass the fetched trades into your analytics engine utility
     const performanceData = calculatePerformanceMetrics(trade || []);
 
     return res.status(200).json({
       success: true,
-      message: 'Success',
-      data: performanceData
+      message: "Success",
+      data: performanceData,
     });
-
   } catch (err) {
-    // This is the catch block where your code was landing because of the reference error
     return res.status(500).json({
       success: false,
-      message: 'Failed to fetch Trade',
-      err: err.message || err
+      message: "Failed to fetch Trade",
+      err: err.message || err,
     });
   }
 };
 
 module.exports = {
-  getTradingAnalytics
+  getTradingAnalytics,
 };
 
-module.exports = { addTrade, getTrade, deleteTrade, updateTrade,getTradingAnalytics };
+module.exports = {
+  addTrade,
+  getTrade,
+  deleteTrade,
+  updateTrade,
+  getTradingAnalytics,
+  addScreenshot
+};

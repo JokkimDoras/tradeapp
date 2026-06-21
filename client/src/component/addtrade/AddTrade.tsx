@@ -79,6 +79,8 @@ export default function AddTrade({ setIsOpen, editData }: AddTradeProps) {
       notes: "",
     });
     setIsOpen(false);
+    setPreviews([])
+    setImages([])
   };
 
   const handleImage = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -175,9 +177,11 @@ export default function AddTrade({ setIsOpen, editData }: AddTradeProps) {
       } else {
         // if the editData or editData.id is not true it will run the addTrade
         const trade: any = await addTrade(payload);
-        if(images.length === 0) return toast.success("New Trade was Created");
+        if(images.length === 0) {
+          toast.success("New Trade was Created");
+          handleCancel()  
+        } 
 
-        return;
         const imageData = new FormData();
 
         images.forEach((image) => {

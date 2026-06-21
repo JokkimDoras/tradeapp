@@ -6,7 +6,7 @@ import {
   type SetStateAction,
   useEffect,
 } from "react";
-import { createScreenshotApi, createTradeApi, updateTradeApi } from "../services/tradeApi";
+import {  createTradeApi, updateTradeApi } from "../services/tradeApi";
 import { deleteTradeApi, type TradeFormData } from "../services/tradeApi";
 import { getTradeApi } from "../services/tradeApi";
 import { useUser } from "../hooks/useUser";
@@ -24,11 +24,6 @@ interface TradeContextType {
   addTrade: (formData: any) => Promise<void>;
   removeTrade: (idToDel: number) => Promise<void>;
   updateTrade: (idToUpdate: number, formData: any) => Promise<void>;
-  images: any[];
-  setImages: Dispatch<SetStateAction<any[]>>;
-  previews: any[];
-  setPreviews: Dispatch<SetStateAction<any[]>>;
-  addScreenshot:(id:number,imageData:any) => Promise<void>;
   loading:LoadingState
 }
 
@@ -40,8 +35,7 @@ interface TradeProviderProps {
 
 export default function TradeProvider({ children }: TradeProviderProps) {
   const [trades, setTrades] = useState<any[]>([]);
-  const [images, setImages] = useState<any[]>([]);
-  const [previews, setPreviews] = useState<any[]>([]);
+
   const [loading, setLoading] = useState<LoadingState>({
     fetchTrades: false,
     addTrade: false,
@@ -98,15 +92,7 @@ export default function TradeProvider({ children }: TradeProviderProps) {
       throw err;
     }
   };
-const addScreenshot = async (id:number,imageData:any) => {
-  try{
-    const data = await createScreenshotApi(id,imageData)
-    console.log(data,'it was from tradeContext handling screenshot')
-  }catch(err:any){
-    console.error(err?.message || 'Failed in addScreenshot in tradeContext')
-    throw err
-  }
-}
+
   const removeTrade = async (idToDel: number) => {
     try {
       setLoading((prev) => ({
@@ -164,11 +150,6 @@ const addScreenshot = async (id:number,imageData:any) => {
         removeTrade,
         updateTrade,
         loading,
-        images,
-        setImages,
-        previews,
-        setPreviews,
-        addScreenshot
       }}
     >
       {children}

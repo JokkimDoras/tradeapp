@@ -6,6 +6,7 @@ import RiskConfigurationPanel from "./RiskConfigurationPanel";
 import useTrade from "../../hooks/useTrade";
 import { toast } from "sonner";
 import { useUser } from "../../hooks/useUser";
+import useScreenshot from "../../hooks/useScreenshot";
 
 type TradeType = "buy" | "sell";
 type TradeStatus = "open" | "closed";
@@ -19,6 +20,8 @@ export default function AddTrade({ setIsOpen, editData }: AddTradeProps) {
   const [loading, setLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState(editData?.currency_pair || "");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const [images, setImages] = useState<any[]>([]);
+    const [previews, setPreviews] = useState<any[]>([]);
   
   const { toggleSidebar } = useSidebar();
   const { user } = useUser();
@@ -26,12 +29,11 @@ export default function AddTrade({ setIsOpen, editData }: AddTradeProps) {
   const {
     addTrade,
     updateTrade,
-    setPreviews,
-    setImages,
-    images,
-    previews,
-    addScreenshot,
   } = useTrade();
+
+  const { uploadScreenshots } = useScreenshot()
+
+
 
   const [formData, setFormData] = useState({
     currency_pair: editData?.currency_pair || "",
@@ -115,7 +117,7 @@ export default function AddTrade({ setIsOpen, editData }: AddTradeProps) {
 
   const submitImage = async (id: number,imageData:FormData) => {
     try {
-      await addScreenshot(id,imageData);
+      await uploadScreenshots(id,imageData);
     } catch (err: any) {
       console.error(err?.message || err);
     }

@@ -18,6 +18,11 @@ vi.mock("../hooks/useTrade", () => ({
     updateTrade: vi.fn(),
   }),
 }));
+vi.mock("../hooks/useScreenshot", () => ({
+  default: () => ({
+    uploadScreenshots: vi.fn(),
+  }),
+}));
 
 test("renders add trade page", () => {
   render(<AddTrade setIsOpen={() => {}} />);

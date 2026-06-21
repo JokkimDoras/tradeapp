@@ -1,4 +1,5 @@
 const { supabaseAdmin } = require('../config/supabase')
+
 const validateaddScreenshot = async (req, res, next) => {
     const authHeader = req.headers.authorization;
   
@@ -79,9 +80,60 @@ const validateaddScreenshot = async (req, res, next) => {
 
   }
   
+  const validateDeleteScreenshot = async(req,res,next) => {
+     
+    const authHeader = req.headers.authorization;
+    if(!authHeader || !authHeader.startsWith('Bearer')){
+
+         return res.status(401).json({
+            success:false,
+            message:'Unauthorized Invaild Token',
+         })
+    }
+
+    const {id} = req.body;
+
+    
+    const token = authHeader.split(' ')[1];
+    try{
+        const { data:{user},error:authError } = await supabaseAdmin.auth.getUser(token);
+
+        if(authError || !user){
+            return res.status(400).json({
+                success:false,
+                message:'Invalid or expired session'
+            });
+        }
+        const { data:screenshot,error} = await supabaseAdmin
+    .from('trade_screenshots')
+    .select('*')
+    .eq('id',id)
+     .single()
+
+     if(error || !screenshot){
+        return res.status(404).json({
+            success: false,
+            message: "Screenshot not found",
+          });
+     }
+
+     if(screenshot.user_id !== user.id){
+        
+     }
+        req.user = user;
+        next()
+    }catch(err){
+        return res.status(500).json({
+            success:false,
+            message:'Internal Server Error during validation processing'
+        })
+    }
+  }
+
 
 
   module.exports = {
     validateaddScreenshot,
-    validategetScreenshot
+    validategetScreenshot,
+    validateDeleteScreenshot
   }

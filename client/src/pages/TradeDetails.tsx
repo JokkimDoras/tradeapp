@@ -9,6 +9,7 @@ import { FiArrowLeft, FiClock, FiActivity, FiLayers, FiShield } from "react-icon
 import useScreenshot from "../hooks/useScreenshot";
 import { useState } from "react";
 import type {responseScreenshotData} from '../types/screenshot.types'
+import { MdDeleteOutline } from "react-icons/md";
 
 export default function TradeDetails() {
   const [screenshots, setScreenshots] = useState<responseScreenshotData[]>([]);
@@ -16,7 +17,7 @@ export default function TradeDetails() {
   const navigate = useNavigate();
   const { toggleSidebar } = useSidebar();
   const { trades } = useTrade();
-  const { fetchScreenshots } = useScreenshot();
+  const { fetchScreenshots,deleteScreenshot } = useScreenshot();
 
   useEffect(() => {
      const getStuffs =async () => {
@@ -73,13 +74,29 @@ export default function TradeDetails() {
     );
   }
 
+  const handleDelete = async(delDetails:responseScreenshotData,index:number) => {
+       try{
+        console.log('Running the detele Image')
+       const res =  await deleteScreenshot(delDetails)
+        if(res.success){
+          const filtered = screenshots.filter((_,i) => {
+          return i !== index;
+          })
+      setScreenshots(filtered)
+        }
+
+       }catch(err:any){
+        console.error(err?.message || err)
+        throw err
+       }
+  }
+
   return (
     <div className="flex flex-col flex-1 min-h-screen bg-black text-zinc-100 font-mono antialiased selection:bg-zinc-800 relative">
       <Navbar toggleSidebar={toggleSidebar} />
 
       <div className="flex flex-col gap-8 w-full max-w-7xl mx-auto flex-1 p-6 pb-24">
         
-        {/* Header */}
         <div className="flex flex-col gap-4 border-b border-zinc-900 pb-6">
           <button onClick={() => navigate(-1)} className="group flex items-center gap-2 text-xs text-zinc-500 hover:text-zinc-300 w-fit">
             <FiArrowLeft size={14} className="transition-transform group-hover:-translate-x-0.5" /> 
@@ -106,7 +123,6 @@ export default function TradeDetails() {
           </div>
         </div>
 
-        {/* Primary Parameter Stat Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 w-full">
           <StatCard label="Net Execution P&L" icon={<FiActivity size={12} />} value={trade.profit_loss} isValueColored colorClass={trade.profit_loss > 0 ? "text-emerald-400" : trade.profit_loss < 0 ? "text-rose-400" : "text-zinc-400"} prefix={trade.profit_loss > 0 ? "+" : ""} />
           <StatCard label="Position Volume" icon={<FiLayers size={12} />} value={trade.lot_size} suffix=" Lots" />
@@ -114,10 +130,8 @@ export default function TradeDetails() {
           <StatCard label="Target Efficiency" icon={<FiClock size={12} />} value={trade.pips} suffix=" Pips" valueColorOverride="text-zinc-300" />
         </div>
 
-        {/* Details and Logs Breakdown */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-start w-full">
           
-          {/* Coordinates Grid Mapping */}
           <div className="md:col-span-2 border border-zinc-900 bg-zinc-950 rounded-lg overflow-hidden">
             <div className="p-4 border-b border-zinc-900"><h3 className="text-xs font-semibold uppercase tracking-widest text-zinc-400">Execution Coordinate Parameters</h3></div>
             <div className="divide-y divide-zinc-900 text-sm">
@@ -129,7 +143,6 @@ export default function TradeDetails() {
             </div>
           </div>
 
-          {/* System Audit Card */}
           <div className="border border-zinc-900 bg-zinc-950 rounded-lg overflow-hidden">
             <div className="p-4 border-b border-zinc-900"><h3 className="text-xs font-semibold uppercase tracking-widest text-zinc-400">System Audit Logs</h3></div>
             <div className="p-4 flex flex-col gap-4 text-xs">
@@ -147,15 +160,34 @@ export default function TradeDetails() {
           </div>
         </div>
 
-        {/* Discretionary Narrative Block */}
         <div className="w-full p-5 rounded-lg border border-zinc-900 bg-zinc-950 flex flex-col gap-3">
           <span className="text-xs text-zinc-400 uppercase tracking-widest font-semibold">Execution Strategy Context & Notes</span>
           <div className="text-sm text-zinc-500 min-h-[60px] leading-relaxed whitespace-pre-wrap">
             {trade.notes ? <span className="text-zinc-300">{trade.notes}</span> : "No textual metadata or discretionary annotations appended to this sequence block."}
           </div>
         </div>
-
       </div>
+
+{screenshots && screenshots.length > 0 && (
+  <div className="w-full max-w-7xl mx-auto px-6 pb-24 flex flex-col gap-4">
+    <span className="text-xs text-zinc-400 uppercase tracking-widest font-semibold">Attached Visual Evidence / Screenshots</span>
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      {screenshots.map((screenshot,index) => {
+        console.log(screenshot, 'from the tradeDetails');
+        return (
+          <div key={screenshot.id} className="border relative border-zinc-900 bg-zinc-950 p-2 rounded-lg overflow-hidden">
+            <MdDeleteOutline onClick={() => handleDelete(screenshot,index)} size={20} className="absolute right-5  bottom-5 cursor-pointer  " color="red" />
+            <img 
+              src={screenshot.public_url} 
+              alt="Trade Setup Screenshot" 
+              className="w-full h-auto object-cover rounded"
+            />
+          </div>
+        );
+      })}
+    </div>
+  </div>
+)}
     </div>
   );
 }

@@ -1,7 +1,6 @@
 const calculatePerformanceMetrics = (trades = []) => {
   const total_trades = trades.length;
 
-  // Filter only closed positions for performance metrics
   const closed_trades = trades.filter(
     (trade) => trade.status?.toLowerCase() === "closed"
   );
@@ -22,8 +21,8 @@ const calculatePerformanceMetrics = (trades = []) => {
         win_rate: "0.0",
         average_win: "0.00",
         average_loss: "0.00",
-        best_trade: 0,       // New tracking safeguard
-        worst_trade: 0,      // New tracking safeguard
+        best_trade: 0,       
+        worst_trade: 0,      
         max_drawdown: 0,
         max_win_streak: 0,
         max_loss_streak: 0
@@ -32,18 +31,16 @@ const calculatePerformanceMetrics = (trades = []) => {
     };
   }
 
-  // 1. Initialize core metric trackers
   let net_profit_loss = 0;
   let overall_wins = 0;
   let overall_losses = 0; 
   let gross_profit = 0;
   let gross_loss = 0;
   
-  // NEW: Outlier trade properties initialized
   let best_trade = -Infinity;
   let worst_trade = Infinity;
 
-  // 2. Loop through closed trades to populate metrics
+  // loop through closed trades to populate metrics
   closed_trades.forEach((trade) => {
     const pnl = Number(trade.profit_loss || 0);
     net_profit_loss += pnl;
@@ -56,7 +53,6 @@ const calculatePerformanceMetrics = (trades = []) => {
       gross_loss += Math.abs(pnl);
     }
 
-    // NEW: Check for Best/Worst Outliers
     if (pnl > best_trade) {
       best_trade = pnl;
     }
@@ -65,11 +61,9 @@ const calculatePerformanceMetrics = (trades = []) => {
     }
   });
 
-  // If all trades were exactly 0 PnL, reset outliers safely from Infinity boundaries
   if (best_trade === -Infinity) best_trade = 0;
   if (worst_trade === Infinity) worst_trade = 0;
 
-  // 3. Calculate Profit Factor
   let profit_factor = "0.00";
   if (gross_loss === 0) {
     profit_factor = gross_profit > 0 ? "Undefeated" : "0.00";
@@ -77,10 +71,8 @@ const calculatePerformanceMetrics = (trades = []) => {
     profit_factor = (gross_profit / gross_loss).toFixed(2);
   }
 
-  // 4. Calculate Win Rate percentage
   const win_rate = ((overall_wins / closed_trades.length) * 100).toFixed(1);
 
-  // 5. Calculate Average Win and Average Loss amounts
   const average_win = overall_wins > 0 
     ? (gross_profit / overall_wins).toFixed(2) 
     : "0.00";
@@ -89,7 +81,6 @@ const calculatePerformanceMetrics = (trades = []) => {
     ? (gross_loss / overall_losses).toFixed(2) 
     : "0.00";
 
-  // Pre-sanitize dates for chronological operations
   const sanitizedTrades = closed_trades.map(trade => {
     const rawDate = trade.close_date || trade.trade_date || trade.updatedAt || trade.created_at;
     let parsed = new Date(rawDate);
@@ -102,10 +93,8 @@ const calculatePerformanceMetrics = (trades = []) => {
     };
   });
 
-  // 6. Sort safely using clean timestamps
   const sortedTrades = sanitizedTrades.sort((a, b) => a.cleanTimestamp - b.cleanTimestamp);
 
-  // 7. Initialize chronological trackers
   const dailyDataMap = {};
   let runningBalance = 0;
   let peakBalance = 0;     

@@ -94,8 +94,8 @@ export default function AddTrade({ setIsOpen, editData }: AddTradeProps) {
     }
 
     const file = e.target.files?.[0];
-    if (!file || (file.type !== "image/png" && "image/jpeg")){
-      return toast.error("Invaild file fotmat");
+    if (!file || (file.type !== "image/png" && file.type !== "image/jpeg")){
+            return toast.error("Invaild file fotmat");
     }
     
     

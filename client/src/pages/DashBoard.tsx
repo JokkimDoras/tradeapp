@@ -34,7 +34,7 @@ export default function Dashboard() {
     }
   };
 
-  if(loading) return <DashboardSkeleton/>
+  if(loading.fetchTrades) return <DashboardSkeleton/>
 
   if (formState) {
     return (

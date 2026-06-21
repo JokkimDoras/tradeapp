@@ -31,6 +31,9 @@ export async function createTradeApi (formData:TradeFormData) {
 }
 
 export const createScreenshotApi = async (tradeId:number,imageData:FormData) => {
+  for (let [key, value] of imageData.entries()) {
+    console.log(`Key: ${key}, Value:`, value);
+  }
   try{
     const response = await axios.post(`${URL}/api/trades/${tradeId}/screenshot`,imageData,{
       headers:{

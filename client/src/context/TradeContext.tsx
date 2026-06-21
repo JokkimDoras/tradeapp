@@ -11,18 +11,25 @@ import { deleteTradeApi, type TradeFormData } from "../services/tradeApi";
 import { getTradeApi } from "../services/tradeApi";
 import { useUser } from "../hooks/useUser";
 
+interface LoadingState {
+  fetchTrades: boolean;
+  addTrade: boolean;
+  updatingTradeId: number | null;
+  deletingTradeId: number | null;
+}
+
 interface TradeContextType {
   trades: any[];
   setTrades: Dispatch<SetStateAction<any[]>>;
   addTrade: (formData: any) => Promise<void>;
   removeTrade: (idToDel: number) => Promise<void>;
   updateTrade: (idToUpdate: number, formData: any) => Promise<void>;
-  loading: boolean;
   images: any[];
   setImages: Dispatch<SetStateAction<any[]>>;
   previews: any[];
   setPreviews: Dispatch<SetStateAction<any[]>>;
   addScreenshot:(id:number,imageData:any) => Promise<void>;
+  loading:LoadingState
 }
 
 export const TradeContext = createContext<TradeContextType | null>(null);
@@ -33,23 +40,33 @@ interface TradeProviderProps {
 
 export default function TradeProvider({ children }: TradeProviderProps) {
   const [trades, setTrades] = useState<any[]>([]);
-  const [loading, setLoading] = useState(false);
   const [images, setImages] = useState<any[]>([]);
   const [previews, setPreviews] = useState<any[]>([]);
+  const [loading, setLoading] = useState<LoadingState>({
+    fetchTrades: false,
+    addTrade: false,
+    updatingTradeId: null,
+    deletingTradeId: null,
+  });
   const { user } = useUser();
 
   useEffect(() => {
     const fetchInitialState = async () => {
       try {
-        setLoading(true);
+        setLoading((prev) => ({
+          ...prev,
+          fetchTrades:true
+        }) );
         const { data } = await getTradeApi();
         console.log(data, "from effect");
         setTrades(data);
       } catch (err) {
         console.error(err);
       } finally {
-        setLoading(false);
-      }
+        setLoading((prev) => ({
+          ...prev,
+          fetchTrades:false
+        }) );      }
     };
 
     if (!user) return;
@@ -63,20 +80,28 @@ export default function TradeProvider({ children }: TradeProviderProps) {
 
   const addTrade = async (formData: TradeFormData) => {
     try {
-      setLoading(true);
-      const { data } = await createTradeApi(formData);
+      setLoading((prev) => ({
+        ...prev,
+        addTrade:true
+      }) );      const { data } = await createTradeApi(formData);
       setTrades((prev) => [data, ...prev]);
-      setLoading(false)
-      return data;
+      setLoading((prev) => ({
+        ...prev,
+        addTrade:false
+      }) );      return data;
     } catch (err: any) {
-      setLoading(false);
+      setLoading((prev) => ({
+        ...prev,
+        addTrade:false
+      }) );
       console.log("error from tradeContext", err);
       throw err;
     }
   };
 const addScreenshot = async (id:number,imageData:any) => {
   try{
-     await createScreenshotApi(id,imageData)
+    const data = await createScreenshotApi(id,imageData)
+    console.log(data,'it was from tradeContext handling screenshot')
   }catch(err:any){
     console.error(err?.message || 'Failed in addScreenshot in tradeContext')
     throw err
@@ -84,15 +109,24 @@ const addScreenshot = async (id:number,imageData:any) => {
 }
   const removeTrade = async (idToDel: number) => {
     try {
-      setLoading(true);
+      setLoading((prev) => ({
+        ...prev,
+        deletingTradeId:idToDel
+      }) );
 
       const response = await deleteTradeApi(idToDel);
       if (response.success) {
         setTrades((prev) => prev.filter((trade) => trade.id !== idToDel));
       }
-      setLoading(false);
+      setLoading((prev) => ({
+        ...prev,
+        deletingTradeId:null
+      }))
     } catch (err: any) {
-      setLoading(false);
+      setLoading((prev) => ({
+        ...prev,
+        deletingTradeId:null
+      }))
 
       console.log(err);
       throw err;
@@ -101,13 +135,22 @@ const addScreenshot = async (id:number,imageData:any) => {
 
   const updateTrade = async (idToUpdate: number, formData: any) => {
     try {
-      setLoading(true);
+      setLoading((prev) => ({
+        ...prev,
+        updatingTradeId:idToUpdate
+      }))
 
       const { data } = await updateTradeApi(idToUpdate, formData);
       setTrades((prev) => prev.map((t) => (t.id === idToUpdate ? data : t)));
-      setLoading(false);
+      setLoading((prev) => ({
+        ...prev,
+        updatingTradeId:null
+      }))
     } catch (err) {
-      setLoading(false);
+      setLoading((prev) => ({
+        ...prev,
+        updatingTradeId:null
+      }))
       throw err;
     }
   };

@@ -9,7 +9,7 @@ export const createScreenshotApi = async (tradeId:number,imageData:FormData) => 
       console.log(`Key: ${key}, Value:`, value);
     }
     try{
-      const response = await axios.post(`${API_URL}/api/${tradeId}/screenshot`,imageData,{
+      const response = await axios.post(`${API_URL}/api/trades/${tradeId}/screenshot`,imageData,{
         headers:{
           Authorization:`Bearer ${token}`
         }

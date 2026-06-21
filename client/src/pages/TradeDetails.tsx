@@ -7,8 +7,11 @@ import StatCard from "../component/tradeDetails/StatCard"; // Import here
 import DataRow from "../component/tradeDetails/DataRow";   // Import here
 import { FiArrowLeft, FiClock, FiActivity, FiLayers, FiShield } from "react-icons/fi";
 import useScreenshot from "../hooks/useScreenshot";
+import { useState } from "react";
+import type {responseScreenshotData} from '../types/screenshot.types'
 
 export default function TradeDetails() {
+  const [screenshots, setScreenshots] = useState<responseScreenshotData[]>([]);
   const { id = '' } = useParams();
   const navigate = useNavigate();
   const { toggleSidebar } = useSidebar();
@@ -16,10 +19,15 @@ export default function TradeDetails() {
   const { fetchScreenshots } = useScreenshot();
 
   useEffect(() => {
-     
-    fetchScreenshots(id)
+     const getStuffs =async () => {
 
-  },[])
+      const data = await fetchScreenshots(id)
+       setScreenshots(data)
+     }
+
+     getStuffs();
+  },[id])
+  console.log(screenshots)
   const trade = useMemo(() => {
     return trades.find((t: any) => String(t.id) === String(id));
   }, [trades, id]);

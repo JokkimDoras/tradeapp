@@ -11,7 +11,7 @@ const validateaddScreenshot = async (req, res, next) => {
   
     const token = authHeader.split(" ")[1];
     const tradeID = req.params.id;
-    const files = req.files;
+    const files = req.files || [];
   
     if (files && files.length > 0) {
       

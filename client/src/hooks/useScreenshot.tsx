@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { createScreenshotApi } from "../services/screenshotApi";
+import { createScreenshotApi,getScreenshotApi } from "../services/screenshotApi";
 
 
 export default function useScreenshot() {
@@ -20,24 +20,25 @@ export default function useScreenshot() {
         setLoading(false);
       }
     };
-    // const fetchScreenshots = async (
-    //   tradeId: string
-    // ) => {
-    //   setLoading(true);
+    const fetchScreenshots = async (
+      tradeId: string
+    ) => {
   
-    //   try {
-    //     const data = await getScreenshotApi(
-    //       tradeId
-    //     );
+      try {
+        const data = await getScreenshotApi(
+          tradeId
+        );
   
-    //     setScreenshots(data);
-    //   } finally {
-    //     setLoading(false);
-    //   }
-    // };
+        return data;
+      } catch(err:any) {
+        console.error(err?.message || 'Failed in useScreenshot')
+        throw err
+      }
+    };
   
     return {
       loading,
       uploadScreenshots,
+      fetchScreenshots
     };
   }

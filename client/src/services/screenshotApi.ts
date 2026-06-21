@@ -9,7 +9,7 @@ export const createScreenshotApi = async (tradeId:number,imageData:FormData) => 
       console.log(`Key: ${key}, Value:`, value);
     }
     try{
-      const response = await axios.post(`${API_URL}/api/trades/${tradeId}/screenshot`,imageData,{
+      const response = await axios.post(`${API_URL}/api/${tradeId}/screenshot`,imageData,{
         headers:{
           Authorization:`Bearer ${token}`
         }
@@ -21,5 +21,22 @@ export const createScreenshotApi = async (tradeId:number,imageData:FormData) => 
      console.error(err?.message || 'Failed in createScreenshot Api in tradeApi file')
      throw err
     }
+  }
+
+  export const getScreenshotApi =async (tradeId:string) => {
+    
+    try{
+     const response = await axios.get(`${API_URL}/api/trades/${tradeId}/screenshot`,{
+        headers:{
+            Authorization:`Bearer ${token}`
+        }
+     })
+     console.log(response.data)
+     return response.data
+    }catch(err:any){
+      console.log(err?.message || 'Failed in screenshotApi')
+      throw err
+    }
+     
   }
   

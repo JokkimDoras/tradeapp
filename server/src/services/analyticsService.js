@@ -185,7 +185,6 @@ const calculatePerformanceMetrics = (trades = []) => {
   };
 };
 
-// ADDED: The missing calculation engine function for singular trade instances
 const calculateTradeMetrics = (tradeData) => {
   const entry = parseFloat(tradeData.entry_price || 0);
   const exit = parseFloat(tradeData.exit_price || 0);
@@ -224,7 +223,6 @@ const calculateTradeMetrics = (tradeData) => {
   };
 };
 
-// FIXED EXPORTS: Both engine blocks are exported cleanly now
 module.exports = {
   calculatePerformanceMetrics,
   calculateTradeMetrics

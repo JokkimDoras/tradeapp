@@ -7,6 +7,7 @@ const API_URL = import.meta.env.VITE_API_URL
 const token = getToken();
 
 export const createScreenshotApi = async (tradeId:number,imageData:FormData) => {
+  console.warn(imageData)
     for (let [key, value] of imageData.entries()) {
       console.log(`Key: ${key}, Value:`, value);
     }

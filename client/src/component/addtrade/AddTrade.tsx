@@ -7,6 +7,8 @@ import useTrade from "../../hooks/useTrade";
 import { toast } from "sonner";
 import { useUser } from "../../hooks/useUser";
 import useScreenshot from "../../hooks/useScreenshot";
+import { IoCloseCircle } from "react-icons/io5";
+
 
 type TradeType = "buy" | "sell";
 type TradeStatus = "open" | "closed";
@@ -92,10 +94,19 @@ export default function AddTrade({ setIsOpen, editData }: AddTradeProps) {
     }
 
     const file = e.target.files?.[0];
-
-    if (!file || (file.type !== "image/png" && "image/jpeg"))
+    if (!file || (file.type !== "image/png" && "image/jpeg")){
       return toast.error("Invaild file fotmat");
+    }
+    
+    
+    const MAX_FILE_SIZE = 5;
+    const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE * 1024 * 1024;
 
+    if(file.size > MAX_FILE_SIZE_BYTES){
+      toast.error(`File is Too large ,Max ${MAX_FILE_SIZE}MB`)
+      return;
+    }
+    
     setImages((prev) => [...prev, file]);
 
     const previewUrl = URL.createObjectURL(file);
@@ -234,7 +245,22 @@ export default function AddTrade({ setIsOpen, editData }: AddTradeProps) {
               ? "Update parameters for this specific system configuration data stream node."
               : "Commit an active or closed ledger sequence to secure vault database analytics."}
           </p>
-        </div>
+          <label className="flex items-center gap-2 px-4 py-2.5 bg-zinc-800 hover:bg-zinc-700 active:bg-zinc-900 text-zinc-200 text-sm font-medium rounded-lg border border-zinc-700 cursor-pointer transition-all shrink-0 shadow-sm self-start sm:self-auto">
+    {/* SVG Camera/Upload Icon */}
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-4 h-4 text-zinc-400">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M6.827 6.175A2.31 2.31 0 0 1 5.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 0 0-1.134-.175 2.31 2.31 0 0 1-1.64-1.055l-.822-1.316a2.192 2.192 0 0 0-1.736-1.039 48.774 48.774 0 0 0-5.232 0 2.192 2.192 0 0 0-1.736 1.039l-.821 1.316Z" />
+      <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 12.75a4.5 4.5 0 1 1-9 0 4.5 4.5 0 0 1 9 0ZM18.75 10.5h.008v.008h-.008V10.5Z" />
+    </svg>
+    
+    <span>Add Screenshot</span>
+    
+    {/* The actual input is hidden, but clicking the label triggers it */}
+    <input 
+      type="file" 
+      className="hidden" 
+      onChange={(e) => handleImage(e)} 
+    />
+  </label>        </div>
 
         <form
           onSubmit={handleSubmit}
@@ -260,21 +286,19 @@ export default function AddTrade({ setIsOpen, editData }: AddTradeProps) {
               handleChange={handleChange}
             />
             {previews?.map((img, index) => (
-              <div key={index}>
-                <div
-                  className="relative left-29 top-3 text-red-500  w-4 h-4"
+              <div key={index} className="ml-10">
+                <IoCloseCircle
+                  className="relative left-44 cursor-pointer top-5 text-red-500  w-4 h-4"
                   onClick={() => handleDeleteLocalImage(index)}
-                >
-                  x
-                </div>
-                <img
+                />
+
+                     <img
                   src={img}
-                  alt={`preview-${index}`}
-                  className="w-32 h-32 object-cover"
+                  alt={`preview-${index} `}
+                  className="w-50 "
                 />
               </div>
             ))}
-            <input type="file" onChange={(e) => handleImage(e)} />
           </div>
 
           <div className="border-t border-zinc-900 p-6 bg-black/40">

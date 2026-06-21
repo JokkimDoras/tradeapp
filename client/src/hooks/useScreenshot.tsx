@@ -1,9 +1,8 @@
 import { useState } from "react";
-import { createScreenshotApi } from "../services/tradeApi";
+import { createScreenshotApi } from "../services/screenshotApi";
 
 
 export default function useScreenshot() {
-    const [screenshots, setScreenshots] = useState([]);
     const [loading, setLoading] = useState(false);
   
     const uploadScreenshots = async (
@@ -21,7 +20,6 @@ export default function useScreenshot() {
         setLoading(false);
       }
     };
-  setScreenshots([])
     // const fetchScreenshots = async (
     //   tradeId: string
     // ) => {
@@ -39,7 +37,6 @@ export default function useScreenshot() {
     // };
   
     return {
-      screenshots,
       loading,
       uploadScreenshots,
     };

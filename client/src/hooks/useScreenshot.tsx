@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { createScreenshotApi,getScreenshotApi } from "../services/screenshotApi";
+import type { fetchScreenshotResponse } from "../types/screenshot.types";
 
 
 export default function useScreenshot() {
@@ -25,11 +26,11 @@ export default function useScreenshot() {
     ) => {
   
       try {
-        const data = await getScreenshotApi(
+        const data:fetchScreenshotResponse = await getScreenshotApi(
           tradeId
         );
   
-        return data;
+        return data.data
       } catch(err:any) {
         console.error(err?.message || 'Failed in useScreenshot')
         throw err

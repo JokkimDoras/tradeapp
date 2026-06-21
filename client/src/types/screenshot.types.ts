@@ -5,7 +5,7 @@ export interface responseScreenshotData{
   file_path:string;
   file_name:number;
   created_at:string;
-  pubblic_url:string;
+  public_url:string;
 
 }
 export interface fetchScreenshotResponse {

@@ -119,8 +119,64 @@ const addScreenshot = async (req, res) => {
     }
   };
 
+const deleteScreenshot = async(req,res) => {
+    try{
+
+        // here deleting only in  the storage bucket after we have to clear in table
+        const deleteDetails = req.body;
+        
+        if(!deleteDetails.id || !deleteDetails.file_path){
+            return res.status(400).json({
+                success:false,
+                message:'Delete Details needed screenshot id and filepath'
+            })
+        }
+        
+        const { error:storageError } = await supabaseAdmin.storage
+        .from('trade-screenshots')
+        .remove([deleteDetails.file_path])
+        
+        if(storageError){
+            return res.status(400).json({
+                success:false,
+                message:'Failed in deleteScreenshot { storage error }',
+                error:storageError
+            })
+        }
+        
+        // now the storage is cleared we have to clear in the table
+        
+        const { error:dbError } = await supabaseAdmin
+        .from('trade_screenshots')
+        .delete()
+        .eq('id',deleteDetails.id)
+        
+        if (dbError) {
+            return res.status(400).json({
+                success: false,
+                message: "Failed to delete screenshot record",
+                error: dbError,
+            });
+        }
+        
+        return res.status(200).json({
+            success: true,
+            message: "Screenshot deleted successfully",
+        });
+    }catch(err){
+        console.error(err)
+        return res.status(500).json({
+            success:false,
+            message:'Something we wrong',
+            err
+        })
+    }
+
+
+  }
   
   module.exports = {
     addScreenshot,
-    getScreenshot
+    getScreenshot,
+    deleteScreenshot
   }

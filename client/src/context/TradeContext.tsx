@@ -6,10 +6,11 @@ import {
   type SetStateAction,
   useEffect,
 } from "react";
-import {  createTradeApi, updateTradeApi } from "../services/tradeApi";
+import { createTradeApi, updateTradeApi } from "../services/tradeApi";
 import { deleteTradeApi, type TradeFormData } from "../services/tradeApi";
 import { getTradeApi } from "../services/tradeApi";
 import { useUser } from "../hooks/useUser";
+import { useAnalytics } from "../hooks/useAnalytics";
 
 interface LoadingState {
   fetchTrades: boolean;
@@ -24,7 +25,7 @@ interface TradeContextType {
   addTrade: (formData: any) => Promise<void>;
   removeTrade: (idToDel: number) => Promise<void>;
   updateTrade: (idToUpdate: number, formData: any) => Promise<void>;
-  loading:LoadingState
+  loading: LoadingState;
 }
 
 export const TradeContext = createContext<TradeContextType | null>(null);
@@ -43,24 +44,25 @@ export default function TradeProvider({ children }: TradeProviderProps) {
     deletingTradeId: null,
   });
   const { user } = useUser();
+  const { setIsOld } = useAnalytics()
 
   useEffect(() => {
     const fetchInitialState = async () => {
       try {
         setLoading((prev) => ({
           ...prev,
-          fetchTrades:true
-        }) );
+          fetchTrades: true,
+        }));
         const { data } = await getTradeApi();
-        console.log(data, "from effect");
         setTrades(data);
       } catch (err) {
         console.error(err);
       } finally {
         setLoading((prev) => ({
           ...prev,
-          fetchTrades:false
-        }) );      }
+          fetchTrades: false,
+        }));
+      }
     };
 
     if (!user) return;
@@ -76,18 +78,22 @@ export default function TradeProvider({ children }: TradeProviderProps) {
     try {
       setLoading((prev) => ({
         ...prev,
-        addTrade:true
-      }) );      const { data } = await createTradeApi(formData);
+        addTrade: true,
+      }));
+
+      const { data } = await createTradeApi(formData);
       setTrades((prev) => [data, ...prev]);
+      setIsOld(true)
       setLoading((prev) => ({
         ...prev,
-        addTrade:false
-      }) );      return data;
+        addTrade: false,
+      }));
+      return data;
     } catch (err: any) {
       setLoading((prev) => ({
         ...prev,
-        addTrade:false
-      }) );
+        addTrade: false,
+      }));
       console.log("error from tradeContext", err);
       throw err;
     }
@@ -97,22 +103,24 @@ export default function TradeProvider({ children }: TradeProviderProps) {
     try {
       setLoading((prev) => ({
         ...prev,
-        deletingTradeId:idToDel
-      }) );
+        deletingTradeId: idToDel,
+      }));
 
       const response = await deleteTradeApi(idToDel);
       if (response.success) {
         setTrades((prev) => prev.filter((trade) => trade.id !== idToDel));
       }
+      setIsOld(true)
+
       setLoading((prev) => ({
         ...prev,
-        deletingTradeId:null
-      }))
+        deletingTradeId: null,
+      }));
     } catch (err: any) {
       setLoading((prev) => ({
         ...prev,
-        deletingTradeId:null
-      }))
+        deletingTradeId: null,
+      }));
 
       console.log(err);
       throw err;
@@ -123,20 +131,22 @@ export default function TradeProvider({ children }: TradeProviderProps) {
     try {
       setLoading((prev) => ({
         ...prev,
-        updatingTradeId:idToUpdate
-      }))
+        updatingTradeId: idToUpdate,
+      }));
 
       const { data } = await updateTradeApi(idToUpdate, formData);
       setTrades((prev) => prev.map((t) => (t.id === idToUpdate ? data : t)));
+      setIsOld(true)
+
       setLoading((prev) => ({
         ...prev,
-        updatingTradeId:null
-      }))
+        updatingTradeId: null,
+      }));
     } catch (err) {
       setLoading((prev) => ({
         ...prev,
-        updatingTradeId:null
-      }))
+        updatingTradeId: null,
+      }));
       throw err;
     }
   };

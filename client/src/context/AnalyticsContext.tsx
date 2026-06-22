@@ -1,24 +1,34 @@
 import { createContext, useState } from "react";
 import { getAnalyticsDataApi } from "../services/analyticsApi";
-import type { AnalyticsDataType,AnalyticsContextType } from "../types/analytics.types";
+import type {
+  AnalyticsDataType,
+  AnalyticsContextType,
+} from "../types/analytics.types";
 
 export const AnalyticsContext = createContext<AnalyticsContextType | null>(
   null
 );
 
-export default function AnalyticsProvider({ children }: { children: React.ReactNode }) {
+
+export default function AnalyticsProvider({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const [analyticsData, setAnalyticsData] = useState<AnalyticsDataType | null>(
     null
   );
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [isOld, setIsOld] = useState(true);
 
   const getAnalyticsData = async () => {
     try {
       setLoading(true);
-      if (!analyticsData) {
+      if (!analyticsData || isOld) {
         const { data } = await getAnalyticsDataApi();
         setAnalyticsData(data);
+        setIsOld(false);
       }
     } catch (err: any) {
       setError(err?.message || "Error from AnalyticsContext");
@@ -30,7 +40,14 @@ export default function AnalyticsProvider({ children }: { children: React.ReactN
 
   return (
     <AnalyticsContext.Provider
-      value={{ analyticsData, loading, error, getAnalyticsData }}
+      value={{
+        analyticsData,
+        loading,
+        error,
+        getAnalyticsData,
+        setIsOld,
+        isOld,
+      }}
     >
       {children}
     </AnalyticsContext.Provider>

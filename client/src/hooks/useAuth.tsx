@@ -38,7 +38,6 @@ export default function useAuth() {
     try {
       const payload = await registerUserApi(formData);
       
-      console.log(payload,'from useAuth')
       setUser((prev) => ({
         ...prev,
         full_name:payload.user?.full_name

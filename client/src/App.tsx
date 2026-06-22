@@ -10,7 +10,7 @@ import Strategies from "./pages/Strategies.tsx";
 import TradeJournal from "./pages/TradeJournal.tsx";
 import Profile from "./pages/Profile.tsx";
 import Settings from "./pages/Settings.tsx";
-import { AuthProvider } from "./context/AuthContext.tsx";
+import { AuthProvider } from "./context/UserContext.tsx";
 import { Toaster } from "sonner";
 import Analytics from "./pages/Analytics.tsx";
 import TradeDetails from "./pages/TradeDetails.tsx";

@@ -49,7 +49,11 @@ export default function AddTrade({ setIsOpen, editData }: AddTradeProps) {
       ? editData?.risk_percentage
       : user.risk_per_trade,
     notes: editData?.notes || "",
+    strategy: editData?.strategy || ""
   });
+
+
+  
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -82,6 +86,7 @@ export default function AddTrade({ setIsOpen, editData }: AddTradeProps) {
       lot_size: "",
       risk_percentage: "",
       notes: "",
+      strategy:''
     });
     setIsOpen(false);
     setPreviews([]);
@@ -296,9 +301,14 @@ export default function AddTrade({ setIsOpen, editData }: AddTradeProps) {
               isthatSell={isThatSell}
             />
 
+
+
             <PricingPanel formData={formData} handleChange={handleChange} />
 
+            
+
             <RiskConfigurationPanel
+              setFormData={setFormData}
               formData={formData}
               handleChange={handleChange}
             />

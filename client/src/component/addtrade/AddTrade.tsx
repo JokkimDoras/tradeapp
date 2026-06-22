@@ -129,6 +129,7 @@ export default function AddTrade({ setIsOpen, editData }: AddTradeProps) {
   const submitImage = async (id: number,imageData:FormData) => {
     try {
       await uploadScreenshots(id,imageData);
+      
     } catch (err: any) {
       console.error(err?.message || err);
     }
@@ -186,14 +187,14 @@ export default function AddTrade({ setIsOpen, editData }: AddTradeProps) {
         } else {
           console.warn("updateTrade method not found in hook registry.");
         }
-        console.log("Terminal Registry Updated Successfully:", payload);
       } else {
-        // if the editData or editData.id is not true it will run the addTrade
+        // if the editData or editData.id is not true it will run the addTrade -> like it will run the new trade
         const trade: any = await addTrade(payload);
         if(images.length === 0) {
           toast.success("New Trade was Created");
-          handleCancel()  
+         return handleCancel() 
         } 
+        console.log('i will not run') 
 
         const imageData = new FormData();
 
@@ -201,6 +202,7 @@ export default function AddTrade({ setIsOpen, editData }: AddTradeProps) {
           imageData.append('screenshots',image)
         })
        await submitImage(trade.id,imageData);
+       toast.success('New Trade Added with Screenshot')
       }
 
       handleCancel();

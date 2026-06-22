@@ -3,9 +3,9 @@ import { useEffect, useMemo } from "react";
 import useTrade from "../hooks/useTrade";
 import { useSidebar } from "../hooks/useSidebar";
 import Navbar from "../component/NavBar";
-import StatCard from "../component/tradeDetails/StatCard"; // Import here
-import DataRow from "../component/tradeDetails/DataRow";   // Import here
-import { FiArrowLeft, FiClock, FiActivity, FiLayers, FiShield } from "react-icons/fi";
+import StatCard from "../component/tradeDetails/StatCard"; 
+import DataRow from "../component/tradeDetails/DataRow";   
+import { FiArrowLeft, FiClock, FiActivity, FiLayers, FiShield,FiX } from "react-icons/fi";
 import useScreenshot from "../hooks/useScreenshot";
 import { useState } from "react";
 import type {responseScreenshotData} from '../types/screenshot.types'
@@ -13,6 +13,7 @@ import { MdDeleteOutline } from "react-icons/md";
 
 export default function TradeDetails() {
   const [screenshots, setScreenshots] = useState<responseScreenshotData[]>([]);
+  const [selectedImage,setSelectedImage ] = useState<string | null>(null);
   const { id = '' } = useParams();
   const navigate = useNavigate();
   const { toggleSidebar } = useSidebar();
@@ -28,7 +29,7 @@ export default function TradeDetails() {
 
      getStuffs();
   },[id])
-  console.log(screenshots)
+
   const trade = useMemo(() => {
     return trades.find((t: any) => String(t.id) === String(id));
   }, [trades, id]);
@@ -91,6 +92,11 @@ export default function TradeDetails() {
        }
   }
 
+
+  const handleFullView = (url:string) => {
+setSelectedImage(url)
+
+  }
   return (
     <div className="flex flex-col flex-1 min-h-screen bg-black text-zinc-100 font-mono antialiased selection:bg-zinc-800 relative">
       <Navbar toggleSidebar={toggleSidebar} />
@@ -178,6 +184,7 @@ export default function TradeDetails() {
           <div key={screenshot.id} className="border relative border-zinc-900 bg-zinc-950 p-2 rounded-lg overflow-hidden">
             <MdDeleteOutline onClick={() => handleDelete(screenshot,index)} size={20} className="absolute right-5  bottom-5 cursor-pointer  " color="red" />
             <img 
+              onClick={() =>handleFullView(screenshot.public_url)}
               src={screenshot.public_url} 
               alt="Trade Setup Screenshot" 
               className="w-full h-auto object-cover rounded"
@@ -188,6 +195,28 @@ export default function TradeDetails() {
     </div>
   </div>
 )}
+{selectedImage && (
+  <div 
+  className="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4 transition-all duration-300"
+  onClick={() => setSelectedImage(null)}
+>
+  <button 
+    className="absolute top-6 right-6 text-zinc-400 hover:text-white transition-colors"
+    onClick={() => setSelectedImage(null)}
+  >
+    <FiX size={24} />
+  </button>
+
+  {/* Full Screen Image */}
+  <img 
+    src={selectedImage} 
+    alt="Full Screen Evidence" 
+    className="max-w-full max-h-[90vh] object-contain rounded-md shadow-2xl border border-zinc-800"
+    onClick={(e) => e.stopPropagation()} // Prevents closing modal when clicking the image window
+  />
+</div>
+)}
+
     </div>
   );
 }

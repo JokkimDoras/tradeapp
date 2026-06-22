@@ -14,10 +14,10 @@ export interface TradeFormData {
     notes: string;
     trade_date: string;
   }
-const token = getToken();
-
-const URL = import.meta.env.VITE_API_URL
-export async function createTradeApi (formData:TradeFormData) {
+  
+  const URL = import.meta.env.VITE_API_URL
+  export async function createTradeApi (formData:TradeFormData) {
+  const token = getToken();
     try{
       const response = await axios.post(`${URL}/api/trades/addtrade`,formData,{
         headers:{Authorization:`Bearer ${token}`}
@@ -46,6 +46,7 @@ export async function getTradeApi () {
 }
 
 export async function deleteTradeApi(tradeId:number) {
+  const token = getToken()
   try{
     const response = await axios.delete(`${URL}/api/trades/deletetrade/${tradeId}`,{
       headers:{
@@ -60,6 +61,7 @@ export async function deleteTradeApi(tradeId:number) {
 }
 
 export async function updateTradeApi(tradeId:number,formData:any){
+  const token = getToken();
   try{
    const response = await axios.put(`${URL}/api/trades/updatetrade/${tradeId}`,formData,{
       headers:{

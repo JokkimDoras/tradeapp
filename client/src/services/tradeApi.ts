@@ -16,6 +16,7 @@ export interface TradeFormData {
   }
   
   const URL = import.meta.env.VITE_API_URL
+
   export async function createTradeApi (formData:TradeFormData) {
   const token = getToken();
     try{
@@ -38,7 +39,6 @@ export async function getTradeApi () {
         Authorization:`Bearer ${tokenToFix}`
       }
     })
-    console.log(response.data.data)
      return response.data
   }catch(err:any){
    throw err

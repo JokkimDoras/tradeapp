@@ -11,7 +11,6 @@ export default function Profile() {
   
   const email = localStorage.getItem("email") || "trader@tradevault.app";
 
-  // Dynamic initials generator
   const initials = fullname
     ? fullname
         .split(" ")
@@ -42,8 +41,6 @@ export default function Profile() {
         </div>
       </header>
 
-      {/* ── PROFILE CONTAINER WITH FULL SCREEN WIDTH ── */}
-      {/* Swapped max-w-5xl mx-auto out for w-full flex-1 edge-to-edge tracking layout */}
       <div className="w-full flex-1 px-8 py-12 flex flex-col gap-10">
         
         {/* Page Header matched cleanly to Settings spacing */}

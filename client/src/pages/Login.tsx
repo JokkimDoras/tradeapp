@@ -28,15 +28,12 @@ export default function Login() {
   return (
     <div className="min-h-screen bg-black grid grid-cols-1 md:grid-cols-2">
 
-      {/* ── LEFT: FORM ── */}
       <div className="flex flex-col justify-between px-8 py-8 border-r border-zinc-900">
 
-        {/* Logo */}
         <div>
           <span className="text-white font-semibold text-sm tracking-tight">TradeVault</span>
         </div>
 
-        {/* Form */}
         <div className="w-full max-w-sm mx-auto flex flex-col gap-8">
           <div className="flex flex-col gap-1">
             <h1 className="text-2xl font-semibold text-white tracking-tight">Welcome back</h1>
@@ -116,14 +113,12 @@ export default function Login() {
           </p>
         </div>
 
-        {/* Footer */}
         <div className="flex items-center gap-1.5">
           <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
           <span className="text-xs text-zinc-600">Backed by Supabase</span>
         </div>
       </div>
 
-      {/* ── RIGHT: QUOTE ── */}
       <div className="hidden md:flex flex-col justify-between px-16 py-16 bg-black">
         <div />
 

@@ -23,6 +23,7 @@ export interface TradeFormData {
       const response = await axios.post(`${URL}/api/trades/addtrade`,formData,{
         headers:{Authorization:`Bearer ${token}`}
        })
+       console.log(response.data)
        return response.data
     }catch(err:any){
        console.error('Error from trade Api',err)

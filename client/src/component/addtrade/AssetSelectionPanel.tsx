@@ -1,6 +1,11 @@
 import TradeTypeSelector from "./TradeTypeSelector";
 import TradeStatusSelector from "./TradeStatusSelector";
 
+
+type TradeType = "buy" | "sell";
+
+
+
 interface PopularPair {
   symbol: string;
   asset: string;
@@ -26,6 +31,7 @@ interface AssetSelectionPanelProps {
   setFormData: React.Dispatch<React.SetStateAction<any>>;
   setType: (type: "buy" | "sell") => void;
   setStatus: (status: "open" | "closed") => void;
+  isthatSell:TradeType
 }
 
 export default function AssetSelectionPanel({
@@ -38,6 +44,7 @@ export default function AssetSelectionPanel({
   setFormData,
   setType,
   setStatus,
+  isthatSell
 }: AssetSelectionPanelProps) {
   const cleanQuery = searchQuery.trim().toUpperCase();
   const filteredPairs = POPULAR_PAIRS.filter(
@@ -118,7 +125,7 @@ export default function AssetSelectionPanel({
         )}
       </div>
 
-      <TradeTypeSelector value={tradeType} onChange={setType} />
+      <TradeTypeSelector isthatSell={isthatSell} value={tradeType} onChange={setType} />
       <TradeStatusSelector value={status} onChange={setStatus} />
     </div>
   );

@@ -3,11 +3,12 @@ type TradeType = "buy" | "sell";
 interface TradeTypeSelectorProps {
   value: TradeType;
   onChange: (type: TradeType) => void;
+  isthatSell:TradeType
 }
 
 export default function TradeTypeSelector({
-  value,
   onChange,
+  isthatSell
 }: TradeTypeSelectorProps) {
   return (
     <div className="flex flex-col gap-2">
@@ -20,7 +21,7 @@ export default function TradeTypeSelector({
           type="button"
           onClick={() => onChange("buy")}
           className={`py-1.5 text-xs font-bold rounded-md tracking-wider uppercase transition-all cursor-pointer ${
-            value === "buy"
+            isthatSell === "buy"
               ? "bg-emerald-500 text-black shadow-lg"
               : "text-zinc-500 hover:text-zinc-300"
           }`}
@@ -32,7 +33,7 @@ export default function TradeTypeSelector({
           type="button"
           onClick={() => onChange("sell")}
           className={`py-1.5 text-xs font-bold rounded-md tracking-wider uppercase transition-all cursor-pointer ${
-            value === "sell"
+            isthatSell === "sell"
               ? "bg-rose-500 text-white shadow-lg"
               : "text-zinc-500 hover:text-zinc-300"
           }`}

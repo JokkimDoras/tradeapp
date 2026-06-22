@@ -9,7 +9,6 @@ import { useUser } from "../../hooks/useUser";
 import useScreenshot from "../../hooks/useScreenshot";
 import { IoCloseCircle } from "react-icons/io5";
 
-
 type TradeType = "buy" | "sell";
 type TradeStatus = "open" | "closed";
 
@@ -24,18 +23,14 @@ export default function AddTrade({ setIsOpen, editData }: AddTradeProps) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [images, setImages] = useState<any[]>([]);
   const [previews, setPreviews] = useState<any[]>([]);
-  
+
+
   const { toggleSidebar } = useSidebar();
   const { user } = useUser();
 
-  const {
-    addTrade,
-    updateTrade,
-  } = useTrade();
+  const { addTrade, updateTrade } = useTrade();
 
-  const { uploadScreenshots } = useScreenshot()
-
-
+  const { uploadScreenshots } = useScreenshot();
 
   const [formData, setFormData] = useState({
     currency_pair: editData?.currency_pair || "",
@@ -60,13 +55,19 @@ export default function AddTrade({ setIsOpen, editData }: AddTradeProps) {
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
+    if(name == 'stop_loss'){
+    }
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const setType = (type: TradeType) =>
-    setFormData((p) => ({ ...p, trade_type: type }));
-  const setStatus = (status: TradeStatus) =>
+  const isThatSell = Number(formData.stop_loss) > Number(formData.entry_price) ? 'sell' : 'buy';
+
+  const setType = (type: TradeType) => {
+    setFormData((p) => ({ ...p, trade_type: isThatSell?isThatSell:type }));
+  };
+  const setStatus = (status: TradeStatus) => {
     setFormData((p) => ({ ...p, status }));
+  };
 
   const handleCancel = () => {
     setSearchQuery("");
@@ -83,8 +84,8 @@ export default function AddTrade({ setIsOpen, editData }: AddTradeProps) {
       notes: "",
     });
     setIsOpen(false);
-    setPreviews([])
-    setImages([])
+    setPreviews([]);
+    setImages([]);
   };
 
   const handleImage = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -94,19 +95,18 @@ export default function AddTrade({ setIsOpen, editData }: AddTradeProps) {
     }
 
     const file = e.target.files?.[0];
-    if (!file || (file.type !== "image/png" && file.type !== "image/jpeg")){
-            return toast.error("Invaild file fotmat");
+    if (!file || (file.type !== "image/png" && file.type !== "image/jpeg")) {
+      return toast.error("Invaild file fotmat");
     }
-    
-    
+
     const MAX_FILE_SIZE = 5;
     const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE * 1024 * 1024;
 
-    if(file.size > MAX_FILE_SIZE_BYTES){
-      toast.error(`File is Too large ,Max ${MAX_FILE_SIZE}MB`)
+    if (file.size > MAX_FILE_SIZE_BYTES) {
+      toast.error(`File is Too large ,Max ${MAX_FILE_SIZE}MB`);
       return;
     }
-    
+
     setImages((prev) => [...prev, file]);
 
     const previewUrl = URL.createObjectURL(file);
@@ -126,10 +126,9 @@ export default function AddTrade({ setIsOpen, editData }: AddTradeProps) {
     setPreviews(deletePreview);
   };
 
-  const submitImage = async (id: number,imageData:FormData) => {
+  const submitImage = async (id: number, imageData: FormData) => {
     try {
-      await uploadScreenshots(id,imageData);
-      
+      await uploadScreenshots(id, imageData);
     } catch (err: any) {
       console.error(err?.message || err);
     }
@@ -190,19 +189,19 @@ export default function AddTrade({ setIsOpen, editData }: AddTradeProps) {
       } else {
         // if the editData or editData.id is not true it will run the addTrade -> like it will run the new trade
         const trade: any = await addTrade(payload);
-        if(images.length === 0) {
+        if (images.length === 0) {
           toast.success("New Trade was Created");
-         return handleCancel() 
-        } 
-        console.log('i will not run') 
+          return handleCancel();
+        }
+        console.log("i will not run");
 
         const imageData = new FormData();
 
         images.forEach((image) => {
-          imageData.append('screenshots',image)
-        })
-       await submitImage(trade.id,imageData);
-       toast.success('New Trade Added with Screenshot')
+          imageData.append("screenshots", image);
+        });
+        await submitImage(trade.id, imageData);
+        toast.success("New Trade Added with Screenshot");
       }
 
       handleCancel();
@@ -248,21 +247,36 @@ export default function AddTrade({ setIsOpen, editData }: AddTradeProps) {
               : "Commit an active or closed ledger sequence to secure vault database analytics."}
           </p>
           <label className="flex items-center gap-2 px-4 py-2.5 bg-zinc-800 hover:bg-zinc-700 active:bg-zinc-900 text-zinc-200 text-sm font-medium rounded-lg border border-zinc-700 cursor-pointer transition-all shrink-0 shadow-sm self-start sm:self-auto">
-    {/* SVG Camera/Upload Icon */}
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-4 h-4 text-zinc-400">
-      <path strokeLinecap="round" strokeLinejoin="round" d="M6.827 6.175A2.31 2.31 0 0 1 5.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 0 0-1.134-.175 2.31 2.31 0 0 1-1.64-1.055l-.822-1.316a2.192 2.192 0 0 0-1.736-1.039 48.774 48.774 0 0 0-5.232 0 2.192 2.192 0 0 0-1.736 1.039l-.821 1.316Z" />
-      <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 12.75a4.5 4.5 0 1 1-9 0 4.5 4.5 0 0 1 9 0ZM18.75 10.5h.008v.008h-.008V10.5Z" />
-    </svg>
-    
-    <span>Add Screenshot</span>
-    
-    {/* The actual input is hidden, but clicking the label triggers it */}
-    <input 
-      type="file" 
-      className="hidden" 
-      onChange={(e) => handleImage(e)} 
-    />
-  </label>        </div>
+            {/* SVG Camera/Upload Icon   //  need to import icons */}
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={2}
+              stroke="currentColor"
+              className="w-4 h-4 text-zinc-400"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M6.827 6.175A2.31 2.31 0 0 1 5.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 0 0-1.134-.175 2.31 2.31 0 0 1-1.64-1.055l-.822-1.316a2.192 2.192 0 0 0-1.736-1.039 48.774 48.774 0 0 0-5.232 0 2.192 2.192 0 0 0-1.736 1.039l-.821 1.316Z"
+              />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M16.5 12.75a4.5 4.5 0 1 1-9 0 4.5 4.5 0 0 1 9 0ZM18.75 10.5h.008v.008h-.008V10.5Z"
+              />
+            </svg>
+
+            <span>Add Screenshot</span>
+
+            <input
+              type="file"
+              className="hidden"
+              onChange={(e) => handleImage(e)}
+            />
+          </label>{" "}
+        </div>
 
         <form
           onSubmit={handleSubmit}
@@ -279,6 +293,7 @@ export default function AddTrade({ setIsOpen, editData }: AddTradeProps) {
               setFormData={setFormData}
               setType={setType}
               setStatus={setStatus}
+              isthatSell={isThatSell}
             />
 
             <PricingPanel formData={formData} handleChange={handleChange} />
@@ -294,11 +309,7 @@ export default function AddTrade({ setIsOpen, editData }: AddTradeProps) {
                   onClick={() => handleDeleteLocalImage(index)}
                 />
 
-                     <img
-                  src={img}
-                  alt={`preview-${index} `}
-                  className="w-50 "
-                />
+                <img src={img} alt={`preview-${index} `} className="w-50 " />
               </div>
             ))}
           </div>

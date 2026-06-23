@@ -106,7 +106,8 @@ export default function RiskConfigurationPanel({
             {filteredStrategies.map((item, index) => (
               <li 
                 key={index}
-                onMouseDown={() => setFormData((prev:any) => ({ ...prev, strategy: item }))}                className="px-3 py-2 text-xs font-mono text-zinc-400 hover:text-zinc-100 hover:bg-zinc-900 cursor-pointer transition-colors"
+                onMouseDown={() => setFormData((prev:any) => ({ ...prev, strategy: item }))}              
+                className="px-3 py-2 text-xs font-mono text-zinc-400 hover:text-zinc-100 hover:bg-zinc-900 cursor-pointer transition-colors"
               >
                 {item}
               </li>

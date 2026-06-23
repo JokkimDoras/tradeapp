@@ -32,7 +32,8 @@ export interface Summary {
     analyticsData: AnalyticsDataType | null;
     loading: boolean;
     error: string | null;
-    getAnalyticsData: () => Promise<void>;
+    getAnalyticsData: (some?:boolean) => Promise<void>;
+    refreshAnalyticsData:() => Promise<void>;
     isOld:boolean;
     setIsOld: React.Dispatch<React.SetStateAction<boolean>>; 
   }

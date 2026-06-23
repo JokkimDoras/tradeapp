@@ -64,7 +64,7 @@ export default function TradeDetails() {
   if (!trade || !metrics) {
     return (
       <div className="flex flex-col min-h-screen bg-black text-zinc-100 font-mono text-sm antialiased">
-        <Navbar toggleSidebar={toggleSidebar} />
+        <Navbar toggleSidebar={toggleSidebar} >Details</Navbar>
         <div className="flex flex-col items-center justify-center flex-1 gap-4">
           <span className="text-zinc-500">Execution node {id} not found.</span>
           <button onClick={() => navigate(-1)} className="flex items-center gap-2 text-zinc-400 hover:text-white">
@@ -99,7 +99,7 @@ setSelectedImage(url)
   }
   return (
     <div className="flex flex-col flex-1 min-h-screen bg-black text-zinc-100 font-mono antialiased selection:bg-zinc-800 relative">
-      <Navbar toggleSidebar={toggleSidebar} />
+      <Navbar toggleSidebar={toggleSidebar} >Details</Navbar>
 
       <div className="flex flex-col gap-8 w-full max-w-7xl mx-auto flex-1 p-6 pb-24">
         

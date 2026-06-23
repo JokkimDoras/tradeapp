@@ -71,7 +71,7 @@ export default function Analytics() {
 
   return (
     <div className="flex flex-col flex-1 min-h-screen bg-black text-zinc-100 font-sans antialiased selection:bg-zinc-800 selection:text-white relative">
-      <Navbar toggleSidebar={toggleSidebar} />
+      <Navbar toggleSidebar={toggleSidebar} >Analytics</Navbar>
 
       <div className="flex flex-col gap-6 w-full max-w-7xl mx-auto flex-1 p-6 pb-24">
         {/* Header Block Section */}

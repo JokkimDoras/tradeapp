@@ -16,7 +16,7 @@ import Analytics from "./pages/Analytics.tsx";
 import TradeDetails from "./pages/TradeDetails.tsx";
 import News from "./pages/News.tsx";
 import AnalyticsProvider from "./context/AnalyticsContext.tsx";
-
+import AccountSelector from "./pages/AcoountSelector.tsx";
 
 
 const router = createBrowserRouter([
@@ -75,6 +75,10 @@ const router = createBrowserRouter([
           {
             path:'/news',
             element:<News/>
+          },
+          {
+            path:'/account-selector',
+            element:<AccountSelector/>
           }
           
         ]

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSidebar } from "../hooks/useSidebar";
 import useTrade from "../hooks/useTrade";
 import Navbar from "../component/NavBar";
@@ -9,6 +9,7 @@ import SystemAnalysis from "../component/dashboard/SystemAnalysis";
 import TradeRow from "../component/dashboard/TradeRow";
 import { FiPlus } from "react-icons/fi";
 import { toast } from "sonner";
+import { useAnalytics } from "../hooks/useAnalytics";
 
 export default function Dashboard() {
   const { toggleSidebar } = useSidebar();
@@ -17,7 +18,21 @@ export default function Dashboard() {
   const [deleteingId, setDeleleteingId] = useState<null | number>(null);
 
   const { trades, removeTrade } = useTrade();
+  const { getAnalyticsData,isOld } = useAnalytics()
   const recentTrades = trades.slice(0, 5);
+
+  useEffect(() => {
+       getAnalyticsData()
+  },[])
+
+  useEffect(() => {
+    if (formState === false) {
+      if(isOld){
+        getAnalyticsData(true); // Force the context to bypass the cache and fetch fresh data
+
+      }
+    }
+  },[formState])
 
   const handleDelete = async (idToDel: number) => {
     try {

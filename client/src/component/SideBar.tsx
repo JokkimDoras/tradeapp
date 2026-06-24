@@ -5,7 +5,9 @@ import {
   FiClock, 
   FiLayers, 
   FiUser, 
-  FiSettings 
+  FiSettings,
+  FiChevronDown,
+  FiPlus
 } from "react-icons/fi";
 import { FaRegNewspaper } from "react-icons/fa";
 import { useNavigate } from "react-router";
@@ -15,6 +17,18 @@ import { useLocation } from "react-router";
 import { IoIosLogOut } from "react-icons/io";
 import useAuth from "../hooks/useAuth";
 import { getToken } from "../utils/auth";
+import { useState } from "react";
+import useAccount from "../hooks/useAccount";
+
+type Account = {
+  id: number;
+  name: string;
+  broker: string | null;
+  account_type: "live" | "demo" | "funded" ;
+  currency: string;
+  starting_balance: any;
+};
+
 
 const navigation = [
   {
@@ -26,9 +40,6 @@ const navigation = [
       { id: 4, name: "History", path: "/history", icon: <FiClock size={14} strokeWidth={1.75} /> },
       { id: 5, name: "Strategies", path: "/strategies", icon: <FiLayers size={14} strokeWidth={1.75} /> },
       { id: 6, name: "News", path: "/news", icon: <FaRegNewspaper size={14} strokeWidth={1.75} /> },
-      // { id: 7, name: "account", path: "/account-selector", icon: <FaRegNewspaper size={14} strokeWidth={1.75} /> },
-
-
     ],
   },
   {
@@ -44,25 +55,29 @@ export default function SideBar() {
   const { closeSidebar, setCurrentPath } = useSidebar();
   const { user } = useUser();
   const navigate = useNavigate();
-  const location = useLocation()
+  const location = useLocation();
   const { logout } = useAuth();
+  const { selectedAccount, accounts, setSelectedAccount } = useAccount();
+  const [accountDropdownOpen, setAccountDropdownOpen] = useState(false);
 
-  const handleLogout = async(e:any) =>{
-    const token = getToken()
-      e.stopPropagation()
-      await logout(token)
-  }
-
-
+  const handleLogout = async (e: any) => {
+    const token = getToken();
+    e.stopPropagation();
+    await logout(token);
+  };
 
   const initials = user.full_name
-    ? user.full_name.split(" ").map((n) => n[0]).join("").toUpperCase().slice(0, 2)
+    ? user.full_name.split(" ").map((n: string) => n[0]).join("").toUpperCase().slice(0, 2)
     : "TV";
 
   const handleNavigation = (item: { id: number; name: string; path: string }) => {
-
     setCurrentPath(item.name);
     navigate(item.path);
+  };
+
+  const handleSelectAccount = (account: Account) => {
+    setSelectedAccount(account);
+    setAccountDropdownOpen(false);
   };
 
   return (
@@ -78,6 +93,70 @@ export default function SideBar() {
             <path d="M15 18l-6-6 6-6"/>
           </svg>
         </button>
+      </div>
+
+      <div className="px-3 pt-4 pb-3 border-b border-zinc-900 relative">
+        <p className="text-[11px] font-semibold text-zinc-500 uppercase px-1 mb-2 tracking-wider font-mono">
+          Active Account
+        </p>
+        <button
+          onClick={() => setAccountDropdownOpen(!accountDropdownOpen)}
+          onMouseEnter={() => setAccountDropdownOpen(true)}
+
+          className="w-full flex items-center justify-between gap-2 px-3 py-2.5 rounded-md border border-zinc-800 hover:border-zinc-700 hover:bg-zinc-900/60 transition-all"
+        >
+          <div className="flex flex-col items-start min-w-0">
+            <span className="text-[13px] font-semibold text-zinc-100 truncate tracking-tight">
+              { selectedAccount?.name ?? "Select Account"}
+            </span>
+            {selectedAccount && (
+              <span className="text-[11px] text-zinc-500 capitalize">
+                {selectedAccount.account_type} - {selectedAccount.currency}
+              </span>
+            )}
+          </div>
+          <FiChevronDown
+            size={14}
+            className={`text-zinc-500 flex-shrink-0 transition-transform duration-200 ${accountDropdownOpen ? "rotate-180" : ""}`}
+          />
+        </button>
+
+        {accountDropdownOpen && (
+          <div className="absolute left-3 right-3 top-full mt-1 bg-zinc-950 border border-zinc-800 rounded-md overflow-hidden z-50 shadow-xl">
+            {accounts.map((account: any) => (
+              <button
+                key={account.id}
+                onClick={() => handleSelectAccount(account)}
+                className={`w-full flex items-center justify-between px-3 py-2.5 text-left hover:bg-zinc-900 transition-all ${
+                  selectedAccount?.id === account.id ? "bg-zinc-900" : ""
+                }`}
+              >
+                <div className="flex flex-col">
+                  <span className="text-[13px] font-medium text-zinc-100">{account.name}</span>
+                  <span className="text-[11px] text-zinc-500 capitalize">
+                    {account.account_type} · {account.currency}
+                  </span>
+                </div>
+                {selectedAccount?.id === account.id && (
+                  <div className="w-1.5 h-1.5 rounded-full bg-purple-500 flex-shrink-0" />
+                )}
+              </button>
+            ))}
+
+            <div className="border-t border-zinc-900">
+              <button
+                onClick={() => {
+                  setAccountDropdownOpen(false);
+                  navigate("/account-selector");
+                }}
+                className="w-full flex items-center gap-2 px-3 py-2.5 text-left hover:bg-zinc-900 transition-all text-zinc-500 hover:text-zinc-300"
+              >
+                <FiPlus size={13} />
+                <span className="text-[13px]">Manage accounts</span>
+              </button>
+            </div>
+          </div>
+        )}
       </div>
 
       <div className="flex-1 overflow-y-auto px-3 py-6 flex flex-col gap-7">
@@ -110,7 +189,7 @@ export default function SideBar() {
       </div>
 
       <div className="px-4 pt-4 border-t border-zinc-900">
-        <div 
+        <div
           onClick={() => {
             setCurrentPath("Profile");
             navigate("/profile");
@@ -126,11 +205,10 @@ export default function SideBar() {
             </span>
             <span className="text-xs font-medium text-zinc-500 tracking-normal mt-0.5">Free Plan</span>
           </div>
-          <div className="absolute ml-47 ">
-            <IoIosLogOut size={20} onClick= {handleLogout} className="hover:text-red-800"/>
+          <div className="absolute ml-47">
+            <IoIosLogOut size={20} onClick={handleLogout} className="hover:text-red-800" />
           </div>
         </div>
-
       </div>
 
     </div>

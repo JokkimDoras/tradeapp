@@ -2,10 +2,10 @@ import { createContext, useState } from "react";
 import { createAccountApi, deleteAccountApi, getAccountApi } from "../services/accoutApi";
 
 type Account = {
-  id: number;
-  name: string;
+  id: number | null;
+  name: string | null;
   broker: string | null;
-  account_type: "live" | "demo" | "funded";
+  account_type: "live" | "demo" | "funded" | '' ;
   currency: string;
   starting_balance: any;
 };
@@ -13,18 +13,26 @@ type Account = {
 interface AccountProviderTypes {
   accounts: Account[];
   setAccounts: any;
-  selectedAccount: string | null;
+  selectedAccount: Account | null;
   setSelectedAccount: any;
   createAccount: (some: any) => Promise<void>;
   getAccount:() => Promise<void>;
   deleteAccount:(idToDel:number) => Promise<void>
 }
 
+
 export const AccountContext = createContext<AccountProviderTypes | null>(null);
 
 function AccountProvider({ children }: { children: React.ReactNode }) {
   const [accounts, setAccounts] = useState<Account[]>([]);
-  const [selectedAccount, setSelectedAccount] = useState<string | null>(null);
+  const [selectedAccount, setSelectedAccount] = useState<Account | null>({
+    id: null,
+    name: '',
+    broker: '',
+    account_type: '' ,
+    currency: '',
+    starting_balance: '',
+  });
 
   const createAccount = async (accountData: any) => {
     try {

@@ -22,7 +22,7 @@ export default function useAuth() {
         ...payload.user
       }));
 
-      navigate("/dashboard");
+      navigate("/account-selector");
     } catch (err: any) {
       const errMsg = err.response?.data?.message || "AUTHENTICATION_FAILED: Access denied.";
       setError(errMsg);

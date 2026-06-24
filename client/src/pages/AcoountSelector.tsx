@@ -80,7 +80,7 @@ function AccountSelector() {
                 <div className="flex items-start justify-between w-full">
                   <div className="flex flex-col min-w-0">
                     <span className="text-[14px] font-semibold text-zinc-100 tracking-tight group-hover:text-white transition-colors truncate max-w-[170px]">
-                      {account.name.toUpperCase()}
+                      {account.name?.toUpperCase()?? ''}
                     </span>
                     <span className="text-[12px] text-zinc-500 truncate max-w-[150px] mt-0.5">
                       {account.broker || "No Broker Specified"}
@@ -117,7 +117,7 @@ function AccountSelector() {
                     onClick={(e) => {
                       e.stopPropagation();
                       setWhichOne({
-                        name:account.name,
+                        name:account.name ?? '',
                         id:account.id
                       });
                     }}

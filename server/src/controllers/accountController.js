@@ -47,12 +47,12 @@ const createAccount = async(req,res) => {
 
 }
 
-const deleteAccount = (req,res) => {
+const deleteAccount = async(req,res) => {
 
     const accountID = req.params.id;
 
     try{
-        const { data,error } = supabaseAdmin
+        const { data,error } = await supabaseAdmin
         .from('accounts')
         .delete()
         .eq('id',accountID)

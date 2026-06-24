@@ -30,8 +30,21 @@ function AccountProvider ({ children }: { children: React.ReactNode }) {
 
     const createAccount =async (accountData:any) => {
      try{
-       const { data } = await createAccountApi(accountData);
-       return data;
+       const  res  = await createAccountApi(accountData);
+       if(res.success){
+        // 1. Grab the new account object
+    //   const newAccount = res.data;
+
+    //   // 2. Explicitly force starting_balance to be a number
+    //   const sanitizedAccount = {
+    //     ...newAccount,
+    //     starting_balance: Number(newAccount.starting_balance)
+    //   };
+        setAccounts((prev) => ([
+            ...prev,
+            res.data
+        ]))
+       }
      }catch(err){
         throw err;
      }

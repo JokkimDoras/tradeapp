@@ -47,4 +47,8 @@ const createAccount = async(req,res) => {
 
 }
 
-module.exports = {createAccount}
+const deleteAccount = (req,res) => {
+
+}
+
+module.exports = {createAccount,deleteAccount}

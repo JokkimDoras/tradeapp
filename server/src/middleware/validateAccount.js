@@ -44,4 +44,8 @@ const validateCreateAccount = async (req, res, next) => {
   }
 };
 
-module.exports = { validateCreateAccount };
+const validateDeleteAccount = (req,res,next) => {
+
+}
+
+module.exports = { validateCreateAccount,validateDeleteAccount };

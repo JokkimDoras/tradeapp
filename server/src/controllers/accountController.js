@@ -49,6 +49,35 @@ const createAccount = async(req,res) => {
 
 const deleteAccount = (req,res) => {
 
+    const accountID = req.params.id;
+
+    try{
+        const { data,error } = supabaseAdmin
+        .from('accounts')
+        .delete()
+        .eq('id',accountID)
+
+        if(error) {
+            return res.status(400).json({
+                success:false,
+                message:'Could not delete account',
+                error
+            })
+        }
+
+        return res.status(200).json({
+            success:true,
+            message:'Account successfully delete',
+            data
+
+        })
+    }catch(err){
+        return res.status(500).json({
+            success: false,
+            message: "Server error",
+            error: err.message,
+          });
+    }
 }
 
 module.exports = {createAccount,deleteAccount}

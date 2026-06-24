@@ -5,7 +5,7 @@ const {createAccount, deleteAccount} = require('../controllers/accountController
 
 
 router.post('/create',validateCreateAccount,createAccount);
-router.delete('/delete/:id',validateDeleteAccount,deleteAccount)
+router.delete('/delete/:id',deleteAccount)
 
 
 module.exports = router

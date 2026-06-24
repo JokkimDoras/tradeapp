@@ -13,9 +13,9 @@ const validateCreateAccount = async (req, res, next) => {
 
   if (!name || !account_type || !currency) {
     return res.status(400).json({
-        success:false,
-        message:'name account type currency must be provide'
-    })
+      success: false,
+      message: "name account type currency must be provide",
+    });
   }
 
   const token = authHeader.split(" ")[1];
@@ -44,8 +44,49 @@ const validateCreateAccount = async (req, res, next) => {
   }
 };
 
-const validateDeleteAccount = (req,res,next) => {
+const validateDeleteAccount = async (req, res, next) => {
+  const authHeader = req.headers.authorization;
 
-}
+  if (!authHeader || !authHeader.startsWith("Bearer")) {
+    return res.status(401).json({
+      success: false,
+      message: "Illegal entry! Unauthorized invalid token",
+    });
+  }
 
-module.exports = { validateCreateAccount,validateDeleteAccount };
+  const token = authHeader.split(" ")[1];
+  const accountId = req.params.id;
+
+  try {
+    const { data:{user},error:userError} = await supabaseAdmin.auth.getUser(token);
+
+    if(userError || !user) {
+        return res.status(400).json({
+            success:false,
+            message:'Cant get the user info',
+            userError
+        })
+    }
+
+    const { data: account, error } = await supabaseAdmin
+      .from("accounts")
+      .select("user_id")
+      .eq("id", accountId)
+      .single()
+
+    if (error || !account) {
+      return res.status(404).json({ message: "Account not found." });
+    }
+
+    if (account.user_id !== user.id) {
+      return res
+        .status(403)
+        .json({ message: "Forbidden: You do not own this account." });
+    }
+
+    req.user = user;
+    next();
+  } catch (err) {}
+};
+
+module.exports = { validateCreateAccount, validateDeleteAccount };

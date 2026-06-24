@@ -18,7 +18,8 @@ app.use('/api/auth', authRoutes);
 app.use('/api/user',userRoutes)
 app.use('/api/trades',tradeRoutes)
 app.use('/api',screenshotRoutes)
-app.use('/api/account',accountRoutes)
+app.use('/api/accounts',accountRoutes)
+
 const PORT = process.env.PORT || 8000;
 
 app.listen(PORT, '0.0.0.0', () => {

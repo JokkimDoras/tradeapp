@@ -11,6 +11,7 @@ import { FiPlus } from "react-icons/fi";
 import { toast } from "sonner";
 import { useAnalytics } from "../hooks/useAnalytics";
 
+
 export default function Dashboard() {
   const { toggleSidebar } = useSidebar();
   const { loading } = useTrade();
@@ -46,6 +47,19 @@ export default function Dashboard() {
       setDeleleteingId(null);
     }
   };
+  // useEffect(() => {
+  //   const fetchAccounts = async () => {
+  //     const token = getToken();
+  //     console.log(token,'nigga')
+  //     const res = await axios.get("http://localhost:8000/api/accounts",{
+  //       headers:{
+  //         Authorization:`Bearer ${token}`
+  //       }
+  //     });
+  //     console.log(res.data)
+  //   };
+  //   fetchAccounts()
+  // }, []);
 
   if (loading.fetchTrades) return <DashboardSkeleton />;
 
@@ -57,6 +71,8 @@ export default function Dashboard() {
       />
     );
   }
+
+
 
   return (
     <div className="flex flex-col flex-1 min-h-screen bg-black text-zinc-100 font-sans antialiased selection:bg-zinc-800 selection:text-white relative">

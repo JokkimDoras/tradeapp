@@ -80,4 +80,38 @@ const deleteAccount = (req,res) => {
     }
 }
 
-module.exports = {createAccount,deleteAccount}
+const getAccount = async(req,res) => {
+       const user_id = req.user.id
+
+       try{
+       const {data,error } = await supabaseAdmin
+        .from('accounts')
+        .select('*')
+        .eq('user_id',user_id)
+        .order("created_at",{ascending:true})
+
+        if (error) {
+            return res.status(400).json({
+              success: false,
+              message: "Failed to fetch accounts",
+              error
+            });
+          }
+
+          return res.status(200).json({
+            success: true,
+            message: "Accounts fetched successfully",
+            data
+          });
+
+       }catch(err){
+        return res.status(400).json({
+            success: false,
+            message: "Failed to fetch accounts",
+            err
+          });
+       }
+
+}
+
+module.exports = {createAccount,deleteAccount,getAccount}

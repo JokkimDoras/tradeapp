@@ -4,11 +4,17 @@ import useAccount from "../hooks/useAccount";
 import { useSidebar } from "../hooks/useSidebar";
 import AddAccount from "../component/AddAccount";
 import { IoIosAdd } from "react-icons/io";
+import { MdDeleteOutline } from "react-icons/md";
+import DeleteAccountModal from "../component/DeleteAccountModal";
 
 function AccountSelector() {
   const { toggleSidebar } = useSidebar();
   const { accounts } = useAccount();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDeleteModalOpen,setIsDeleteModalOpen] = useState(false);
+  const [whichOne,setWhichOne] = useState('')
+
+  if(isDeleteModalOpen) return <DeleteAccountModal setIsDeleteModalOpen={setIsDeleteModalOpen}>{whichOne}</DeleteAccountModal>
 
   return (
     <div className="flex flex-col min-h-screen bg-black text-zinc-100 font-sans antialiased selection:bg-zinc-800 selection:text-white">
@@ -64,14 +70,27 @@ function AccountSelector() {
                   </span>
                 </div>
 
-                <div className="flex flex-col gap-0.5 w-full mt-auto">
-                  <span className="text-[11px] font-semibold text-zinc-500 uppercase tracking-wider font-mono">
-                    Starting Balance
-                  </span>
-                  <span className="text-[18px] font-bold font-mono text-zinc-50 tracking-tight leading-none">
-                    {account.currency === "USD" ? "$" : account.currency + " "}
-                    {Number(account.starting_balance || 0).toLocaleString()}
-                  </span>
+                <div className="flex items-end justify-between w-full mt-auto">
+                  <div className="flex flex-col gap-0.5 min-w-0">
+                    <span className="text-[11px] font-semibold text-zinc-500 uppercase tracking-wider font-mono">
+                      Starting Balance
+                    </span>
+                    <span className="text-[18px] font-bold font-mono text-zinc-50 tracking-tight leading-none">
+                      {account.currency === "USD" ? "$" : account.currency + " "}
+                      {Number(account.starting_balance || 0).toLocaleString()}
+                    </span>
+                  </div>
+
+                  <button 
+                    onClick={(e) => {
+                      e.stopPropagation(); 
+                      setWhichOne(account.name)
+                      
+                    }}
+                    className="text-zinc-500 hover:text-red-400 p-1.5 rounded hover:bg-zinc-900/50 transition-colors duration-150 cursor-pointer mb-[-4px] mr-[-4px]"
+                  >
+                    <MdDeleteOutline  onClick={() => setIsDeleteModalOpen(true)} color="red" size={18} />
+                  </button>
                 </div>
               </div>
             ))}

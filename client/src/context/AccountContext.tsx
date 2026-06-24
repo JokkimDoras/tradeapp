@@ -5,7 +5,6 @@ type Account = {
     id: string;
     name: string;
     size: number;
-    broker: string;
     platform: string;
 };
 

@@ -23,7 +23,7 @@ const navigation = [
       { id: 4, name: "History", path: "/history", icon: <FiClock size={14} strokeWidth={1.75} /> },
       { id: 5, name: "Strategies", path: "/strategies", icon: <FiLayers size={14} strokeWidth={1.75} /> },
       { id: 6, name: "News", path: "/news", icon: <FaRegNewspaper size={14} strokeWidth={1.75} /> },
-      // { id: 7, name: "acoount", path: "/account-selector", icon: <FaRegNewspaper size={14} strokeWidth={1.75} /> },
+      { id: 7, name: "acoount", path: "/account-selector", icon: <FaRegNewspaper size={14} strokeWidth={1.75} /> },
 
 
     ],

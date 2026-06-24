@@ -7,7 +7,7 @@ import { IoIosAdd } from "react-icons/io";
 
 function AccountSelector() {
   const { toggleSidebar } = useSidebar();
-  const { accounts } = useAccount();
+  const { accounts } = useAccount(); 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
@@ -33,26 +33,39 @@ function AccountSelector() {
 
         {accounts && accounts.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {accounts.map((account, index) => (
+            {accounts.map((account) => (
               <div 
-                key={account.id || index}
+                key={account.id}
                 className="w-full h-32 bg-black border border-zinc-900 rounded-lg p-4 flex flex-col justify-between hover:border-zinc-800 hover:bg-[#050505] transition-all cursor-pointer duration-200 group shadow-sm"
               >
                 <div className="flex items-start justify-between w-full">
-                  <span className="text-[14px] font-semibold text-zinc-100 tracking-tight group-hover:text-white transition-colors truncate max-w-[180px]">
-                    {account.name || "Untitled Account"}
-                  </span>
-                  <span className="text-[11px] font-medium font-mono text-zinc-500 bg-zinc-900 border border-zinc-800 rounded px-1.5 py-0.5 tracking-tight uppercase">
-                    {account.platform || "Platform"}
+                  <div className="flex flex-col min-w-0">
+                    <span className="text-[14px] font-semibold text-zinc-100 tracking-tight group-hover:text-white transition-colors truncate max-w-[170px]">
+                      {account.name}
+                    </span>
+                    <span className="text-[12px] text-zinc-500 truncate max-w-[150px] mt-0.5">
+                      {account.broker || "No Broker Specified"}
+                    </span>
+                  </div>
+                  
+                  <span className={`text-[10px] font-mono font-bold tracking-tight rounded px-1.5 py-0.5 uppercase border ${
+                    account.account_type === 'live' 
+                      ? 'bg-emerald-850/40 text-emerald-400 border-emerald-900/50' 
+                      : account.account_type === 'funded'
+                      ? 'bg-purple-950/40 text-purple-400 border-purple-900/50'
+                      : 'bg-zinc-900 text-zinc-400 border-zinc-800'
+                  }`}>
+                    {account.account_type}
                   </span>
                 </div>
                 
                 <div className="flex flex-col gap-0.5 w-full mt-auto">
                   <span className="text-[11px] font-semibold text-zinc-500 uppercase tracking-wider font-mono">
-                    Account Balance
+                    Starting Balance
                   </span>
-                  <span className="text-[18px] font-bold font-mono text-emerald-500 tracking-tight leading-none">
-                    ${Number(account.size || 0).toLocaleString()}
+                  <span className="text-[18px] font-bold font-mono text-zinc-50 tracking-tight leading-none">
+                    {account.currency === 'USD' ? '$' : account.currency + ' '}
+                    {Number(account.starting_balance.toLocaleString() || 0)}
                   </span>
                 </div>
               </div>

@@ -4,6 +4,7 @@ const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes')
 const tradeRoutes = require('./routes/tradeRoutes')
 const screenshotRoutes = require('./routes/screenshotRoutes')
+const accountRoutes = require('./routes/accountRoutes')
 const app = express();
 
 app.use(cors());
@@ -17,7 +18,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/user',userRoutes)
 app.use('/api/trades',tradeRoutes)
 app.use('/api',screenshotRoutes)
-
+app.use('/api/account',accountRoutes)
 const PORT = process.env.PORT || 8000;
 
 app.listen(PORT, '0.0.0.0', () => {

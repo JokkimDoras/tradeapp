@@ -53,7 +53,7 @@ console.log(payload)
   }
 }
 
-export default async function logOutUserApi(token: string) {
+export default async function logOutUserApi(token: string | null) {
   try {
     await axios.post(`${API_URL}/api/auth/logout`, {}, {
       headers: { Authorization: `Bearer ${token}` },

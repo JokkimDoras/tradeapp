@@ -1,11 +1,29 @@
-import type { ReactNode } from "react";
+import { useState } from "react";
+import useAccount from "../hooks/useAccount";
 
 interface DeleteAccountModalProps {
   setIsDeleteModalOpen: (open: boolean) => void;
-  children: ReactNode;
+  children: any;
 }
 
+
+
 function DeleteAccountModal({ setIsDeleteModalOpen, children }: DeleteAccountModalProps) {
+  const[loading,setLoading]=useState(false);
+
+  const { deleteAccount } = useAccount();
+
+  const handleDelete = async(idToDel:number) => {
+    try{
+      setLoading(true)
+      await deleteAccount(idToDel)
+      setIsDeleteModalOpen(false)
+    }catch(err:any){
+   throw err;
+    }finally{
+      setLoading(false)
+    }
+  }
   return (
     <div 
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in duration-200 cursor-pointer font-sans antialiased selection:bg-zinc-800 selection:text-white"
@@ -20,7 +38,7 @@ function DeleteAccountModal({ setIsDeleteModalOpen, children }: DeleteAccountMod
             Delete Workspace Account
           </h2>
           <p className="text-[13px] text-zinc-400 leading-relaxed tracking-tight">
-            Are you sure you want to permanently delete <span className="text-zinc-100 font-semibold">"{children}"</span>? This action cannot be undone and will immediately wipe all context dashboard metrics.
+            Are you sure you want to permanently delete <span className="text-zinc-100 font-semibold">"{children.name}"</span>? This action cannot be undone and will immediately wipe all context dashboard metrics.
           </p>
         </div>
 
@@ -33,11 +51,20 @@ function DeleteAccountModal({ setIsDeleteModalOpen, children }: DeleteAccountMod
             Cancel
           </button>
           <button
-            type="button"
-            className="px-3 py-1.5 text-[12px] font-medium bg-red-600 hover:bg-red-500 text-white border border-red-700 hover:border-red-600 rounded-md transition-all cursor-pointer shadow-sm shadow-red-950/20"
-          >
-            Delete
-          </button>
+  onClick={() => handleDelete(children.id)}
+  disabled={loading}
+  type="button"
+  className="px-3 py-1.5 text-[12px] font-medium bg-red-600 hover:bg-red-500 text-white border border-red-700 hover:border-red-600 rounded-md transition-all shadow-sm shadow-red-950/20 disabled:opacity-50 disabled:cursor-not-allowed"
+>
+  {loading ? (
+    <span className="flex items-center gap-2">
+      <span className="w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin" />
+      Deleting...
+    </span>
+  ) : (
+    "Delete"
+  )}
+</button>
         </div>
       </div>
     </div>

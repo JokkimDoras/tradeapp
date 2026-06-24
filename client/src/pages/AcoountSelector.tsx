@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Navbar from "../component/NavBar";
 import useAccount from "../hooks/useAccount";
 import { useSidebar } from "../hooks/useSidebar";
@@ -6,15 +6,45 @@ import AddAccount from "../component/AddAccount";
 import { IoIosAdd } from "react-icons/io";
 import { MdDeleteOutline } from "react-icons/md";
 import DeleteAccountModal from "../component/DeleteAccountModal";
+import AccountSelectorSkeleton from "../component/skeltons/AccountSelectorSkeleton";
 
+type whichOneState = {
+  name:string;
+  id:number | null
+}
 function AccountSelector() {
   const { toggleSidebar } = useSidebar();
-  const { accounts } = useAccount();
+  const { accounts, getAccount } = useAccount();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isDeleteModalOpen,setIsDeleteModalOpen] = useState(false);
-  const [whichOne,setWhichOne] = useState('')
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [whichOne, setWhichOne] = useState<whichOneState>({
+    name:'',
+    id:null 
+  });
+  const [loading, setLoading] = useState(false);
 
-  if(isDeleteModalOpen) return <DeleteAccountModal setIsDeleteModalOpen={setIsDeleteModalOpen}>{whichOne}</DeleteAccountModal>
+  useEffect(() => {
+    const fetchAccounts = async () => {
+      try {
+        setLoading(true);
+        await getAccount();
+      } catch (err: any) {
+        throw err;
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchAccounts();
+  }, []);
+
+  if (loading) return <AccountSelectorSkeleton />;
+
+  if (isDeleteModalOpen)
+    return (
+      <DeleteAccountModal  setIsDeleteModalOpen={setIsDeleteModalOpen}>
+        {whichOne}
+      </DeleteAccountModal>
+    );
 
   return (
     <div className="flex flex-col min-h-screen bg-black text-zinc-100 font-sans antialiased selection:bg-zinc-800 selection:text-white">
@@ -50,7 +80,7 @@ function AccountSelector() {
                 <div className="flex items-start justify-between w-full">
                   <div className="flex flex-col min-w-0">
                     <span className="text-[14px] font-semibold text-zinc-100 tracking-tight group-hover:text-white transition-colors truncate max-w-[170px]">
-                      {account.name}
+                      {account.name.toUpperCase()}
                     </span>
                     <span className="text-[12px] text-zinc-500 truncate max-w-[150px] mt-0.5">
                       {account.broker || "No Broker Specified"}
@@ -76,20 +106,28 @@ function AccountSelector() {
                       Starting Balance
                     </span>
                     <span className="text-[18px] font-bold font-mono text-zinc-50 tracking-tight leading-none">
-                      {account.currency === "USD" ? "$" : account.currency + " "}
+                      {account.currency === "USD"
+                        ? "$"
+                        : account.currency + " "}
                       {Number(account.starting_balance || 0).toLocaleString()}
                     </span>
                   </div>
 
-                  <button 
+                  <button
                     onClick={(e) => {
-                      e.stopPropagation(); 
-                      setWhichOne(account.name)
-                      
+                      e.stopPropagation();
+                      setWhichOne({
+                        name:account.name,
+                        id:account.id
+                      });
                     }}
                     className="text-zinc-500 hover:text-red-400 p-1.5 rounded hover:bg-zinc-900/50 transition-colors duration-150 cursor-pointer mb-[-4px] mr-[-4px]"
                   >
-                    <MdDeleteOutline  onClick={() => setIsDeleteModalOpen(true)} color="red" size={18} />
+                    <MdDeleteOutline
+                      onClick={() => setIsDeleteModalOpen(true)}
+                      color="red"
+                      size={18}
+                    />
                   </button>
                 </div>
               </div>

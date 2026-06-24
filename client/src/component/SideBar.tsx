@@ -68,7 +68,6 @@ export default function SideBar() {
   return (
     <div className="flex flex-col w-64 h-screen bg-black border-r border-zinc-900 py-4 font-sans antialiased selection:bg-zinc-800 selection:text-white">
 
-      {/* ── LOGO + CLOSE ── */}
       <div className="h-12 flex items-center justify-between px-5 pb-3 border-b border-zinc-900">
         <span className="text-base font-bold text-zinc-50 tracking-tight">TradeVault</span>
         <button
@@ -81,7 +80,6 @@ export default function SideBar() {
         </button>
       </div>
 
-      {/* ── NAV ITEMS ── */}
       <div className="flex-1 overflow-y-auto px-3 py-6 flex flex-col gap-7">
         {navigation.map((group) => (
           <div key={group.section} className="flex flex-col gap-1">
@@ -111,7 +109,6 @@ export default function SideBar() {
         ))}
       </div>
 
-      {/* ── USER FOOTER ── */}
       <div className="px-4 pt-4 border-t border-zinc-900">
         <div 
           onClick={() => {
@@ -133,6 +130,7 @@ export default function SideBar() {
             <IoIosLogOut size={20} onClick= {handleLogout} className="hover:text-red-800"/>
           </div>
         </div>
+
       </div>
 
     </div>

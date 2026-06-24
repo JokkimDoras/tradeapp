@@ -11,6 +11,7 @@ const token = getToken();
             }
         })
 
+        console.log(response.data)
         return response.data
     }catch(err:any){
         console.error(err);

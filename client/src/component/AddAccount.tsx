@@ -2,10 +2,11 @@ import { useState } from "react";
 import { useSidebar } from "../hooks/useSidebar";
 import Navbar from "./NavBar";
 import { toast } from "sonner";
+import useAccount from "../hooks/useAccount";
 
 function AddAccount ({setIsModalOpen}:any) {
     const { toggleSidebar } = useSidebar();
-    // const { setAccounts,createAccount } = useAccount();
+    const { createAccount } = useAccount();
 
     const [newAccount, setNewAccount] = useState({
         name: "",
@@ -36,11 +37,11 @@ function AddAccount ({setIsModalOpen}:any) {
         if (!newAccount.name || !newAccount.starting_balance || !newAccount.currency || !newAccount.account_type) return toast.error('Fill the account details')
 
             console.log(newAccount)
-            // try{
-            //     await createAccount(newAccount)
-            // }catch(err:any){
-            //     throw err
-            // }
+            try{
+                await createAccount(newAccount)
+            }catch(err:any){
+                throw err
+            }
         // setAccounts((prevArray) => [
         //     ...prevArray,
         //     { 

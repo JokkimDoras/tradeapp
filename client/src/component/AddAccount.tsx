@@ -3,7 +3,7 @@ import { useSidebar } from "../hooks/useSidebar";
 import Navbar from "./NavBar";
 import { toast } from "sonner";
 
-function AddAccount ({setIsModalOpen}) {
+function AddAccount ({setIsModalOpen}:any) {
     const { toggleSidebar } = useSidebar();
     // const { setAccounts,createAccount } = useAccount();
 

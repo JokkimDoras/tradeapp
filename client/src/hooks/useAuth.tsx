@@ -54,7 +54,7 @@ export default function useAuth() {
     }
   };
 
-  const logout = async (currentToken: string) => {
+  const logout = async (currentToken: string | null) => {
     setLoading(true);
     try {
       await logOutUserApi(currentToken);

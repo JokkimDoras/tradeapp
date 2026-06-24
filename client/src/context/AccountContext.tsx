@@ -8,7 +8,7 @@ type Account = {
     broker: string | null;
     account_type: "live" | "demo" | "funded";
     currency: string;
-    starting_balance: number | null;
+    starting_balance: any;
   };
 
 interface AccountProviderTypes{

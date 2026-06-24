@@ -3,6 +3,7 @@ import SideBar from "./SideBar";
 import { useSidebar } from "../hooks/useSidebar";
 import { SidebarProvider } from "../context/SidebarContext";
 import TradeProvider from "../context/TradeContext";
+import AccountProvider from "../context/AccountContext";
 
 function DashboardLayoutContent() {
   const { isOpen } = useSidebar();
@@ -31,10 +32,12 @@ function DashboardLayoutContent() {
 
 export default function DashboardLayout() {
   return (
-    <SidebarProvider>
-      <TradeProvider>
-        <DashboardLayoutContent />
-      </TradeProvider>
-    </SidebarProvider>
+    <AccountProvider>
+      <SidebarProvider>
+        <TradeProvider>
+          <DashboardLayoutContent />
+        </TradeProvider>
+      </SidebarProvider>
+    </AccountProvider>
   );
 }

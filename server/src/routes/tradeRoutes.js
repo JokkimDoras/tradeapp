@@ -4,7 +4,7 @@ const { validateAddTrade,validateGetTrade,validateDeleteTrade, validateUpdateTra
 const { addTrade,getTrade,deleteTrade, updateTrade,getTradingAnalytics, }  = require('../controllers/tradeController')
 
 router.post('/addtrade',validateAddTrade,addTrade)
-router.get('/gettrade',validateGetTrade,getTrade)
+router.get('/gettrade/:id',validateGetTrade,getTrade)
 router.delete('/deletetrade/:id',validateDeleteTrade,deleteTrade)
 router.put('/updatetrade/:id',validateUpdateTrade,updateTrade)
 router.get('/dashboard/stats',validateStats,getTradingAnalytics)

@@ -4,13 +4,11 @@ import {
   type ReactNode,
   type Dispatch,
   type SetStateAction,
-  useEffect,
 } from "react";
 import { createTradeApi, updateTradeApi } from "../services/tradeApi";
 import { deleteTradeApi, type TradeFormData } from "../services/tradeApi";
-import { getTradeApi } from "../services/tradeApi";
-import { useUser } from "../hooks/useUser";
 import { useAnalytics } from "../hooks/useAnalytics";
+import useAccount from "../hooks/useAccount";
 
 interface LoadingState {
   fetchTrades: boolean;
@@ -26,6 +24,7 @@ interface TradeContextType {
   removeTrade: (idToDel: number) => Promise<void>;
   updateTrade: (idToUpdate: number, formData: any) => Promise<void>;
   loading: LoadingState;
+  setLoading:any;
 }
 
 export const TradeContext = createContext<TradeContextType | null>(null);
@@ -43,36 +42,11 @@ export default function TradeProvider({ children }: TradeProviderProps) {
     updatingTradeId: null,
     deletingTradeId: null,
   });
-  const { user } = useUser();
-  const { setIsOld } = useAnalytics()
+  const { setIsOld } = useAnalytics();
+  const {selectedAccount} = useAccount();
+  console.log(selectedAccount,'what its contain')
 
-  useEffect(() => {
-    const fetchInitialState = async () => {
-      try {
-        setLoading((prev) => ({
-          ...prev,
-          fetchTrades: true,
-        }));
-        const { data } = await getTradeApi();
-        setTrades(data);
-      } catch (err) {
-        console.error(err);
-      } finally {
-        setLoading((prev) => ({
-          ...prev,
-          fetchTrades: false,
-        }));
-      }
-    };
 
-    if (!user) return;
-
-    const timer = setTimeout(() => {
-      fetchInitialState();
-    }, 1000);
-
-    return () => clearTimeout(timer);
-  }, [user]);
 
   const addTrade = async (formData: TradeFormData) => {
     try {
@@ -160,6 +134,7 @@ export default function TradeProvider({ children }: TradeProviderProps) {
         removeTrade,
         updateTrade,
         loading,
+        setLoading
       }}
     >
       {children}

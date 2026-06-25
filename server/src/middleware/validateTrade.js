@@ -71,34 +71,54 @@ const validateGetTrade = async (req, res, next) => {
   if (!authHeader || !authHeader.startsWith("Bearer")) {
     return res.status(401).json({
       success: false,
-      message: "Unauthorized Invaild token",
+      message: "Unauthorized: Invalid token",
     });
   }
+
+  const accountId = req.params.id; 
   const token = authHeader.split(" ")[1];
+
   try {
     const {
       data: { user },
-      error,
+      error: authError,
     } = await supabase.auth.getUser(token);
-    if (error || !user) {
+
+    if (authError || !user) {
       return res.status(401).json({
         success: false,
-        message: "Unauthorized Invalid token",
-        error,
+        message: "Unauthorized: Invalid token",
+        error: authError,
+      });
+    }
+
+
+    // does this user own this account? 
+    const { data: account, error: accountError } = await supabaseAdmin
+      .from("accounts") 
+      .select("id")
+      .eq("id", accountId)
+      .eq("user_id", user.id) 
+      .single();
+
+    if (accountError || !account) {
+      return res.status(404).json({
+        success: false,
+        message: "Account not found or access denied",
       });
     }
 
     req.user_id = user.id;
+    req.account_id = accountId; 
 
     next();
   } catch (err) {
-    return res.status(400).json({
+    return res.status(500).json({
       success: false,
       message: "Internal server Error",
     });
   }
 };
-
 const validateDeleteTrade = async (req, res, next) => {
   const authHeader = req.headers.authorization;
 

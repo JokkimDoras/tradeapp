@@ -32,10 +32,11 @@ export interface TradeFormData {
 }
  
 
-export async function getTradeApi () {
+export async function getTradeApi (id:number) {
   const tokenToFix = getToken();
+  console.log(id)
   try{
-    const response = await axios.get(`${URL}/api/trades/gettrade`,{
+    const response = await axios.get(`${URL}/api/trades/gettrade/${id}`,{
       headers:{
         Authorization:`Bearer ${tokenToFix}`
       }

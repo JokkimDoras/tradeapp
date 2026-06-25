@@ -1,5 +1,6 @@
 import { MdDeleteOutline } from "react-icons/md";
 import { useNavigate } from "react-router";
+import useAccount from "../../hooks/useAccount";
 
 interface AccountCardProps {
   account: any;
@@ -13,10 +14,24 @@ export default function AccountCard({
   setIsDeleteModalOpen,
 }: AccountCardProps) {
 
-    const navigate = useNavigate()
+    const navigate = useNavigate();
+    const { setSelectedAccount } = useAccount();
+
+    const handleMultiTask = () => {
+        setSelectedAccount({
+            id: account.id,
+            name: account?.name,
+            broker: account.broker??null,
+            account_type: account?.account_type ,
+            currency: account?.currency,
+            starting_balance: account?.starting_balance,
+        })
+        navigate(`/dashboard/${account.id}`)
+    }
+
   return (
-    <div className="w-full h-32 bg-black border border-zinc-900 rounded-lg p-4 flex flex-col justify-between hover:border-zinc-800 hover:bg-[#050505] transition-all cursor-pointer duration-200 group shadow-sm">
-      <div className="flex items-start justify-between w-full " onClick={() => navigate(`/dashboard/${account.id}`)}>
+    <div className="w-full h-32 bg-black border border-zinc-900 rounded-lg p-4 flex flex-col justify-between hover:border-zinc-800 hover:bg-[#050505] transition-all cursor-pointer duration-200 group shadow-sm" onClick={handleMultiTask}>
+      <div className="flex items-start justify-between w-full " >
         <div className="flex flex-col min-w-0" >
           <span className="text-[14px] font-semibold text-zinc-100 tracking-tight group-hover:text-white transition-colors truncate max-w-[170px]">
             {account.name?.toUpperCase() ?? ""}

@@ -1,6 +1,6 @@
 import { useSidebar } from "../hooks/useSidebar";
 import AddTrade from "../component/addtrade/AddTrade";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import useTrade from "../hooks/useTrade";
 import Navbar from "../component/NavBar";
 import HistoryToolbar from "../component/history/HistoryToolbar";
@@ -8,19 +8,52 @@ import HistoryRow from "../component/history/HistoryRow";
 import ExitPriceModal from "../component/history/ExitPriceModal";
 import { toast } from "sonner";
 import { useNavigate } from "react-router";
+import useAccount from "../hooks/useAccount";
+import { getTradeApi } from "../services/tradeApi";
+import { useUser } from "../hooks/useUser";
+import HistorySkeleton from "../component/skeltons/HistorySkelton";
+
 
 export default function History() {
   const { toggleSidebar } = useSidebar();
-  const { trades, removeTrade, updateTrade } = useTrade(); 
+  const { trades, removeTrade, updateTrade,setLoading,setTrades,loading } = useTrade(); 
+  const { selectedAccount} = useAccount();
   const navigate = useNavigate();
+  const { user } = useUser();
 
   const [formState, setFormState] = useState<boolean | any>(false);
   const [deleteingId, setDeleleteingId] = useState<null | number>(null);
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
 
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeTradeToClose, setActiveTradeToClose] = useState<any>(null);
+
+    useEffect(() => {
+      const fetchInitialState = async () => {
+        try {
+          setLoading((prev:any) => ({
+            ...prev,
+            fetchTrades: true,
+          }));
+          const { data } = await getTradeApi(selectedAccount!.id!);
+          setTrades(data);
+        } catch (err) {
+          console.error(err);
+        } finally {
+          setLoading((prev:any) => ({
+            ...prev,
+            fetchTrades: false,
+          }));
+        }
+      };
+  
+      if (!user || !selectedAccount?.id) return;
+        fetchInitialState();
+      
+  
+    }, [user,selectedAccount?.id]);
 
   const handleDelete = async (idToDel: number) => {
     try {
@@ -80,6 +113,8 @@ export default function History() {
       />
     );
   }
+
+  if(loading.fetchTrades) return <HistorySkeleton/>
 
   return (
     <div className="flex flex-col flex-1 min-h-screen bg-black text-zinc-100 font-sans antialiased relative selection:bg-zinc-800 selection:text-white">

@@ -80,7 +80,7 @@ export default function Dashboard() {
   // useEffect(() => {
   //   const fetchAccounts = async () => {
   //     const token = getToken();
-  //     console.log(token,'nigga')
+  //     console.log(token)
   //     const res = await axios.get("http://localhost:8000/api/accounts",{
   //       headers:{
   //         Authorization:`Bearer ${token}`
@@ -152,7 +152,6 @@ export default function Dashboard() {
         </div>
       </div>
 
-      {/* Floating Action Button */}
       <div className="fixed bottom-6 right-6 z-50">
         <button
           onClick={() => setFormState(true)}

@@ -57,7 +57,7 @@ export default function SideBar() {
   const navigate = useNavigate();
   const location = useLocation();
   const { logout } = useAuth();
-  const { selectedAccount, accounts, setSelectedAccount } = useAccount();
+  const { selectedAccount, accounts, setSelectedAccount,setIsModalOpen } = useAccount();
   const [accountDropdownOpen, setAccountDropdownOpen] = useState(false);
 
   const handleLogout = async (e: any) => {
@@ -146,8 +146,8 @@ export default function SideBar() {
             <div className="border-t border-zinc-900">
               <button
                 onClick={() => {
-                  setAccountDropdownOpen(false);
-                  navigate("/account-selector");
+                  setAccountDropdownOpen(true);
+                  setIsModalOpen(true)
                 }}
                 className="w-full flex items-center gap-2 px-3 py-2.5 text-left hover:bg-zinc-900 transition-all text-zinc-500 hover:text-zinc-300"
               >

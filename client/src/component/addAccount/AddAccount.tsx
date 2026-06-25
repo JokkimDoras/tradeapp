@@ -4,10 +4,10 @@ import Navbar from "../NavBar";
 import { toast } from "sonner";
 import useAccount from "../../hooks/useAccount";
 
-function AddAccount({ setIsModalOpen }: any) {
+function AddAccount() {
   const [loading, setLoading] = useState(false);
   const { toggleSidebar } = useSidebar();
-  const { createAccount } = useAccount();
+  const { createAccount,setIsModalOpen } = useAccount();
 
   const [newAccount, setNewAccount] = useState({
     name: "",

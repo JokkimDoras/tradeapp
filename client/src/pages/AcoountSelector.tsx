@@ -16,14 +16,15 @@ type whichOneState = {
 
 function AccountSelector() {
   const { toggleSidebar } = useSidebar();
-  const { accounts, getAccount } = useAccount();
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const { accounts, getAccount,setIsModalOpen,isModalOpen } = useAccount();
+  console.log("Type of setIsModalOpen:", typeof setIsModalOpen);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [whichOne, setWhichOne] = useState<whichOneState>({
     name: "",
     id: null,
   });
   const [loading, setLoading] = useState(false);
+  
 
   useEffect(() => {
     const fetchAccounts = async () => {
@@ -71,7 +72,7 @@ function AccountSelector() {
         )}
       </main>
 
-      {isModalOpen && <AddAccount setIsModalOpen={setIsModalOpen} />}
+      {isModalOpen && <AddAccount  />}
     </div>
   );
 }

@@ -37,3 +37,13 @@ export interface Summary {
     isOld:boolean;
     setIsOld: React.Dispatch<React.SetStateAction<boolean>>; 
   }
+
+  // export interface AnalyticsContextType {
+  //   analyticsData: any ;
+  //   loading: any;
+  //   error: any ;
+  //   getAnalyticsData: (some?:any) => any;
+  //   refreshAnalyticsData:any;
+  //   isOld:any;
+  //   setIsOld: any; 
+  // }

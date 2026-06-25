@@ -4,9 +4,12 @@ import { useSidebar } from "../hooks/useSidebar";
 import { SidebarProvider } from "../context/SidebarContext";
 import TradeProvider from "../context/TradeContext";
 import AccountProvider from "../context/AccountContext";
+import useAccount from "../hooks/useAccount";
+import AddAccount from "./addAccount/AddAccount";
 
 function DashboardLayoutContent() {
   const { isOpen } = useSidebar();
+  const { isModalOpen} = useAccount()
 
   return (
     <div className="flex min-h-screen bg-black text-white font-mono overflow-x-hidden relative">
@@ -26,6 +29,9 @@ function DashboardLayoutContent() {
       >
         <Outlet />
       </div>
+      {isModalOpen && (
+        <AddAccount />
+      )} 
     </div>
   );
 }

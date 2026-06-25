@@ -1,4 +1,4 @@
-import { createContext, useState } from "react";
+import { createContext, useState,type SetStateAction,type Dispatch } from "react";
 import { createAccountApi, deleteAccountApi, getAccountApi } from "../services/accoutApi";
 
 type Account = {
@@ -17,7 +17,9 @@ interface AccountProviderTypes {
   setSelectedAccount: any;
   createAccount: (some: any) => Promise<void>;
   getAccount:() => Promise<void>;
-  deleteAccount:(idToDel:number) => Promise<void>
+  deleteAccount:(idToDel:number) => Promise<void>;
+  setIsModalOpen:Dispatch<SetStateAction<boolean>>;
+  isModalOpen:boolean;
 }
 
 
@@ -25,6 +27,7 @@ export const AccountContext = createContext<AccountProviderTypes | null>(null);
 
 function AccountProvider({ children }: { children: React.ReactNode }) {
   const [accounts, setAccounts] = useState<Account[]>([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedAccount, setSelectedAccount] = useState<Account | null>({
     id: null,
     name: '',
@@ -47,6 +50,8 @@ function AccountProvider({ children }: { children: React.ReactNode }) {
         //     starting_balance: Number(newAccount.starting_balance)
         //   };
         setAccounts((prev) => [...prev, res.data]);
+        setIsModalOpen(false)
+
       }
     } catch (err) {
         console.error(err)
@@ -88,7 +93,9 @@ function AccountProvider({ children }: { children: React.ReactNode }) {
         setSelectedAccount,
         createAccount,
         getAccount,
-        deleteAccount
+        deleteAccount,
+        isModalOpen,
+        setIsModalOpen
         
       }}
     >

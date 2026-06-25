@@ -7,7 +7,7 @@ router.post('/addtrade',validateAddTrade,addTrade)
 router.get('/gettrade/:id',validateGetTrade,getTrade)
 router.delete('/deletetrade/:id',validateDeleteTrade,deleteTrade)
 router.put('/updatetrade/:id',validateUpdateTrade,updateTrade)
-router.get('/dashboard/stats',validateStats,getTradingAnalytics)
+router.get('/dashboard/stats/:id',validateStats,getTradingAnalytics)
 
 
 module.exports = router;

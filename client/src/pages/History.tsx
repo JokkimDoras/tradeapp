@@ -122,7 +122,6 @@ export default function History() {
 
       <div className="flex flex-col gap-8 w-full max-w-7xl mx-auto flex-1 p-6 pb-24">
         
-        {/* Header Layout Section */}
         <div className="flex flex-col gap-2 border-b border-zinc-900 pb-5">
           <h1 className="text-xl font-mono font-bold tracking-wider text-white uppercase">
             Archive / Execution Logs
@@ -132,7 +131,6 @@ export default function History() {
           </p>
         </div>
 
-        {/* Toolbar Component */}
         <HistoryToolbar 
           searchQuery={searchQuery}
           setSearchQuery={setSearchQuery}
@@ -140,7 +138,6 @@ export default function History() {
           setStatusFilter={setStatusFilter}
         />
 
-        {/* Layout Box Container */}
         <div className="w-full flex-1 flex flex-col">
           <span className="text-xs font-mono text-zinc-400 uppercase tracking-widest font-semibold mb-4">
             Sequence Registry ({filteredTrades.length})
@@ -153,7 +150,6 @@ export default function History() {
           ) : (
             <div className="w-full border border-zinc-900 bg-zinc-950 rounded-lg overflow-hidden shadow-md">
               
-              {/* Header Box Column Layout */}
               <div className="grid grid-cols-7 p-4 border-b border-zinc-900 text-xs font-mono text-zinc-500 uppercase tracking-wider font-semibold bg-zinc-950">
                 <div>Asset / Risk</div>
                 <div>Action / Size</div>
@@ -164,7 +160,6 @@ export default function History() {
                 <div className="text-right">Actions</div>
               </div>
 
-              {/* Table Rows Wrapper */}
               <div className="divide-y divide-zinc-900">
                 {filteredTrades.map((trade: any, idx: number) => (
                   <HistoryRow 

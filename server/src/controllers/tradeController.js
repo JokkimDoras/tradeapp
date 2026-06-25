@@ -158,13 +158,15 @@ const updateTrade = async (req, res) => {
 };
 
 const getTradingAnalytics = async (req, res) => {
+  const account_id = req.params.id
   const user_id = req.user_id;
 
   try {
     const { data: trade, error: tradeError } = await supabaseAdmin
       .from("trades")
       .select("*")
-      .eq("user_id", user_id);
+      .eq("user_id", user_id)
+      .eq("account_id", account_id);
 
     if (tradeError) {
       return res.status(400).json({

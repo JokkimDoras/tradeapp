@@ -9,6 +9,7 @@ import RiskAnalysisMatrix from "../component/analytics/RiskAnalysisMatrix";
 import type { Summary } from "../types/analytics.types";
 
 import { FiActivity, FiArrowUpRight, FiArrowDownRight } from "react-icons/fi";
+import useAccount from "../hooks/useAccount";
 
 // interface AnalyticsSummary {
 //   total_trades: number;
@@ -57,10 +58,11 @@ const CustomChartTooltip = ({ active, payload }: any) => {
 export default function Analytics() {
   const { toggleSidebar } = useSidebar();
   const { getAnalyticsData, analyticsData, loading } = useAnalytics();
+  const { selectedAccount } = useAccount()
   const [activeTimeframe, setActiveTimeframe] = useState<"ALL" | "MTD" | "YTD">("ALL");
 
   useEffect(() => {
-    getAnalyticsData();
+    getAnalyticsData(undefined,selectedAccount?.id);
   }, []);
 
 

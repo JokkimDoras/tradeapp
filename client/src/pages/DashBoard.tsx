@@ -22,7 +22,7 @@ export default function Dashboard() {
   const [deleteingId, setDeleleteingId] = useState<null | number>(null);
 
   const { trades, removeTrade,setTrades,setLoading } = useTrade();
-  const { getAnalyticsData,isOld } = useAnalytics();
+  const { getAnalyticsData,isOld,analyticsData } = useAnalytics();
   const { selectedAccount } = useAccount();
   const { user } = useUser();
   const recentTrades = trades.slice(0, 5);
@@ -110,7 +110,7 @@ export default function Dashboard() {
 
       <div className="flex flex-col gap-8 w-full max-w-7xl mx-auto flex-1 p-6 pb-24">
         
-        <StatsGrid totalExecutions={trades.length} />
+        <StatsGrid analyticsData={analyticsData} totalExecutions={trades.length} />
 
         <SystemAnalysis hasTrades={trades.length > 0} />
 

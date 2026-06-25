@@ -1,13 +1,13 @@
-import { 
-  FiGrid, 
-  FiBookOpen, 
-  FiBarChart2, 
-  FiClock, 
-  FiLayers, 
-  FiUser, 
+import {
+  FiGrid,
+  FiBookOpen,
+  FiBarChart2,
+  FiClock,
+  FiLayers,
+  FiUser,
   FiSettings,
   FiChevronDown,
-  FiPlus
+  FiPlus,
 } from "react-icons/fi";
 import { FaRegNewspaper } from "react-icons/fa";
 import { useNavigate } from "react-router";
@@ -24,7 +24,7 @@ type Account = {
   id: number;
   name: string;
   broker: string | null;
-  account_type: "live" | "demo" | "funded" ;
+  account_type: "live" | "demo" | "funded";
   currency: string;
   starting_balance: any;
 };
@@ -33,19 +33,59 @@ const navigation = [
   {
     section: "Overview",
     items: [
-      { id: 1, name: "Dashboard", path: "/dashboard", icon: <FiGrid size={14} strokeWidth={1.75} /> },
-      { id: 2, name: "Trade Journal", path: "/journal", icon: <FiBookOpen size={14} strokeWidth={1.75} /> },
-      { id: 3, name: "Analytics", path: "/analytics", icon: <FiBarChart2 size={14} strokeWidth={1.75} /> },
-      { id: 4, name: "History", path: "/history", icon: <FiClock size={14} strokeWidth={1.75} /> },
-      { id: 5, name: "Strategies", path: "/strategies", icon: <FiLayers size={14} strokeWidth={1.75} /> },
-      { id: 6, name: "News", path: "/news", icon: <FaRegNewspaper size={14} strokeWidth={1.75} /> },
+      {
+        id: 1,
+        name: "Dashboard",
+        path: "/dashboard",
+        icon: <FiGrid size={14} strokeWidth={1.75} />,
+      },
+      {
+        id: 2,
+        name: "Trade Journal",
+        path: "/journal",
+        icon: <FiBookOpen size={14} strokeWidth={1.75} />,
+      },
+      {
+        id: 3,
+        name: "Analytics",
+        path: "/analytics",
+        icon: <FiBarChart2 size={14} strokeWidth={1.75} />,
+      },
+      {
+        id: 4,
+        name: "History",
+        path: "/history",
+        icon: <FiClock size={14} strokeWidth={1.75} />,
+      },
+      {
+        id: 5,
+        name: "Strategies",
+        path: "/strategies",
+        icon: <FiLayers size={14} strokeWidth={1.75} />,
+      },
+      {
+        id: 6,
+        name: "News",
+        path: "/news",
+        icon: <FaRegNewspaper size={14} strokeWidth={1.75} />,
+      },
     ],
   },
   {
     section: "Account",
     items: [
-      { id: 6, name: "Profile", path: "/profile", icon: <FiUser size={14} strokeWidth={1.75} /> },
-      { id: 7, name: "Settings", path: "/setting", icon: <FiSettings size={14} strokeWidth={1.75} /> },
+      {
+        id: 6,
+        name: "Profile",
+        path: "/profile",
+        icon: <FiUser size={14} strokeWidth={1.75} />,
+      },
+      {
+        id: 7,
+        name: "Settings",
+        path: "/setting",
+        icon: <FiSettings size={14} strokeWidth={1.75} />,
+      },
     ],
   },
 ];
@@ -56,9 +96,10 @@ export default function SideBar() {
   const navigate = useNavigate();
   const location = useLocation();
   const { logout } = useAuth();
-  const { selectedAccount, accounts, setSelectedAccount, setIsModalOpen } = useAccount();
+  const { selectedAccount, accounts, setSelectedAccount, setIsModalOpen } =
+    useAccount();
   const [accountDropdownOpen, setAccountDropdownOpen] = useState(false);
-  
+
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const handleLogout = async (e: any) => {
@@ -68,24 +109,47 @@ export default function SideBar() {
   };
 
   const initials = user.full_name
-    ? user.full_name.split(" ").map((n: string) => n[0]).join("").toUpperCase().slice(0, 2)
+    ? user.full_name
+        .split(" ")
+        .map((n: string) => n[0])
+        .join("")
+        .toUpperCase()
+        .slice(0, 2)
     : "TV";
 
+    //this effect handle if the user change the account in the sidebar the dashboard url change with the accountId
   useEffect(() => {
-    if (location.pathname.startsWith('/dashboard') && selectedAccount?.id) {
+    if (location.pathname.startsWith("/dashboard") && selectedAccount?.id) {
       navigate(`/dashboard/${selectedAccount.id}`);
     }
   }, [selectedAccount?.id, location.pathname, navigate]);
 
-  const handleNavigation = (item: { id: number; name: string; path: string }) => {
-    if(item.name === 'Dashboard'){
-      console.log('i am running',item)
-      setCurrentPath(item.name)
-      navigate(`${item.path}/${selectedAccount?.id}`)
+     //this effect handle if the user change the account in the sidebar the History url change with the accountId
+
+  useEffect(() => {
+    const isOnHistory = location.pathname.startsWith("/history");
+    
+    if (isOnHistory && selectedAccount?.id) {
+      navigate(`/history/${selectedAccount.id}`);
+    }
+  }, [selectedAccount?.id]);
+
+  const handleNavigation = (item: {
+    id: number;
+    name: string;
+    path: string;
+  }) => {
+    if (item.name === "Dashboard") {
+      setCurrentPath(item.name);
+      navigate(`${item.path}/${selectedAccount?.id}`);
+    } else if (item.name === "History") {
+      setCurrentPath(item.name);
+      navigate(`${item.path}/${selectedAccount?.id}`);
     } else {
       setCurrentPath(item.name);
-      navigate(item.path)
+      navigate(item.path);
     }
+    
   };
 
   const handleSelectAccount = (account: Account) => {
@@ -107,20 +171,28 @@ export default function SideBar() {
 
   return (
     <div className="flex flex-col w-64 h-screen bg-black border-r border-zinc-900 py-4 font-sans antialiased selection:bg-zinc-800 selection:text-white">
-
       <div className="h-12 flex items-center justify-between px-5 pb-3 border-b border-zinc-900">
-        <span className="text-base font-bold text-zinc-50 tracking-tight">TradeVault</span>
+        <span className="text-base font-bold text-zinc-50 tracking-tight">
+          TradeVault
+        </span>
         <button
           onClick={closeSidebar}
           className="w-8 h-8 flex items-center justify-center rounded-md border border-zinc-800 hover:border-zinc-700 hover:bg-zinc-900 text-zinc-500 hover:text-zinc-100 transition-all"
         >
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <path d="M15 18l-6-6 6-6"/>
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+          >
+            <path d="M15 18l-6-6 6-6" />
           </svg>
         </button>
       </div>
 
-      <div 
+      <div
         className="px-3 pt-4 pb-3 border-b border-zinc-900 relative"
         onMouseEnter={handleContainerMouseEnter}
         onMouseLeave={handleContainerMouseLeave}
@@ -135,7 +207,7 @@ export default function SideBar() {
         >
           <div className="flex flex-col items-start min-w-0">
             <span className="text-[13px] font-semibold text-zinc-100 truncate tracking-tight">
-              { selectedAccount?.name ?? "Select Account"}
+              {selectedAccount?.name ?? "Select Account"}
             </span>
             {selectedAccount && (
               <span className="text-[11px] text-zinc-500 capitalize">
@@ -145,7 +217,9 @@ export default function SideBar() {
           </div>
           <FiChevronDown
             size={14}
-            className={`text-zinc-500 flex-shrink-0 transition-transform duration-200 ${accountDropdownOpen ? "rotate-180" : ""}`}
+            className={`text-zinc-500 flex-shrink-0 transition-transform duration-200 ${
+              accountDropdownOpen ? "rotate-180" : ""
+            }`}
           />
         </button>
 
@@ -160,7 +234,9 @@ export default function SideBar() {
                 }`}
               >
                 <div className="flex flex-col">
-                  <span className="text-[13px] font-medium text-zinc-100">{account.name}</span>
+                  <span className="text-[13px] font-medium text-zinc-100">
+                    {account.name}
+                  </span>
                   <span className="text-[11px] text-zinc-500 capitalize">
                     {account.account_type} · {account.currency}
                   </span>
@@ -175,7 +251,7 @@ export default function SideBar() {
               <button
                 onClick={() => {
                   setAccountDropdownOpen(true);
-                  setIsModalOpen(true)
+                  setIsModalOpen(true);
                 }}
                 className="w-full flex items-center gap-2 px-3 py-2.5 text-left hover:bg-zinc-900 transition-all text-zinc-500 hover:text-zinc-300"
               >
@@ -205,7 +281,11 @@ export default function SideBar() {
                       : "text-zinc-400 hover:text-zinc-100 hover:bg-zinc-900/40"
                   }`}
                 >
-                  <span className={`transition-colors ${isActive ? "text-zinc-100" : "text-zinc-500"}`}>
+                  <span
+                    className={`transition-colors ${
+                      isActive ? "text-zinc-100" : "text-zinc-500"
+                    }`}
+                  >
                     {item.icon}
                   </span>
                   {item.name}
@@ -231,14 +311,19 @@ export default function SideBar() {
             <span className="text-[14px] font-semibold text-zinc-100 truncate tracking-tight group-hover:text-white transition-colors">
               {user.full_name || "Guest User"}
             </span>
-            <span className="text-xs font-medium text-zinc-500 tracking-normal mt-0.5">Free Plan</span>
+            <span className="text-xs font-medium text-zinc-500 tracking-normal mt-0.5">
+              Free Plan
+            </span>
           </div>
           <div className="absolute ml-47">
-            <IoIosLogOut size={20} onClick={handleLogout} className="hover:text-red-800" />
+            <IoIosLogOut
+              size={20}
+              onClick={handleLogout}
+              className="hover:text-red-800"
+            />
           </div>
         </div>
       </div>
-
     </div>
   );
 }

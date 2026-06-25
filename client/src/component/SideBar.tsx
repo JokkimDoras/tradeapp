@@ -81,7 +81,7 @@ export default function SideBar() {
     if(item.name === 'Dashboard'){
       console.log('i am running',item)
       setCurrentPath(item.name)
-      navigate(`${item.path}/${selectedAccount.id}`)
+      navigate(`${item.path}/${selectedAccount?.id}`)
     }else{
       setCurrentPath(item.name);
       navigate(item.path)

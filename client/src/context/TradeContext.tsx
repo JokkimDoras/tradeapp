@@ -8,7 +8,6 @@ import {
 import { createTradeApi, updateTradeApi } from "../services/tradeApi";
 import { deleteTradeApi, type TradeFormData } from "../services/tradeApi";
 import { useAnalytics } from "../hooks/useAnalytics";
-import useAccount from "../hooks/useAccount";
 
 interface LoadingState {
   fetchTrades: boolean;
@@ -43,7 +42,6 @@ export default function TradeProvider({ children }: TradeProviderProps) {
     deletingTradeId: null,
   });
   const { setIsOld } = useAnalytics();
-  const {selectedAccount} = useAccount();
 
 
 

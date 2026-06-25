@@ -1,8 +1,8 @@
-// src/hooks/useAuth.ts
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import logOutUserApi, { loginUserApi, registerUserApi } from "../services/authApi";
 import { useUser } from "./useUser";
+import { clearAuth } from "../utils/auth";
 
 
 export default function useAuth() {
@@ -62,7 +62,7 @@ export default function useAuth() {
       console.error("Hook runtime message: Server-side route invalidation bypassed.", err.message);
     } finally {
       // Storage registers wiped clean safely
-      localStorage.removeItem("token");      
+      clearAuth()
       setUser((prev) => ({
         ...prev,
         full_name:''

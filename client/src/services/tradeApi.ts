@@ -32,7 +32,7 @@ export interface TradeFormData {
 }
  
 
-export async function getTradeApi (id:number) {
+export async function getTradeApi (id:string) {
   const tokenToFix = getToken();
   console.log(id)
   try{

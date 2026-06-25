@@ -3,7 +3,7 @@ import { createAccountApi, deleteAccountApi, getAccountApi } from "../services/a
 
 
 type Account = {
-  id: number | null;
+  id: string | null;
   name: string | null;
   broker: string | null;
   account_type: "live" | "demo" | "funded" | '' ;
@@ -18,7 +18,7 @@ interface AccountProviderTypes {
   setSelectedAccount: any;
   createAccount: (some: any) => Promise<void>;
   getAccount:() => Promise<void>;
-  deleteAccount:(idToDel:number) => Promise<void>;
+  deleteAccount:(idToDel:string) => Promise<void>;
   setIsModalOpen:Dispatch<SetStateAction<boolean>>;
   isModalOpen:boolean;
   loading:boolean;
@@ -30,15 +30,22 @@ export const AccountContext = createContext<AccountProviderTypes | null>(null);
 function AccountProvider({ children }: { children: React.ReactNode }) {
   const [accounts, setAccounts] = useState<Account[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedAccount, setSelectedAccount] = useState<Account | null>({
-    id: null,
-    name: '',
-    broker: '',
-    account_type: '' ,
-    currency: '',
-    starting_balance: '',
+  const [selectedAccount, setSelectedAccount] = useState<Account | null>(() => {
+    const saved = localStorage.getItem("selectedAccount");
+    return saved ? JSON.parse(saved) : null; 
   });
+  
   const [loading,setLoading]=useState(false)
+
+
+  useEffect(() => {
+    if (selectedAccount) {
+      localStorage.setItem("selectedAccount", JSON.stringify(selectedAccount));
+    } else {
+      localStorage.removeItem("selectedAccount");
+    }
+  }, [selectedAccount]);
+
 
   useEffect(() => {
     const fetchAccounts = async () => {
@@ -77,7 +84,7 @@ function AccountProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  const deleteAccount = async (idToDel:number) => {
+  const deleteAccount = async (idToDel:string) => {
     try{
         await deleteAccountApi(idToDel);
         const filtered = accounts.filter((account) => {

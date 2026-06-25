@@ -13,7 +13,7 @@ function DeleteAccountModal({ setIsDeleteModalOpen, children }: DeleteAccountMod
 
   const { deleteAccount } = useAccount();
 
-  const handleDelete = async(idToDel:number) => {
+  const handleDelete = async(idToDel:string) => {
     try{
       setLoading(true)
       await deleteAccount(idToDel)

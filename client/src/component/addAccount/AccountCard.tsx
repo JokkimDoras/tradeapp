@@ -26,6 +26,7 @@ export default function AccountCard({
             currency: account?.currency,
             starting_balance: account?.starting_balance,
         })
+        localStorage.setItem('slectedAccount',account)
         navigate(`/dashboard/${account.id}`)
     }
 

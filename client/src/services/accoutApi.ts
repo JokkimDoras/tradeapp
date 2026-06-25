@@ -20,7 +20,7 @@ const token = getToken();
 
 }
 
-export async function deleteAccountApi(idToDel:number) {
+export async function deleteAccountApi(idToDel:string) {
     const token = getToken();
   try{
     const response = await axios.delete(`${API_URL}/api/accounts/delete/${idToDel}`,{

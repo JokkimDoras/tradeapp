@@ -44,7 +44,6 @@ export default function TradeProvider({ children }: TradeProviderProps) {
   });
   const { setIsOld } = useAnalytics();
   const {selectedAccount} = useAccount();
-  console.log(selectedAccount,'what its contain')
 
 
 

@@ -19,6 +19,7 @@ import useAuth from "../hooks/useAuth";
 import { getToken } from "../utils/auth";
 import { useState } from "react";
 import useAccount from "../hooks/useAccount";
+import { useEffect } from "react";
 
 type Account = {
   id: number;
@@ -70,9 +71,23 @@ export default function SideBar() {
     ? user.full_name.split(" ").map((n: string) => n[0]).join("").toUpperCase().slice(0, 2)
     : "TV";
 
+    useEffect(() => {
+      if (location.pathname.startsWith('/dashboard') && selectedAccount?.id) {
+        navigate(`/dashboard/${selectedAccount.id}`);
+      }
+    }, [selectedAccount?.id, location.pathname, navigate]);
+
   const handleNavigation = (item: { id: number; name: string; path: string }) => {
-    setCurrentPath(item.name);
-    navigate(item.path);
+    if(item.name === 'Dashboard'){
+      console.log('i am running',item)
+      setCurrentPath(item.name)
+      navigate(`${item.path}/${selectedAccount.id}`)
+    }else{
+      setCurrentPath(item.name);
+      navigate(item.path)
+    }
+
+    
   };
 
   const handleSelectAccount = (account: Account) => {

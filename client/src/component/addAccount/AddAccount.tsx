@@ -43,7 +43,6 @@ function AddAccount() {
     )
       return toast.error("Fill the account details");
 
-    console.log(newAccount);
     try {
       setLoading(true);
       await createAccount(newAccount);

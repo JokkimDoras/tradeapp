@@ -13,10 +13,9 @@ import { getTradeApi } from "../services/tradeApi";
 import { useUser } from "../hooks/useUser";
 import HistorySkeleton from "../component/skeltons/HistorySkelton";
 
-
 export default function History() {
   const { toggleSidebar } = useSidebar();
-  const { trades, removeTrade, updateTrade,setLoading,setTrades,loading } = useTrade(); 
+  const { trades, removeTrade, updateTrade, setLoading, setTrades, loading } = useTrade(); 
   const { selectedAccount} = useAccount();
   const navigate = useNavigate();
   const { user } = useUser();
@@ -26,34 +25,32 @@ export default function History() {
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
 
-
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeTradeToClose, setActiveTradeToClose] = useState<any>(null);
 
-    useEffect(() => {
-      const fetchInitialState = async () => {
-        try {
-          setLoading((prev:any) => ({
-            ...prev,
-            fetchTrades: true,
-          }));
-          const { data } = await getTradeApi(selectedAccount!.id!);
-          setTrades(data);
-        } catch (err) {
-          console.error(err);
-        } finally {
-          setLoading((prev:any) => ({
-            ...prev,
-            fetchTrades: false,
-          }));
-        }
-      };
-  
-      if (!user || !selectedAccount?.id) return;
-        fetchInitialState();
-      
-  
-    }, [user,selectedAccount?.id]);
+  useEffect(() => {
+    const fetchInitialState = async () => {
+      try {
+        setLoading((prev:any) => ({
+          ...prev,
+          fetchTrades: true,
+        }));
+        const { data } = await getTradeApi(selectedAccount!.id!);
+        setTrades(data);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading((prev:any) => ({
+          ...prev,
+          fetchTrades: false,
+        }));
+      }
+    };
+
+    if (!user || !selectedAccount?.id) return;
+    fetchInitialState();
+
+  }, [user, selectedAccount?.id]);
 
   const handleDelete = async (idToDel: number) => {
     try {
@@ -150,11 +147,13 @@ export default function History() {
           ) : (
             <div className="w-full border border-zinc-900 bg-zinc-950 rounded-lg overflow-hidden shadow-md">
               
-              <div className="grid grid-cols-7 p-4 border-b border-zinc-900 text-xs font-mono text-zinc-500 uppercase tracking-wider font-semibold bg-zinc-950">
+              {/* Perfectly balanced 8-column header split matching the new history row design */}
+              <div className="grid grid-cols-8 p-4 border-b border-zinc-900 text-xs font-mono text-zinc-500 uppercase tracking-wider font-semibold bg-zinc-950">
                 <div>Asset / Risk</div>
                 <div>Action / Size</div>
                 <div>Entry / Exit</div>
-                <div>Targets (SL/TP)</div>
+                <div>Stop Loss</div>
+                <div>Take Profit</div>
                 <div>P&L / Pips</div>
                 <div>Status / Notes</div>
                 <div className="text-right">Actions</div>

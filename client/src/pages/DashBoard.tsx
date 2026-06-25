@@ -14,31 +14,28 @@ import { getTradeApi } from "../services/tradeApi";
 import useAccount from "../hooks/useAccount";
 import { useUser } from "../hooks/useUser";
 
-
 export default function Dashboard() {
   const { toggleSidebar } = useSidebar();
   const { loading } = useTrade();
   const [formState, setFormState] = useState<boolean | any>(false);
   const [deleteingId, setDeleleteingId] = useState<null | number>(null);
 
-  const { trades, removeTrade,setTrades,setLoading } = useTrade();
-  const { getAnalyticsData,isOld,analyticsData } = useAnalytics();
+  const { trades, removeTrade, setTrades, setLoading } = useTrade();
+  const { getAnalyticsData, isOld, analyticsData } = useAnalytics();
   const { selectedAccount } = useAccount();
   const { user } = useUser();
   const recentTrades = trades.slice(0, 5);
 
   useEffect(() => {
-       getAnalyticsData()
-  },[])
+    getAnalyticsData()
+  }, [])
 
   useEffect(() => {
     if (!selectedAccount?.id) return;
 
     if (formState === false && isOld) {
-      // If you just closed the "Add Trade" form, get fresh data
       getAnalyticsData(true, selectedAccount.id);
     } else {
-      // Normal account switch or initial page load
       getAnalyticsData(false, selectedAccount.id);
     }
   }, [selectedAccount?.id, formState, isOld]);
@@ -72,19 +69,6 @@ export default function Dashboard() {
       setDeleleteingId(null);
     }
   };
-  // useEffect(() => {
-  //   const fetchAccounts = async () => {
-  //     const token = getToken();
-  //     console.log(token)
-  //     const res = await axios.get("http://localhost:8000/api/accounts",{
-  //       headers:{
-  //         Authorization:`Bearer ${token}`
-  //       }
-  //     });
-  //     console.log(res.data)
-  //   };
-  //   fetchAccounts()
-  // }, []);
 
   if (loading.fetchTrades) return <DashboardSkeleton />;
 
@@ -96,8 +80,6 @@ export default function Dashboard() {
       />
     );
   }
-
-
 
   return (
     <div className="flex flex-col flex-1 min-h-screen bg-black text-zinc-100 font-sans antialiased selection:bg-zinc-800 selection:text-white relative">
@@ -120,13 +102,13 @@ export default function Dashboard() {
             </div>
           ) : (
             <div className="w-full border border-zinc-900 bg-zinc-950 rounded-lg overflow-hidden shadow-md">
-              <div className="grid grid-cols-7 p-4 border-b border-zinc-900 text-xs font-mono text-zinc-500 uppercase tracking-wider font-semibold bg-zinc-950">
+              {/* Clean 6-column header split */}
+              <div className="grid grid-cols-6 p-4 border-b border-zinc-900 text-xs font-mono text-zinc-500 uppercase tracking-wider font-semibold bg-zinc-950">
                 <div>Asset / Risk</div>
                 <div>Action / Size</div>
                 <div>Entry / Exit</div>
-                <div>Targets (SL/TP)</div>
-                <div>P&L / Pips</div>
-                <div>Status / Notes</div>
+                <div>Stop Loss</div>
+                <div>Take Profit</div>
                 <div className="text-right">Actions</div>
               </div>
 

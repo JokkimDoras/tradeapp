@@ -15,14 +15,15 @@ export default function TradeRow({ trade, idx, isDeleting, onEdit, onDelete }: T
 
   return (
     <div
-      onClick={() => navigate(`/trade/${trade.id}`)}
+      onClick={() => !isDeleting && navigate(`/trade/${trade.id}`)}
       key={trade.id || idx}
-      className={`grid grid-cols-7 p-4 items-center hover:bg-zinc-900/50 transition-colors font-mono text-sm cursor-pointer ${
+      className={`grid grid-cols-6 p-4 items-center hover:bg-zinc-900/40 transition-colors font-mono text-sm cursor-pointer ${
         isDeleting ? "opacity-35 pointer-events-none select-none" : ""
       }`}
     >
+      {/* Col 1: Asset & Risk */}
       <div className="flex flex-col gap-0.5">
-        <span className="font-bold text-white tracking-wide text-base">
+        <span className="font-semibold text-white tracking-tight text-base">
           {trade.currency_pair || "—"}
         </span>
         <span className="text-xs text-zinc-500">
@@ -30,10 +31,13 @@ export default function TradeRow({ trade, idx, isDeleting, onEdit, onDelete }: T
         </span>
       </div>
 
+      {/* Col 2: Side & Size */}
       <div className="flex flex-col gap-1 items-start">
         <span
-          className={`text-[10px] px-2 py-0.5 rounded font-bold uppercase tracking-wide ${
-            isBuy ? "bg-emerald-950 text-emerald-400" : "bg-rose-950 text-rose-400"
+          className={`text-[10px] px-2 py-0.5 rounded font-bold uppercase tracking-wide border ${
+            isBuy 
+              ? "bg-emerald-950/40 border-emerald-900/60 text-emerald-400" 
+              : "bg-rose-950/40 border-rose-900/60 text-rose-400"
           }`}
         >
           {trade.trade_type || "POSITION"}
@@ -43,6 +47,7 @@ export default function TradeRow({ trade, idx, isDeleting, onEdit, onDelete }: T
         </span>
       </div>
 
+      {/* Col 3: Entry & Exit */}
       <div className="flex flex-col gap-0.5">
         <span className="text-zinc-300 font-medium">
           En: {trade.entry_price ?? "—"}
@@ -52,45 +57,19 @@ export default function TradeRow({ trade, idx, isDeleting, onEdit, onDelete }: T
         </span>
       </div>
 
-      <div className="flex flex-col gap-0.5 text-xs">
-        <span className="text-rose-400">SL: {trade.stop_loss ?? "—"}</span>
-        <span className="text-emerald-400">TP: {trade.take_profit ?? "—"}</span>
-      </div>
-
+      {/* Col 4: Stop Loss */}
       <div className="flex flex-col gap-0.5">
-        <span
-          className={`font-semibold text-base ${
-            trade.profit_loss > 0
-              ? "text-emerald-400"
-              : trade.profit_loss < 0
-              ? "text-rose-400"
-              : "text-zinc-400"
-          }`}
-        >
-          {trade.profit_loss != null
-            ? `${trade.profit_loss > 0 ? "+" : ""}${trade.profit_loss}`
-            : "—"}
-        </span>
-        <span className="text-xs text-zinc-500">
-          {trade.pips != null ? `${trade.pips} pips` : "—"}
-        </span>
+        <span className="text-xs text-zinc-500 uppercase tracking-wider">Stop Loss</span>
+        <span className="text-sm font-medium text-rose-400/90">{trade.stop_loss ?? "—"}</span>
       </div>
 
-      <div className="flex flex-col gap-0.5 items-start">
-        <span
-          className={`text-xs font-medium uppercase tracking-wider ${
-            trade.status === "open" ? "text-amber-400" : "text-zinc-500"
-          }`}
-        >
-          {trade.status || "—"}
-        </span>
-        {trade.notes && (
-          <span className="text-xs text-zinc-500 max-w-[110px] truncate" title={trade.notes}>
-            {trade.notes}
-          </span>
-        )}
+      {/* Col 5: Take Profit */}
+      <div className="flex flex-col gap-0.5">
+        <span className="text-xs text-zinc-500 uppercase tracking-wider">Take Profit</span>
+        <span className="text-sm font-medium text-emerald-400/90">{trade.take_profit ?? "—"}</span>
       </div>
 
+      {/* Col 6: Actions */}
       <div className="flex items-center justify-end gap-2 text-right">
         <button
           disabled={isDeleting}
@@ -98,7 +77,7 @@ export default function TradeRow({ trade, idx, isDeleting, onEdit, onDelete }: T
             e.stopPropagation();
             onEdit(trade);
           }}
-          className="w-7 h-7 flex items-center justify-center rounded border border-zinc-800 bg-zinc-950 text-zinc-400 hover:text-white hover:border-zinc-700 transition-all active:scale-90 cursor-pointer disabled:opacity-30"
+          className="w-7 h-7 flex items-center justify-center rounded border border-zinc-800 bg-zinc-950 text-zinc-400 hover:text-white hover:border-zinc-700 transition-all active:scale-95 cursor-pointer disabled:opacity-30"
           title="Edit"
         >
           <FiEdit2 size={12} />
@@ -109,7 +88,7 @@ export default function TradeRow({ trade, idx, isDeleting, onEdit, onDelete }: T
             e.stopPropagation();
             onDelete(trade.id);
           }}
-          className="w-7 h-7 flex items-center justify-center rounded border border-zinc-800 bg-zinc-950 text-zinc-500 hover:text-rose-400 hover:border-rose-950/60 transition-all active:scale-90 cursor-pointer disabled:opacity-30"
+          className="w-7 h-7 flex items-center justify-center rounded border border-zinc-800 bg-zinc-950 text-zinc-500 hover:text-rose-400 hover:border-rose-900 transition-all active:scale-95 cursor-pointer disabled:opacity-30"
           title="Delete"
         >
           {isDeleting ? (

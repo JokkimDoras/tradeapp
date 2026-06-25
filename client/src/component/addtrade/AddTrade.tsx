@@ -8,6 +8,7 @@ import { toast } from "sonner";
 import { useUser } from "../../hooks/useUser";
 import useScreenshot from "../../hooks/useScreenshot";
 import { IoCloseCircle } from "react-icons/io5";
+import { useParams } from "react-router";
 
 type TradeType = "buy" | "sell";
 type TradeStatus = "open" | "closed";
@@ -25,33 +26,38 @@ export default function AddTrade({ setIsOpen, editData }: AddTradeProps) {
   const [previews, setPreviews] = useState<any[]>([]);
 
 
+  
   const { toggleSidebar } = useSidebar();
   const { user } = useUser();
 
   const { addTrade, updateTrade } = useTrade();
 
   const { uploadScreenshots } = useScreenshot();
-
+  const { id } = useParams()
+  
   const [formData, setFormData] = useState({
     currency_pair: editData?.currency_pair || "",
     trade_type:
-      (editData?.trade_type?.toLowerCase() as TradeType) ||
-      ("buy" as TradeType),
+    (editData?.trade_type?.toLowerCase() as TradeType) ||
+    ("buy" as TradeType),
     status:
-      (editData?.status?.toLowerCase() as TradeStatus) ||
-      ("open" as TradeStatus),
+    (editData?.status?.toLowerCase() as TradeStatus) ||
+    ("open" as TradeStatus),
     entry_price: editData?.entry_price ?? "",
     exit_price: editData?.exit_price ?? "",
     stop_loss: editData?.stop_loss ?? "",
     take_profit: editData?.take_profit ?? "",
     lot_size: editData?.lot_size ? editData?.lot_size : user.default_lot_size,
     risk_percentage: editData?.risk_percentage
-      ? editData?.risk_percentage
-      : user.risk_per_trade,
+    ? editData?.risk_percentage
+    : user.risk_per_trade,
     notes: editData?.notes || "",
-    strategy: editData?.strategy || ""
+    strategy: editData?.strategy || "",
+    account_id:id
+    
+    
   });
-
+  
 
   
 
@@ -86,7 +92,8 @@ export default function AddTrade({ setIsOpen, editData }: AddTradeProps) {
       lot_size: "",
       risk_percentage: "",
       notes: "",
-      strategy:''
+      strategy:'',
+      account_id:''
     });
     setIsOpen(false);
     setPreviews([]);

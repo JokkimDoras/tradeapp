@@ -32,38 +32,33 @@ export default function Dashboard() {
   },[])
 
   useEffect(() => {
-    if (formState === false) {
-      if(isOld){
-        getAnalyticsData(true); // Force the context to bypass the cache and fetch fresh data
+    if (!selectedAccount?.id) return;
 
-      }
+    if (formState === false && isOld) {
+      // If you just closed the "Add Trade" form, get fresh data
+      getAnalyticsData(true, selectedAccount.id);
+    } else {
+      // Normal account switch or initial page load
+      getAnalyticsData(false, selectedAccount.id);
     }
-  },[formState])
+  }, [selectedAccount?.id, formState, isOld]);
 
   useEffect(() => {
     const fetchInitialState = async () => {
+      if (!user || !selectedAccount?.id) return;
       try {
-        setLoading((prev:any) => ({
-          ...prev,
-          fetchTrades: true,
-        }));
-        const { data } = await getTradeApi(selectedAccount!.id!);
+        setLoading((prev: any) => ({ ...prev, fetchTrades: true }));
+        const { data } = await getTradeApi(selectedAccount.id);
         setTrades(data);
       } catch (err) {
         console.error(err);
       } finally {
-        setLoading((prev:any) => ({
-          ...prev,
-          fetchTrades: false,
-        }));
+        setLoading((prev: any) => ({ ...prev, fetchTrades: false }));
       }
     };
 
-    if (!user || !selectedAccount?.id) return;
-      fetchInitialState();
-    
-
-  }, [user,selectedAccount?.id]);
+    fetchInitialState();
+  }, [user, selectedAccount?.id]);
 
   const handleDelete = async (idToDel: number) => {
     try {

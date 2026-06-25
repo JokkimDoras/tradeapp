@@ -21,13 +21,19 @@ export default function AnalyticsProvider({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isOld, setIsOld] = useState(true);
+  const [currentAccountId, setCurrentAccountId] = useState<string | null>(null);
+
 
   const getAnalyticsData = async (force: boolean | undefined = false,accountId:string) => {
     try {
       setLoading(true);
-      if (!analyticsData || isOld || force) {
+
+      const isDifferentAccount = accountId !== currentAccountId;
+
+      if (!analyticsData || isOld || force || isDifferentAccount) {
         const { data } = await getAnalyticsDataApi(accountId);
         setAnalyticsData(data);
+        setCurrentAccountId(accountId);
         setIsOld(false);
         return data 
       }

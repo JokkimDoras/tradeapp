@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Navbar from "../component/NavBar";
 import useAccount from "../hooks/useAccount";
 import { useSidebar } from "../hooks/useSidebar";
@@ -16,29 +16,16 @@ type whichOneState = {
 
 function AccountSelector() {
   const { toggleSidebar } = useSidebar();
-  const { accounts, getAccount,setIsModalOpen,isModalOpen } = useAccount();
+  const { accounts, loading,setIsModalOpen,isModalOpen } = useAccount();
   console.log("Type of setIsModalOpen:", typeof setIsModalOpen);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [whichOne, setWhichOne] = useState<whichOneState>({
     name: "",
     id: null,
   });
-  const [loading, setLoading] = useState(false);
   
 
-  useEffect(() => {
-    const fetchAccounts = async () => {
-      try {
-        setLoading(true);
-        await getAccount();
-      } catch (err: any) {
-        throw err;
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchAccounts();
-  }, []);
+
 
   if (loading) return <AccountSelectorSkeleton />;
 

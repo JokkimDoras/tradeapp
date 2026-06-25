@@ -1,5 +1,6 @@
-import { createContext, useState,type SetStateAction,type Dispatch } from "react";
+import { createContext, useState, useEffect, type SetStateAction,type Dispatch } from "react";
 import { createAccountApi, deleteAccountApi, getAccountApi } from "../services/accoutApi";
+
 
 type Account = {
   id: number | null;
@@ -20,6 +21,7 @@ interface AccountProviderTypes {
   deleteAccount:(idToDel:number) => Promise<void>;
   setIsModalOpen:Dispatch<SetStateAction<boolean>>;
   isModalOpen:boolean;
+  loading:boolean;
 }
 
 
@@ -36,6 +38,21 @@ function AccountProvider({ children }: { children: React.ReactNode }) {
     currency: '',
     starting_balance: '',
   });
+  const [loading,setLoading]=useState(false)
+
+  useEffect(() => {
+    const fetchAccounts = async () => {
+      try {
+        setLoading(true);
+        await getAccount();
+      } catch (err: any) {
+        throw err;
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchAccounts();
+  }, []);
 
   const createAccount = async (accountData: any) => {
     try {
@@ -95,7 +112,8 @@ function AccountProvider({ children }: { children: React.ReactNode }) {
         getAccount,
         deleteAccount,
         isModalOpen,
-        setIsModalOpen
+        setIsModalOpen,
+        loading
         
       }}
     >

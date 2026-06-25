@@ -17,9 +17,8 @@ import { useLocation } from "react-router";
 import { IoIosLogOut } from "react-icons/io";
 import useAuth from "../hooks/useAuth";
 import { getToken } from "../utils/auth";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import useAccount from "../hooks/useAccount";
-import { useEffect } from "react";
 
 type Account = {
   id: number;
@@ -29,7 +28,6 @@ type Account = {
   currency: string;
   starting_balance: any;
 };
-
 
 const navigation = [
   {
@@ -58,8 +56,10 @@ export default function SideBar() {
   const navigate = useNavigate();
   const location = useLocation();
   const { logout } = useAuth();
-  const { selectedAccount, accounts, setSelectedAccount,setIsModalOpen } = useAccount();
+  const { selectedAccount, accounts, setSelectedAccount, setIsModalOpen } = useAccount();
   const [accountDropdownOpen, setAccountDropdownOpen] = useState(false);
+  
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const handleLogout = async (e: any) => {
     const token = getToken();
@@ -71,30 +71,39 @@ export default function SideBar() {
     ? user.full_name.split(" ").map((n: string) => n[0]).join("").toUpperCase().slice(0, 2)
     : "TV";
 
-    useEffect(() => {
-      if (location.pathname.startsWith('/dashboard') && selectedAccount?.id) {
-        navigate(`/dashboard/${selectedAccount.id}`);
-      }
-    }, [selectedAccount?.id, location.pathname, navigate]);
+  useEffect(() => {
+    if (location.pathname.startsWith('/dashboard') && selectedAccount?.id) {
+      navigate(`/dashboard/${selectedAccount.id}`);
+    }
+  }, [selectedAccount?.id, location.pathname, navigate]);
 
   const handleNavigation = (item: { id: number; name: string; path: string }) => {
     if(item.name === 'Dashboard'){
       console.log('i am running',item)
       setCurrentPath(item.name)
       navigate(`${item.path}/${selectedAccount?.id}`)
-    }else{
+    } else {
       setCurrentPath(item.name);
       navigate(item.path)
     }
-
-    
   };
 
   const handleSelectAccount = (account: Account) => {
     setSelectedAccount(account);
     setAccountDropdownOpen(false);
   };
-  
+
+  const handleContainerMouseEnter = () => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+  };
+
+  const handleContainerMouseLeave = () => {
+    timeoutRef.current = setTimeout(() => {
+      setAccountDropdownOpen(false);
+    }, 1000);
+  };
 
   return (
     <div className="flex flex-col w-64 h-screen bg-black border-r border-zinc-900 py-4 font-sans antialiased selection:bg-zinc-800 selection:text-white">
@@ -111,14 +120,17 @@ export default function SideBar() {
         </button>
       </div>
 
-      <div className="px-3 pt-4 pb-3 border-b border-zinc-900 relative">
+      <div 
+        className="px-3 pt-4 pb-3 border-b border-zinc-900 relative"
+        onMouseEnter={handleContainerMouseEnter}
+        onMouseLeave={handleContainerMouseLeave}
+      >
         <p className="text-[11px] font-semibold text-zinc-500 uppercase px-1 mb-2 tracking-wider font-mono">
           Active Account
         </p>
         <button
           onClick={() => setAccountDropdownOpen(!accountDropdownOpen)}
           onMouseEnter={() => setAccountDropdownOpen(true)}
-
           className="w-full flex items-center justify-between gap-2 px-3 py-2.5 rounded-md border border-zinc-800 hover:border-zinc-700 hover:bg-zinc-900/60 transition-all"
         >
           <div className="flex flex-col items-start min-w-0">

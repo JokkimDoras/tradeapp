@@ -10,8 +10,8 @@ export default function FormField({
   children,
 }: FormFieldProps) {
   return (
-    <div className="flex flex-col gap-1.5">
-      <label className="text-xs font-semibold text-zinc-400 tracking-tight">
+    <div className="flex flex-col gap-1.5 select-none antialiased">
+      <label className="text-[12px] font-medium text-zinc-400 tracking-tight">
         {label}
       </label>
 

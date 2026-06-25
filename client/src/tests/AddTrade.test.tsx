@@ -61,8 +61,8 @@ test("should successfully submit valid data and convert inputs to numbers", asyn
   const form = container.querySelector("form");
   if (!form) throw new Error("Form element not found");
 
-  const assetInput = screen.getByPlaceholderText("Type to filter or create custom...");
-  fireEvent.change(assetInput, { target: { value: "GBP/USD" } });
+  const assetInput = screen.getByPlaceholderText("Search assets (e.g., BTC/USD)...");
+    fireEvent.change(assetInput, { target: { value: "GBP/USD" } });
 
   const dropdownOption = screen.getByRole("button", { name: /GBP\/USD/i });
   fireEvent.click(dropdownOption);

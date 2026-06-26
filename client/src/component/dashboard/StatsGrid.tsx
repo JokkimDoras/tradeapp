@@ -3,9 +3,10 @@ import type { AnalyticsDataType } from "../../types/analytics.types";
 interface StatsGridProps {
   totalExecutions: number;
   analyticsData?: AnalyticsDataType | null; 
+  margin:number
 }
 
-export default function StatsGrid({ totalExecutions, analyticsData }: StatsGridProps) {
+export default function StatsGrid({ totalExecutions, analyticsData,margin }: StatsGridProps) {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 w-full">
       <div className="p-5 rounded-lg border border-zinc-900 bg-zinc-950 flex flex-col gap-2 shadow-sm">
@@ -20,7 +21,7 @@ export default function StatsGrid({ totalExecutions, analyticsData }: StatsGridP
         <span className="text-xs font-mono text-zinc-500 uppercase tracking-widest">
           Active Margin
         </span>
-        <span className="text-2xl font-mono font-bold text-white">--</span>
+        <span className="text-2xl font-mono font-bold text-white">{margin}</span>
       </div>
       <div className="p-5 rounded-lg border border-zinc-900 bg-zinc-950 flex flex-col gap-2 shadow-sm">
         <span className="text-xs font-mono text-zinc-500 uppercase tracking-widest">

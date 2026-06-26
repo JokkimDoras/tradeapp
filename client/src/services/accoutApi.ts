@@ -51,3 +51,19 @@ export async function getAccountApi() {
     }
     
 }
+
+export async function getParticularAccountApi(accountId:string) {
+    const token = getToken();
+    try{
+       const response = await axios.get(`${API_URL}/api/accounts/${accountId}`,{
+        headers:{
+            Authorization:`Bearer ${token}`
+        }
+       })
+       return response.data
+
+    }catch(err:any){
+        console.error(err?.message)
+    }
+
+}

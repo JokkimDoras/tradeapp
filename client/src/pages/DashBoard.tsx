@@ -20,13 +20,22 @@ export default function Dashboard() {
   const [deleteingId, setDeleleteingId] = useState<null | number>(null);
   const { trades, removeTrade, fetchTradesData } = useTrade();
   const { getAnalyticsData, isOld, analyticsData } = useAnalytics();
-  const { selectedAccount } = useAccount();
+  const { selectedAccount,getParticularAccount } = useAccount();
   const { user } = useUser();
   const recentTrades = trades.slice(0, 5);
 
   useEffect(() => {
-    getAnalyticsData()
+    getAnalyticsData();
+    getParticularAccount();
   }, [])
+
+  // useEffect(() => {
+  //   if (!user || !selectedAccount?.id || ) return;
+    
+  //   getParticularAccount(); 
+    
+  // }, [user, selectedAccount?.id]);
+  
 
   useEffect(() => {
     if (!selectedAccount || !selectedAccount.id || selectedAccount.id === "undefined") return;
@@ -75,7 +84,7 @@ export default function Dashboard() {
 
       <div className="flex flex-col gap-8 w-full max-w-7xl mx-auto flex-1 p-6 pb-24">
         
-        <StatsGrid analyticsData={analyticsData} totalExecutions={trades.length} />
+        <StatsGrid margin={selectedAccount?.starting_balance} analyticsData={analyticsData} totalExecutions={trades.length} />
 
         <SystemAnalysis hasTrades={trades.length > 0} />
 

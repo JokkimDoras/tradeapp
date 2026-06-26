@@ -1,12 +1,22 @@
-import { createContext, useState, useEffect, type SetStateAction,type Dispatch } from "react";
-import { createAccountApi, deleteAccountApi, getAccountApi } from "../services/accoutApi";
-
+import {
+  createContext,
+  useState,
+  useEffect,
+  type SetStateAction,
+  type Dispatch,
+} from "react";
+import {
+  createAccountApi,
+  deleteAccountApi,
+  getAccountApi,
+  getParticularAccountApi,
+} from "../services/accoutApi";
 
 type Account = {
   id: string | null;
   name: string | null;
   broker: string | null;
-  account_type: "live" | "demo" | "funded" | '' ;
+  account_type: "live" | "demo" | "funded" | "";
   currency: string;
   starting_balance: any;
 };
@@ -17,13 +27,13 @@ interface AccountProviderTypes {
   selectedAccount: Account | null;
   setSelectedAccount: any;
   createAccount: (some: any) => Promise<void>;
-  getAccount:() => Promise<void>;
-  deleteAccount:(idToDel:string) => Promise<void>;
-  setIsModalOpen:Dispatch<SetStateAction<boolean>>;
-  isModalOpen:boolean;
-  loading:boolean;
+  getAccount: () => Promise<void>;
+  deleteAccount: (idToDel: string) => Promise<void>;
+  setIsModalOpen: Dispatch<SetStateAction<boolean>>;
+  isModalOpen: boolean;
+  loading: boolean;
+  getParticularAccount: () => Promise<void>;
 }
-
 
 export const AccountContext = createContext<AccountProviderTypes | null>(null);
 
@@ -32,11 +42,10 @@ function AccountProvider({ children }: { children: React.ReactNode }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedAccount, setSelectedAccount] = useState<Account | null>(() => {
     const saved = localStorage.getItem("selectedAccount");
-    return saved ? JSON.parse(saved) : null; 
+    return saved ? JSON.parse(saved) : null;
   });
-  
-  const [loading,setLoading]=useState(false)
 
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (selectedAccount) {
@@ -45,7 +54,6 @@ function AccountProvider({ children }: { children: React.ReactNode }) {
       localStorage.removeItem("selectedAccount");
     }
   }, [selectedAccount]);
-
 
   useEffect(() => {
     const fetchAccounts = async () => {
@@ -74,37 +82,45 @@ function AccountProvider({ children }: { children: React.ReactNode }) {
         //     starting_balance: Number(newAccount.starting_balance)
         //   };
         setAccounts((prev) => [...prev, res.data]);
-        setIsModalOpen(false)
-
+        setIsModalOpen(false);
       }
     } catch (err) {
-        console.error(err)
+      console.error(err);
 
       throw err;
     }
   };
 
-  const deleteAccount = async (idToDel:string) => {
-    try{
-        await deleteAccountApi(idToDel);
-        const filtered = accounts.filter((account) => {
-            return account.id !== idToDel;
-        })
-        setAccounts(filtered)
-
-    }catch(err:any){
-        console.error(err)
-        throw err
+  const deleteAccount = async (idToDel: string) => {
+    try {
+      await deleteAccountApi(idToDel);
+      const filtered = accounts.filter((account) => {
+        return account.id !== idToDel;
+      });
+      setAccounts(filtered);
+    } catch (err: any) {
+      console.error(err);
+      throw err;
     }
-  }
+  };
   const getAccount = async () => {
     try {
-     const res = await getAccountApi();
-     if(res.success){
-        setAccounts(res.data)
-     }
+      const res = await getAccountApi();
+      if (res.success) {
+        setAccounts(res.data);
+      }
     } catch (err: any) {
       throw err;
+    }
+  };
+
+  const getParticularAccount = async () => {
+    try {
+      const res = await getParticularAccountApi(selectedAccount?.id!);
+
+      return res;
+    } catch (err) {
+      console.error(err);
     }
   };
 
@@ -120,8 +136,8 @@ function AccountProvider({ children }: { children: React.ReactNode }) {
         deleteAccount,
         isModalOpen,
         setIsModalOpen,
-        loading
-        
+        loading,
+        getParticularAccount,
       }}
     >
       {children}

@@ -9,13 +9,12 @@ import ExitPriceModal from "../component/history/ExitPriceModal";
 import { toast } from "sonner";
 import { useNavigate } from "react-router";
 import useAccount from "../hooks/useAccount";
-import { getTradeApi } from "../services/tradeApi";
 import { useUser } from "../hooks/useUser";
 import HistorySkeleton from "../component/skeltons/HistorySkelton";
 
 export default function History() {
   const { toggleSidebar } = useSidebar();
-  const { trades, removeTrade, updateTrade, setLoading, setTrades, loading } = useTrade(); 
+  const { trades, removeTrade, updateTrade, fetchTradesData,  loading } = useTrade(); 
   const { selectedAccount} = useAccount();
   const navigate = useNavigate();
   const { user } = useUser();
@@ -29,28 +28,13 @@ export default function History() {
   const [activeTradeToClose, setActiveTradeToClose] = useState<any>(null);
 
   useEffect(() => {
-    const fetchInitialState = async () => {
-      try {
-        setLoading((prev:any) => ({
-          ...prev,
-          fetchTrades: true,
-        }));
-        const { data } = await getTradeApi(selectedAccount!.id!);
-        setTrades(data);
-      } catch (err) {
-        console.error(err);
-      } finally {
-        setLoading((prev:any) => ({
-          ...prev,
-          fetchTrades: false,
-        }));
-      }
-    };
-
-    if (!user || !selectedAccount?.id) return;
-    fetchInitialState();
-
-  }, [user, selectedAccount?.id]);
+    if (!user || !selectedAccount?.id || selectedAccount.id === "undefined") {
+      return;
+    }
+  
+    fetchTradesData(selectedAccount.id);
+  
+  }, [user, selectedAccount?.id]); 
 
   const handleDelete = async (idToDel: number) => {
     try {

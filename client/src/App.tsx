@@ -71,7 +71,7 @@ const router = createBrowserRouter([
             element:<Analytics/>
           },
           {
-            path:'/trade/:id',
+            path:'/account/:id/trade/:id',
             element:<TradeDetails/>
           },
           {

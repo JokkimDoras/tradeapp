@@ -1,5 +1,7 @@
 import { FiEdit2, FiTrash2 } from "react-icons/fi";
 import { useNavigate } from "react-router";
+import useAccount from "../../hooks/useAccount";
+
 
 interface TradeRowProps {
   trade: any;
@@ -10,12 +12,13 @@ interface TradeRowProps {
 }
 
 export default function TradeRow({ trade, idx, isDeleting, onEdit, onDelete }: TradeRowProps) {
+  const { selectedAccount } = useAccount()
   const navigate = useNavigate();
   const isBuy = trade.trade_type?.toLowerCase() === "buy";
 
   return (
     <div
-      onClick={() => !isDeleting && navigate(`/trade/${trade.id}`)}
+      onClick={() => !isDeleting && navigate(`/account/${selectedAccount?.id}/trade/${trade.id}`)}
       key={trade.id || idx}
       className={`grid grid-cols-6 p-4 items-center hover:bg-zinc-900/40 transition-colors font-mono text-sm cursor-pointer ${
         isDeleting ? "opacity-35 pointer-events-none select-none" : ""

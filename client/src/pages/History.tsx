@@ -151,7 +151,7 @@ export default function History() {
                     onEdit={setFormState}
                     onDelete={handleDelete}
                     onComplete={handleOpenCompleteModal}
-                    onRowClick={(id) => navigate(`/trade/${id}`)}
+                    onRowClick={(id) => navigate(`/account/${selectedAccount?.id}/trade/${id}`)}
                   />
                 ))}
               </div>

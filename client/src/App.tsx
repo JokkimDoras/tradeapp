@@ -17,9 +17,8 @@ import TradeDetails from "./pages/TradeDetails.tsx";
 import News from "./pages/News.tsx";
 import AnalyticsProvider from "./context/AnalyticsContext.tsx";
 import AccountSelector from "./pages/AcoountSelector.tsx";
-import Calendar from "./pages/Calendar.tsx";
 import NotFound from "./pages/404.tsx";
-
+import  Calendar  from "./pages/Calendar.tsx";
 
 
 const router = createBrowserRouter([

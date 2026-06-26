@@ -11,7 +11,7 @@ export default function Page404() {
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#111_1px,transparent_1px),linear-gradient(to_bottom,#111_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)] pointer-events-none z-0" />
 
       <div className="relative z-10 flex flex-col flex-1">
-        <Navbar toggleSidebar={toggleSidebar}>WorkSpace</Navbar>
+        <Navbar toggleSidebar={toggleSidebar}>404</Navbar>
 
         <div className="flex flex-col items-center justify-center flex-1 max-w-7xl mx-auto w-full p-6 text-center">
           <div className="flex flex-col items-center max-w-xl">

@@ -127,4 +127,58 @@ const validategetAccount = async(req,res,next) => {
     }
 }
 
-module.exports = { validateCreateAccount, validateDeleteAccount,validategetAccount };
+const validategetParticularAccount = async(req,res,next) => {
+
+  const authHeader = req.headers.authorization;
+
+  if(!authHeader || !authHeader.startsWith('Bearer')) {
+    return res.status(401).json({
+      success:false,
+      message:'Unauthorized Invaild Token'
+    })
+  }
+
+  const token = authHeader.split(' ')[1];
+  const account_id = req.params.id
+try{
+  const { data:{user},error:userError } = await supabaseAdmin.auth.getUser(token);
+
+  if(userError || !user){
+    return res.status(401).json({
+      success:false,
+      message:'Unauthorized Invalid Token'
+    })
+  }
+
+  const { data , error:dbError } = await supabaseAdmin
+  .from('accounts')
+  .select('*')
+  .eq('id',account_id)
+  .eq('user_id',user.id)
+  .single();
+
+  if (dbError || !data) {
+    return res.status(403).json({ 
+      success:false,
+      message: 'Forbidden: You do not have access to this account' ,
+      error:dbError
+    });
+  }
+
+  req.user = user;
+  req.accountId = account_id;
+
+  next()
+}catch(err){
+    return res.status(500).json({
+      success:false,
+      message:'Internal Server Error',
+      error:err
+    })
+}
+
+
+
+}
+
+module.exports = { validateCreateAccount, validateDeleteAccount,validategetAccount,validategetParticularAccount  };

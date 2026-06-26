@@ -114,4 +114,43 @@ const getAccount = async(req,res) => {
 
 }
 
-module.exports = {createAccount,deleteAccount,getAccount}
+const getParticularAccount = async(req,res) => {
+
+    const user_id = req.user.id;
+    const account_id = req.accountId;
+
+    try{
+       const {data,error} = await supabaseAdmin
+        .from('accounts')
+        .select('*')
+        .eq('id',account_id)
+        .single()
+
+        if(error || !data){
+            return res.status(404).json({
+                success:false,
+                message:'Account details not found',
+                error
+            })
+        }
+
+        return res.status(200).json({
+            success:true,
+            message:'Fetched the account details successfully',
+            data
+        })
+
+    }catch(error){
+        return res.status(500).json({
+            success:false,
+            message:'Internal Server Error',
+            error:error.message
+        })
+
+    }
+
+
+
+}
+
+module.exports = {createAccount,deleteAccount,getAccount,getParticularAccount}

@@ -138,18 +138,23 @@ export default function SideBar() {
     }
   }, [selectedAccount?.id]);
 
+  useEffect(() => {
+    const isOnCalendar = location.pathname.startsWith("/calendar");
+    
+    if (isOnCalendar && selectedAccount?.id) {
+      navigate(`/calendar/${selectedAccount.id}`);
+    }
+  }, [selectedAccount?.id]);
+
   const handleNavigation = (item: {
     id: number;
     name: string;
     path: string;
   }) => {
-    if (item.name === "Dashboard") {
+    if (item.name === "Dashboard" || item.name === "History" || item.name === 'Calendar') {
       setCurrentPath(item.name);
       navigate(`${item.path}/${selectedAccount?.id}`);
-    } else if (item.name === "History") {
-      setCurrentPath(item.name);
-      navigate(`${item.path}/${selectedAccount?.id}`);
-    } else {
+    }else{
       setCurrentPath(item.name);
       navigate(item.path);
     }

@@ -18,6 +18,8 @@ import News from "./pages/News.tsx";
 import AnalyticsProvider from "./context/AnalyticsContext.tsx";
 import AccountSelector from "./pages/AcoountSelector.tsx";
 import Calendar from "./pages/Calendar.tsx";
+import NotFound from "./pages/404.tsx";
+
 
 
 const router = createBrowserRouter([
@@ -84,6 +86,10 @@ const router = createBrowserRouter([
           {
             path:'/calendar/:id',
             element:<Calendar/>
+          },
+          {
+            path:'*',
+            element:<NotFound/>
           }
           
         ]

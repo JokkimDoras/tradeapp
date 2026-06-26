@@ -10,6 +10,7 @@ import {
   FiPlus,
 } from "react-icons/fi";
 import { FaRegNewspaper } from "react-icons/fa";
+import { CiCalendarDate } from "react-icons/ci";
 import { useNavigate } from "react-router";
 import { useSidebar } from "../hooks/useSidebar";
 import { useUser } from "../hooks/useUser";
@@ -38,6 +39,12 @@ const navigation = [
         name: "Dashboard",
         path: "/dashboard",
         icon: <FiGrid size={14} strokeWidth={1.75} />,
+      },
+      {
+        id: 2,
+        name: "Calendar",
+        path: "/calendar",
+        icon: <CiCalendarDate size={16} strokeWidth={1.75} />,
       },
       {
         id: 2,
@@ -117,14 +124,11 @@ export default function SideBar() {
         .slice(0, 2)
     : "TV";
 
-    //this effect handle if the user change the account in the sidebar the dashboard url change with the accountId
   useEffect(() => {
     if (location.pathname.startsWith("/dashboard") && selectedAccount?.id) {
       navigate(`/dashboard/${selectedAccount.id}`);
     }
   }, [selectedAccount?.id, location.pathname, navigate]);
-
-     //this effect handle if the user change the account in the sidebar the History url change with the accountId
 
   useEffect(() => {
     const isOnHistory = location.pathname.startsWith("/history");
@@ -149,7 +153,6 @@ export default function SideBar() {
       setCurrentPath(item.name);
       navigate(item.path);
     }
-    
   };
 
   const handleSelectAccount = (account: Account) => {
@@ -171,6 +174,7 @@ export default function SideBar() {
 
   return (
     <div className="flex flex-col w-64 h-screen bg-black border-r border-zinc-900 py-4 font-sans antialiased selection:bg-zinc-800 selection:text-white">
+      {/* Sidebar Header */}
       <div className="h-12 flex items-center justify-between px-5 pb-3 border-b border-zinc-900">
         <span className="text-base font-bold text-zinc-50 tracking-tight">
           TradeVault
@@ -192,6 +196,7 @@ export default function SideBar() {
         </button>
       </div>
 
+      {/* Active Account Dropdown Section */}
       <div
         className="px-3 pt-4 pb-3 border-b border-zinc-900 relative"
         onMouseEnter={handleContainerMouseEnter}
@@ -263,7 +268,29 @@ export default function SideBar() {
         )}
       </div>
 
-      <div className="flex-1 overflow-y-auto px-3 py-6 flex flex-col gap-7">
+      <div 
+        className="flex-1 overflow-y-auto px-3 py-6 flex flex-col gap-7"
+        style={{
+          scrollbarWidth: 'thin',
+          scrollbarColor: '#27272a transparent'
+        }}
+      >
+        <style>{`
+          .overflow-y-auto::-webkit-scrollbar {
+            width: 5px;
+          }
+          .overflow-y-auto::-webkit-scrollbar-track {
+            background: transparent;
+          }
+          .overflow-y-auto::-webkit-scrollbar-thumb {
+            background-color: #27272a; 
+            border-radius: 9999px;
+          }
+          .overflow-y-auto::-webkit-scrollbar-thumb:hover {
+            background-color: #3f3f46;
+          }
+        `}</style>
+
         {navigation.map((group) => (
           <div key={group.section} className="flex flex-col gap-1">
             <p className="text-[11px] font-semibold text-zinc-500 uppercase px-3 mb-1 tracking-wider font-mono">

@@ -1,9 +1,12 @@
 import { useMemo } from "react";
 import  useTrade  from "../hooks/useTrade";
 import { BarChart2 } from "lucide-react";
+import Navbar from "../component/NavBar";
+import { useSidebar } from "../hooks/useSidebar";
 
 export default function StrategiesPage() {
   const { trades } = useTrade();
+  const { toggleSidebar } = useSidebar()
 
   const processedStrategies = useMemo(() => {
     const statsMap: Record<string, { name: string; total: number; wins: number; pnl: number }> = {};
@@ -44,6 +47,7 @@ export default function StrategiesPage() {
 
   return (
     <div className="w-full min-h-screen bg-[#000000] text-[#ffffff] font-sans antialiased selection:bg-[#333333]">
+        <Navbar toggleSidebar={toggleSidebar}>Strategies</Navbar>
       <div className="w-full px-8 py-10">
         
         <div className="w-full flex items-center justify-between border-b border-zinc-900 pb-6 mb-8">

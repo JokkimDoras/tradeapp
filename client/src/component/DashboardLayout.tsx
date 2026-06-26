@@ -1,5 +1,5 @@
 import { Outlet } from "react-router";
-import SideBar from "./SideBar";
+import SideBar from "./sidebar/SideBar";
 import { useSidebar } from "../hooks/useSidebar";
 import { SidebarProvider } from "../context/SidebarContext";
 import TradeProvider from "../context/TradeContext";

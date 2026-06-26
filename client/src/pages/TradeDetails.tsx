@@ -2,7 +2,7 @@ import { useParams, useNavigate } from "react-router";
 import { useEffect, useMemo } from "react";
 import useTrade from "../hooks/useTrade";
 import { useSidebar } from "../hooks/useSidebar";
-import Navbar from "../component/NavBar";
+import Navbar from "../component/ui/NavBar";
 import StatCard from "../component/tradeDetails/StatCard"; 
 import DataRow from "../component/tradeDetails/DataRow";   
 import { FiArrowLeft, FiClock, FiActivity, FiLayers, FiShield,FiX } from "react-icons/fi";

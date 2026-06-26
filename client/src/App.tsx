@@ -67,7 +67,7 @@ const router = createBrowserRouter([
             element:<TradeJournal/>
           },
           {
-            path:'/analytics',
+            path:'/analytics/:id',
             element:<Analytics/>
           },
           {

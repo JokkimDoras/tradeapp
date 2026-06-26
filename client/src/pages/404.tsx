@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router"; 
-import Navbar from "../component/NavBar";
+import Navbar from "../component/ui/NavBar";
 import { useSidebar } from "../hooks/useSidebar";
 
 export default function Page404() {

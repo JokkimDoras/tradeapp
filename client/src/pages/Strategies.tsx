@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import  useTrade  from "../hooks/useTrade";
 import { BarChart2 } from "lucide-react";
-import Navbar from "../component/NavBar";
+import Navbar from "../component/ui/NavBar";
 import { useSidebar } from "../hooks/useSidebar";
 
 export default function StrategiesPage() {

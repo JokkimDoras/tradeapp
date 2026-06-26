@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useSidebar } from "../../hooks/useSidebar";
-import Navbar from "../NavBar";
+import Navbar from "../ui/NavBar";
 import { toast } from "sonner";
 import useAccount from "../../hooks/useAccount";
 

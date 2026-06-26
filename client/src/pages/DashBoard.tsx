@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useSidebar } from "../hooks/useSidebar";
 import useTrade from "../hooks/useTrade";
-import Navbar from "../component/NavBar";
+import Navbar from "../component/ui/NavBar";
 import AddTrade from "../component/addtrade/AddTrade";
 import DashboardSkeleton from "../component/skeltons/DashBoardSkelton";
 import StatsGrid from "../component/dashboard/StatsGrid";

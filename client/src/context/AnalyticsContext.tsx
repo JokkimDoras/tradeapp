@@ -23,12 +23,15 @@ export default function AnalyticsProvider({
   const [isOld, setIsOld] = useState(true);
   const [currentAccountId, setCurrentAccountId] = useState<string | null>(null);
 
-
   const getAnalyticsData = async (force: boolean | undefined = false,accountId:string) => {
     try {
       setLoading(true);
 
       const isDifferentAccount = accountId !== currentAccountId;
+
+      if (isDifferentAccount) {
+        setAnalyticsData(null);
+      }
 
       if (!analyticsData || isOld || force || isDifferentAccount) {
         const { data } = await getAnalyticsDataApi(accountId);
@@ -44,6 +47,7 @@ export default function AnalyticsProvider({
       setLoading(false);
     }
   };
+
   const refreshAnalyticsData = async (accountId:string) => {
     try {
       setLoading(true);

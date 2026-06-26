@@ -47,31 +47,31 @@ const navigation = [
         icon: <CiCalendarDate size={16} strokeWidth={1.75} />,
       },
       {
-        id: 2,
+        id: 3,
         name: "Trade Journal",
         path: "/journal",
         icon: <FiBookOpen size={14} strokeWidth={1.75} />,
       },
       {
-        id: 3,
+        id: 4,
         name: "Analytics",
         path: "/analytics",
         icon: <FiBarChart2 size={14} strokeWidth={1.75} />,
       },
       {
-        id: 4,
+        id: 5,
         name: "History",
         path: "/history",
         icon: <FiClock size={14} strokeWidth={1.75} />,
       },
       {
-        id: 5,
+        id: 6,
         name: "Strategies",
         path: "/strategies",
         icon: <FiLayers size={14} strokeWidth={1.75} />,
       },
       {
-        id: 6,
+        id: 7,
         name: "News",
         path: "/news",
         icon: <FaRegNewspaper size={14} strokeWidth={1.75} />,
@@ -82,13 +82,13 @@ const navigation = [
     section: "Account",
     items: [
       {
-        id: 6,
+        id: 8,
         name: "Profile",
         path: "/profile",
         icon: <FiUser size={14} strokeWidth={1.75} />,
       },
       {
-        id: 7,
+        id: 9,
         name: "Settings",
         path: "/setting",
         icon: <FiSettings size={14} strokeWidth={1.75} />,
@@ -132,7 +132,7 @@ export default function SideBar() {
 
   useEffect(() => {
     const isOnHistory = location.pathname.startsWith("/history");
-    
+
     if (isOnHistory && selectedAccount?.id) {
       navigate(`/history/${selectedAccount.id}`);
     }
@@ -140,9 +140,17 @@ export default function SideBar() {
 
   useEffect(() => {
     const isOnCalendar = location.pathname.startsWith("/calendar");
-    
+
     if (isOnCalendar && selectedAccount?.id) {
       navigate(`/calendar/${selectedAccount.id}`);
+    }
+  }, [selectedAccount?.id]);
+
+  useEffect(() => {
+    const isOnAnalytics = location.pathname.startsWith("/analytics");
+
+    if (isOnAnalytics && selectedAccount?.id) {
+      navigate(`/analytics/${selectedAccount.id}`);
     }
   }, [selectedAccount?.id]);
 
@@ -151,10 +159,15 @@ export default function SideBar() {
     name: string;
     path: string;
   }) => {
-    if (item.name === "Dashboard" || item.name === "History" || item.name === 'Calendar') {
+    if (
+      item.name === "Dashboard" ||
+      item.name === "History" ||
+      item.name === "Calendar" ||
+      item.name === "Analytics"
+    ) {
       setCurrentPath(item.name);
       navigate(`${item.path}/${selectedAccount?.id}`);
-    }else{
+    } else {
       setCurrentPath(item.name);
       navigate(item.path);
     }
@@ -273,11 +286,11 @@ export default function SideBar() {
         )}
       </div>
 
-      <div 
+      <div
         className="flex-1 overflow-y-auto px-3 py-6 flex flex-col gap-7"
         style={{
-          scrollbarWidth: 'thin',
-          scrollbarColor: '#27272a transparent'
+          scrollbarWidth: "thin",
+          scrollbarColor: "#27272a transparent",
         }}
       >
         <style>{`

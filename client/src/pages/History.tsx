@@ -2,7 +2,7 @@ import { useSidebar } from "../hooks/useSidebar";
 import AddTrade from "../component/addtrade/AddTrade";
 import { useState, useMemo, useEffect } from "react";
 import useTrade from "../hooks/useTrade";
-import Navbar from "../component/NavBar";
+import Navbar from "../component/ui/NavBar";
 import HistoryToolbar from "../component/history/HistoryToolbar";
 import HistoryRow from "../component/history/HistoryRow";
 import ExitPriceModal from "../component/history/ExitPriceModal";

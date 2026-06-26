@@ -2,7 +2,7 @@ import { useState } from 'react';
 import {type MonthData } from '../types/calendar';
 import { MetricCards } from '../component/calendar/MetricCards';
 import { TradeInspector } from '../component/calendar/TradeInspector';
-import Navbar from '../component/NavBar';
+import Navbar from '../component/ui/NavBar';
 import { useSidebar } from '../hooks/useSidebar';
 
 const INITIAL_MOCK_DATA: MonthData = {

@@ -131,7 +131,6 @@ export default function History() {
           ) : (
             <div className="w-full border border-zinc-900 bg-zinc-950 rounded-lg overflow-hidden shadow-md">
               
-              {/* Perfectly balanced 8-column header split matching the new history row design */}
               <div className="grid grid-cols-8 p-4 border-b border-zinc-900 text-xs font-mono text-zinc-500 uppercase tracking-wider font-semibold bg-zinc-950">
                 <div>Asset / Risk</div>
                 <div>Action / Size</div>

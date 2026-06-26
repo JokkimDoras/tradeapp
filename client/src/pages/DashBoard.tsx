@@ -10,7 +10,6 @@ import TradeRow from "../component/dashboard/TradeRow";
 import { FiPlus } from "react-icons/fi";
 import { toast } from "sonner";
 import { useAnalytics } from "../hooks/useAnalytics";
-import { getTradeApi } from "../services/tradeApi";
 import useAccount from "../hooks/useAccount";
 import { useUser } from "../hooks/useUser";
 
@@ -19,8 +18,7 @@ export default function Dashboard() {
   const { loading } = useTrade();
   const [formState, setFormState] = useState<boolean | any>(false);
   const [deleteingId, setDeleleteingId] = useState<null | number>(null);
-
-  const { trades, removeTrade, setTrades, setLoading } = useTrade();
+  const { trades, removeTrade, fetchTradesData } = useTrade();
   const { getAnalyticsData, isOld, analyticsData } = useAnalytics();
   const { selectedAccount } = useAccount();
   const { user } = useUser();
@@ -31,7 +29,7 @@ export default function Dashboard() {
   }, [])
 
   useEffect(() => {
-    if (!selectedAccount?.id) return;
+    if (!selectedAccount || !selectedAccount.id || selectedAccount.id === "undefined") return;
 
     if (formState === false && isOld) {
       getAnalyticsData(true, selectedAccount.id);
@@ -41,20 +39,10 @@ export default function Dashboard() {
   }, [selectedAccount?.id, formState, isOld]);
 
   useEffect(() => {
-    const fetchInitialState = async () => {
-      if (!user || !selectedAccount?.id) return;
-      try {
-        setLoading((prev: any) => ({ ...prev, fetchTrades: true }));
-        const { data } = await getTradeApi(selectedAccount.id);
-        setTrades(data);
-      } catch (err) {
-        console.error(err);
-      } finally {
-        setLoading((prev: any) => ({ ...prev, fetchTrades: false }));
-      }
-    };
-
-    fetchInitialState();
+    if (!user || !selectedAccount?.id) return;
+    
+    fetchTradesData(selectedAccount.id); 
+    
   }, [user, selectedAccount?.id]);
 
   const handleDelete = async (idToDel: number) => {

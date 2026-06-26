@@ -5,7 +5,7 @@ import {
   type Dispatch,
   type SetStateAction,
 } from "react";
-import { createTradeApi, updateTradeApi } from "../services/tradeApi";
+import { createTradeApi, updateTradeApi,getTradeApi } from "../services/tradeApi";
 import { deleteTradeApi, type TradeFormData } from "../services/tradeApi";
 import { useAnalytics } from "../hooks/useAnalytics";
 
@@ -20,6 +20,7 @@ interface TradeContextType {
   trades: any[];
   setTrades: Dispatch<SetStateAction<any[]>>;
   addTrade: (formData: any) => Promise<void>;
+  fetchTradesData: (accountId: string) => Promise<void>; 
   removeTrade: (idToDel: number) => Promise<void>;
   updateTrade: (idToUpdate: number, formData: any) => Promise<void>;
   loading: LoadingState;
@@ -41,8 +42,27 @@ export default function TradeProvider({ children }: TradeProviderProps) {
     updatingTradeId: null,
     deletingTradeId: null,
   });
+  const [currentAccountId, setCurrentAccountId] = useState<string | null>(null);
+
   const { setIsOld } = useAnalytics();
 
+  const fetchTradesData = async (accountId: string) => {
+    if (currentAccountId === accountId && trades.length > 0) {
+      return;
+    }
+
+    try {
+      setLoading((prev) => ({ ...prev, fetchTrades: true }));
+      const { data } = await getTradeApi(accountId);
+      setTrades(data);
+      setCurrentAccountId(accountId); // Save this account ID to memory
+    } catch (err) {
+      console.error("Error fetching trades inside context:", err);
+      throw err;
+    } finally {
+      setLoading((prev) => ({ ...prev, fetchTrades: false }));
+    }
+  };
 
 
   const addTrade = async (formData: TradeFormData) => {
@@ -131,7 +151,8 @@ export default function TradeProvider({ children }: TradeProviderProps) {
         removeTrade,
         updateTrade,
         loading,
-        setLoading
+        setLoading,
+        fetchTradesData
       }}
     >
       {children}

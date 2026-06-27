@@ -24,10 +24,12 @@ export default function Dashboard() {
   const { user } = useUser();
   const recentTrades = trades.slice(0, 5);
 
+  
   useEffect(() => {
     getAnalyticsData();
     getParticularAccount();
   }, [])
+  const currentBalance = (selectedAccount?.starting_balance || 0) + (analyticsData?.summary.net_profit_loss || 0)
 
   // useEffect(() => {
   //   if (!user || !selectedAccount?.id || ) return;
@@ -84,7 +86,7 @@ export default function Dashboard() {
 
       <div className="flex flex-col gap-8 w-full max-w-7xl mx-auto flex-1 p-6 pb-24">
         
-        <StatsGrid margin={selectedAccount?.starting_balance} analyticsData={analyticsData} totalExecutions={trades.length} />
+        <StatsGrid currentBalance={currentBalance} margin={selectedAccount?.starting_balance} analyticsData={analyticsData} totalExecutions={trades.length} />
 
         <SystemAnalysis hasTrades={trades.length > 0} />
 

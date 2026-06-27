@@ -3,7 +3,8 @@ import type { AnalyticsDataType } from "../../types/analytics.types";
 interface StatsGridProps {
   totalExecutions: number;
   analyticsData?: AnalyticsDataType | null; 
-  margin:number
+  margin:number;
+  currentBalance:number;
 }
 
 export default function StatsGrid({ totalExecutions, analyticsData,margin }: StatsGridProps) {
@@ -22,6 +23,7 @@ export default function StatsGrid({ totalExecutions, analyticsData,margin }: Sta
           Active Margin
         </span>
         <span className="text-2xl font-mono font-bold text-white">{margin}</span>
+        {/* <span className="text-xl font-mono font-bold text-white">{currentBalance}</span> */}
       </div>
       <div className="p-5 rounded-lg border border-zinc-900 bg-zinc-950 flex flex-col gap-2 shadow-sm">
         <span className="text-xs font-mono text-zinc-500 uppercase tracking-widest">

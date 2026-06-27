@@ -1,96 +1,114 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { type MonthData } from '../types/calendar';
 import { MetricCards } from '../component/calendar/MetricCards';
 import { TradeInspector } from '../component/calendar/TradeInspector';
 import Navbar from '../component/ui/NavBar';
 import useTrade from '../hooks/useTrade';
 import { useSidebar } from '../hooks/useSidebar';
+import useAccount from '../hooks/useAccount';
+import CalendarSkeleton from '../component/skeltons/CalendarSkeleton';
 
 export default function Calendar() {
   const { toggleSidebar } = useSidebar();
-  const { trades } = useTrade();
+  const { trades,fetchTradesData,loading } = useTrade();
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedDateStr, setSelectedDateStr] = useState<string>('');
   const [isOpen, setIsOpen] = useState(true);
-  console.log(trades,'totest')
+  const { selectedAccount } = useAccount();
+  
+  
+  useEffect(() => {
+    if (!selectedAccount?.id) return;
+    fetchTradesData(selectedAccount.id);
+  }, [selectedAccount?.id]);
 
+ 
+  
+  // useEffect(() => {
+    //  fetchTradesData(selectedAccount?.id)
+  // },[selectedAccount?.id])
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth();
-
+  
   const firstDayIndex = new Date(year, month, 1).getDay();
   const totalDays = new Date(year, month + 1, 0).getDate();
   const blankCells = Array(firstDayIndex).fill(null);
   const monthDays = Array.from({ length: totalDays }, (_, i) => i + 1);
   const totalGridCells = [...blankCells, ...monthDays];
-
+  
   const monthsList = ["January", "February", "March", "April", "May", "June",
     "July", "August", "September", "October", "November", "December"];
-
-  // Build tradeData from real trades
-  const tradeData = useMemo<MonthData>(() => {
-    const map: MonthData = {};
-
-    trades.forEach((trade: any) => {
-      if (!trade.trade_date) return;
-
-      const dateStr = new Date(trade.trade_date).toISOString().split('T')[0];
-
-      if (!map[dateStr]) {
-        map[dateStr] = {
-          tradeCount: 0,
-          netPnL: 0,
-          status: 'breakeven',
-          trades: []
-        };
-      }
-
-      map[dateStr].tradeCount += 1;
-
-      // only add P&L for closed trades
-      if (trade.status === 'closed') {
-        map[dateStr].netPnL += Number(trade.profit_loss || 0);
-      }
-
-      map[dateStr].trades?.push({
-        id: trade.id,
-        pair: trade.currency_pair,
-        type: trade.trade_type,
-        pips: trade.pips,
-        pnl: trade.profit_loss
+    
+    // Build tradeData from real trades
+    const tradeData = useMemo<MonthData>(() => {
+      const map: MonthData = {};
+      
+      trades.forEach((trade: any) => {
+        if (!trade.trade_date) return;
+        
+        const dateStr = new Date(trade.trade_date).toISOString().split('T')[0];
+        
+        if (!map[dateStr]) {
+          map[dateStr] = {
+            tradeCount: 0,
+            netPnL: 0,
+            status: 'breakeven',
+            trades: []
+          };
+        }
+        
+        map[dateStr].tradeCount += 1;
+        
+        // only add P&L for closed trades
+        if (trade.status === 'closed') {
+          map[dateStr].netPnL += Number(trade.profit_loss || 0);
+        }
+        
+        map[dateStr].trades?.push({
+          id: trade.id,
+          pair: trade.currency_pair,
+          type: trade.trade_type,
+          pips: trade.pips,
+          pnl: trade.profit_loss
+        });
       });
-    });
-
-    // set status based on netPnL
-    Object.keys(map).forEach((dateStr) => {
-      const day = map[dateStr];
-      const closedTrades = trades.filter((t: any) => {
-        const d = new Date(t.trade_date).toISOString().split('T')[0];
-        return d === dateStr && t.status === 'closed';
-      });
-
-      if (closedTrades.length === 0) {
-        day.status = 'breakeven'; 
-      } else if (day.netPnL > 0) {
-        day.status = 'profitable';
-      } else if (day.netPnL < 0) {
-        day.status = 'unprofitable';
-      } else {
-        day.status = 'breakeven';
-      }
-
-      const wins = closedTrades.filter((t: any) => t.result === 'win').length;
-      day.winRate = closedTrades.length > 0
+      
+      // set status based on netPnL
+      Object.keys(map).forEach((dateStr) => {
+        const day = map[dateStr];
+        const closedTrades = trades.filter((t: any) => {
+          const d = new Date(t.trade_date).toISOString().split('T')[0];
+          return d === dateStr && t.status === 'closed';
+        });
+        
+        if (closedTrades.length === 0) {
+          day.status = 'breakeven'; 
+        } else if (day.netPnL > 0) {
+          day.status = 'profitable';
+        } else if (day.netPnL < 0) {
+          day.status = 'unprofitable';
+        } else {
+          day.status = 'breakeven';
+        }
+        
+        const wins = closedTrades.filter((t: any) => t.result === 'win').length;
+        day.winRate = closedTrades.length > 0
         ? Math.round((wins / closedTrades.length) * 100)
         : 0;
+        
+        day.totalPips = closedTrades.reduce((sum: number, t: any) => sum + (t.pips || 0), 0);
+        
+        day.netPnL = Math.round(day.netPnL * 100) / 100;
+      });
+      
+      return map;
+    }, [trades]);
 
-      day.totalPips = closedTrades.reduce((sum: number, t: any) => sum + (t.pips || 0), 0);
-
-      day.netPnL = Math.round(day.netPnL * 100) / 100;
-    });
-
-    return map;
-  }, [trades]);
-
+     if (loading.fetchTrades) {
+    return <CalendarSkeleton />;
+  }
+  
+    
   const handleDateClick = (targetStr: string) => {
     setSelectedDateStr(targetStr);
     if (!isOpen) setIsOpen(true);

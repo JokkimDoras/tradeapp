@@ -46,6 +46,8 @@ export default function TradeProvider({ children }: TradeProviderProps) {
 
   const { setIsOld } = useAnalytics();
 
+  
+
   const fetchTradesData = async (accountId: string) => {
     if (currentAccountId === accountId && trades.length > 0) {
       return;

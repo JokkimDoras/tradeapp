@@ -12,6 +12,7 @@ import { toast } from "sonner";
 import { useAnalytics } from "../hooks/useAnalytics";
 import useAccount from "../hooks/useAccount";
 import { useUser } from "../hooks/useUser";
+// import { useLocation } from "react-router";
 
 export default function Dashboard() {
   const { toggleSidebar } = useSidebar();
@@ -20,15 +21,19 @@ export default function Dashboard() {
   const [deleteingId, setDeleleteingId] = useState<null | number>(null);
   const { trades, removeTrade, fetchTradesData } = useTrade();
   const { getAnalyticsData, isOld, analyticsData } = useAnalytics();
-  const { selectedAccount,getParticularAccount } = useAccount();
+  const { selectedAccount } = useAccount();
   const { user } = useUser();
   const recentTrades = trades.slice(0, 5);
 
   
   useEffect(() => {
     getAnalyticsData();
-    getParticularAccount();
+    // getParticularAccount()
   }, [])
+  // useEffect(() => {
+  //   getParticularAccount();
+
+  // },[selectedAccount?.id])
   const hasLoadedData = selectedAccount && analyticsData?.summary;
   const currentBalance = hasLoadedData 
     ? (selectedAccount.starting_balance || 0) + (analyticsData.summary.net_profit_loss || 0)

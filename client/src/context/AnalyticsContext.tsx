@@ -24,6 +24,7 @@ export default function AnalyticsProvider({
   const [currentAccountId, setCurrentAccountId] = useState<string | null>(null);
 
   const getAnalyticsData = async (force: boolean | undefined = false,accountId:string) => {
+    if (!accountId || accountId === "undefined") return;
     try {
       setLoading(true);
 

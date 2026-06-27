@@ -29,7 +29,10 @@ export default function Dashboard() {
     getAnalyticsData();
     getParticularAccount();
   }, [])
-  const currentBalance = (selectedAccount?.starting_balance || 0) + (analyticsData?.summary.net_profit_loss || 0)
+  const hasLoadedData = selectedAccount && analyticsData?.summary;
+  const currentBalance = hasLoadedData 
+    ? (selectedAccount.starting_balance || 0) + (analyticsData.summary.net_profit_loss || 0)
+    : (selectedAccount?.starting_balance || 0);
 
   // useEffect(() => {
   //   if (!user || !selectedAccount?.id || ) return;

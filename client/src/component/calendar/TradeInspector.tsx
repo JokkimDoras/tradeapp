@@ -1,19 +1,27 @@
 import React from 'react';
 import type { DaySummary } from '../../types/calendar';
+import { IoCloseOutline } from "react-icons/io5";
+import { useNavigate } from 'react-router';
+import useAccount from '../../hooks/useAccount';
 
 interface TradeInspectorProps {
   selectedDateStr: string;
   activeDayData?: DaySummary;
+  setIsOpen:any;
 }
 
-export const TradeInspector: React.FC<TradeInspectorProps> = ({ selectedDateStr, activeDayData }) => {
+export const TradeInspector: React.FC<TradeInspectorProps> = ({ selectedDateStr, activeDayData,setIsOpen }) => {
+  const { selectedAccount } = useAccount();
+  
+  const navigate = useNavigate()
   const parsedDate = new Date(selectedDateStr + 'T00:00:00');
   const humanDate = parsedDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
   const weekday = parsedDate.toLocaleDateString('en-US', { weekday: 'long' });
 
   return (
     <div className="w-[320px] border-l border-zinc-900 p-6 flex flex-col gap-5 overflow-y-auto flex-shrink-0 bg-black">
-      <div>
+      <div className='flex flex-col '>
+      <IoCloseOutline onClick={() => setIsOpen(false)} className='self-end cursor-pointer' size={20} color='red'/>
         <h3 className="text-sm font-semibold text-zinc-100 tracking-tight">{humanDate}</h3>
         <p className="text-xs text-zinc-500 mt-1 font-medium">{weekday} · {activeDayData?.tradeCount || 0} executions</p>
       </div>
@@ -42,7 +50,7 @@ export const TradeInspector: React.FC<TradeInspectorProps> = ({ selectedDateStr,
       <div className="flex flex-col gap-2">
         <span className="text-xs text-zinc-500 font-bold uppercase tracking-wider mb-1">Execution History</span>
         {activeDayData?.trades?.map((trade) => (
-          <div key={trade.id} className="bg-zinc-950 border border-zinc-900 rounded-xl p-3 flex flex-col gap-2 shadow-sm hover:border-zinc-800 transition-all">
+          <div key={trade.id} onClick={() => navigate(`/account/${selectedAccount?.id}/trade/${trade.id}`)} className="bg-zinc-950 border border-zinc-900 rounded-xl p-3 flex flex-col gap-2 shadow-sm hover:border-zinc-800 transition-all">
             <div className="flex justify-between items-center">
               <span className="text-sm font-semibold text-zinc-200">{trade.pair}</span>
               <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold tracking-wide uppercase ${trade.type === 'Buy' ? 'bg-emerald-500/10 text-emerald-400' : 'bg-rose-500/10 text-rose-400'}`}>

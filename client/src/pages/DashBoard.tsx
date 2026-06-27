@@ -86,7 +86,16 @@ export default function Dashboard() {
 
       <div className="flex flex-col gap-8 w-full max-w-7xl mx-auto flex-1 p-6 pb-24">
         
-        <StatsGrid currentBalance={currentBalance} margin={selectedAccount?.starting_balance} analyticsData={analyticsData} totalExecutions={trades.length} />
+        <StatsGrid 
+        totalwin={analyticsData?.summary.overall_wins} 
+        totalLosses={analyticsData?.summary.overall_losses} 
+        currentBalance={currentBalance} 
+        margin={selectedAccount?.starting_balance} 
+        analyticsData={analyticsData} 
+        totalExecutions={trades.length}
+        avgWin={analyticsData?.summary.average_win}
+        avgLoss={analyticsData?.summary.average_loss}
+        />
 
         <SystemAnalysis hasTrades={trades.length > 0} />
 

@@ -4,7 +4,6 @@ const router = express.Router();
 const authController = require('../controllers/authController');
 const authMiddleware = require('../middleware/validateAuth');
 
-// Core Authentication Mappings
 router.post('/register', authMiddleware.validateRegisterInput, authController.registerUser);
 router.post('/login', authMiddleware.validateLoginInput, authController.loginUser);
 router.post('/logout',authController.logoutUser);

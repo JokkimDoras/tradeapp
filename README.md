@@ -8,7 +8,7 @@ This is not a trading platform. This is not a broker. This is a trade journaling
 
 ## Live
 
-- Frontend: https://tradevault.vercel.app
+- Frontend: jokkim.xyz
 - Backend API: https://tradeapp-43tb.onrender.com
 
 ---

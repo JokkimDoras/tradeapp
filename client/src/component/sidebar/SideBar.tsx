@@ -62,7 +62,6 @@ export default function SideBar() {
   const [accountDropdownOpen, setAccountDropdownOpen] = useState(false);
 
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
   const handleLogout = async (e: any) => {
     const token = getToken();
     e.stopPropagation();

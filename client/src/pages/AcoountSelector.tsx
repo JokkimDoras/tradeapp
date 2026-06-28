@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import {  useState } from "react";
 import Navbar from "../component/ui/NavBar";
 import useAccount from "../hooks/useAccount";
 import { useSidebar } from "../hooks/useSidebar";
@@ -8,7 +8,6 @@ import AccountSelectorSkeleton from "../component/skeltons/AccountSelectorSkelet
 import AccountHeader from "../component/addAccount/AccountHeader";
 import AccountCard from "../component/addAccount/AccountCard";
 import EmptyState from "../component/addAccount/EmptyState";
-import { useNavigate } from "react-router";
 
 type whichOneState = {
   name: string;
@@ -24,15 +23,12 @@ function AccountSelector() {
     name: "",
     id: null,
   });
-  const { selectedAccount } = useAccount();
-
-  const navigate = useNavigate();
-useEffect(() => {
-
-  if(selectedAccount?.id){
-    navigate(`/dashboard/${selectedAccount?.id}`)
-  }
-},[])
+ 
+// useEffect(() => {
+//   if(selectedAccount?.id){
+//     navigate(`/dashboard/${selectedAccount?.id}`)
+//   }
+// },[])
 
 
 

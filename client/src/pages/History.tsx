@@ -1,18 +1,23 @@
 import { useSidebar } from "../hooks/useSidebar";
 import AddTrade from "../component/addtrade/AddTrade";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import useTrade from "../hooks/useTrade";
-import Navbar from "../component/NavBar";
+import Navbar from "../component/ui/NavBar";
 import HistoryToolbar from "../component/history/HistoryToolbar";
 import HistoryRow from "../component/history/HistoryRow";
 import ExitPriceModal from "../component/history/ExitPriceModal";
 import { toast } from "sonner";
 import { useNavigate } from "react-router";
+import useAccount from "../hooks/useAccount";
+import { useUser } from "../hooks/useUser";
+import HistorySkeleton from "../component/skeltons/HistorySkelton";
 
 export default function History() {
   const { toggleSidebar } = useSidebar();
-  const { trades, removeTrade, updateTrade } = useTrade(); 
+  const { trades, removeTrade, updateTrade, fetchTradesData,  loading } = useTrade(); 
+  const { selectedAccount} = useAccount();
   const navigate = useNavigate();
+  const { user } = useUser();
 
   const [formState, setFormState] = useState<boolean | any>(false);
   const [deleteingId, setDeleleteingId] = useState<null | number>(null);
@@ -21,6 +26,15 @@ export default function History() {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeTradeToClose, setActiveTradeToClose] = useState<any>(null);
+
+  useEffect(() => {
+    if (!user || !selectedAccount?.id || selectedAccount.id === "undefined") {
+      return;
+    }
+  
+    fetchTradesData(selectedAccount.id);
+  
+  }, [user, selectedAccount?.id]); 
 
   const handleDelete = async (idToDel: number) => {
     try {
@@ -81,13 +95,14 @@ export default function History() {
     );
   }
 
+  if(loading.fetchTrades) return <HistorySkeleton/>
+
   return (
     <div className="flex flex-col flex-1 min-h-screen bg-black text-zinc-100 font-sans antialiased relative selection:bg-zinc-800 selection:text-white">
       <Navbar toggleSidebar={toggleSidebar} >History</Navbar>
 
       <div className="flex flex-col gap-8 w-full max-w-7xl mx-auto flex-1 p-6 pb-24">
         
-        {/* Header Layout Section */}
         <div className="flex flex-col gap-2 border-b border-zinc-900 pb-5">
           <h1 className="text-xl font-mono font-bold tracking-wider text-white uppercase">
             Archive / Execution Logs
@@ -97,7 +112,6 @@ export default function History() {
           </p>
         </div>
 
-        {/* Toolbar Component */}
         <HistoryToolbar 
           searchQuery={searchQuery}
           setSearchQuery={setSearchQuery}
@@ -105,7 +119,6 @@ export default function History() {
           setStatusFilter={setStatusFilter}
         />
 
-        {/* Layout Box Container */}
         <div className="w-full flex-1 flex flex-col">
           <span className="text-xs font-mono text-zinc-400 uppercase tracking-widest font-semibold mb-4">
             Sequence Registry ({filteredTrades.length})
@@ -118,18 +131,17 @@ export default function History() {
           ) : (
             <div className="w-full border border-zinc-900 bg-zinc-950 rounded-lg overflow-hidden shadow-md">
               
-              {/* Header Box Column Layout */}
-              <div className="grid grid-cols-7 p-4 border-b border-zinc-900 text-xs font-mono text-zinc-500 uppercase tracking-wider font-semibold bg-zinc-950">
+              <div className="grid grid-cols-8 p-4 border-b border-zinc-900 text-xs font-mono text-zinc-500 uppercase tracking-wider font-semibold bg-zinc-950">
                 <div>Asset / Risk</div>
                 <div>Action / Size</div>
                 <div>Entry / Exit</div>
-                <div>Targets (SL/TP)</div>
+                <div>Stop Loss</div>
+                <div>Take Profit</div>
                 <div>P&L / Pips</div>
                 <div>Status / Notes</div>
                 <div className="text-right">Actions</div>
               </div>
 
-              {/* Table Rows Wrapper */}
               <div className="divide-y divide-zinc-900">
                 {filteredTrades.map((trade: any, idx: number) => (
                   <HistoryRow 
@@ -139,7 +151,7 @@ export default function History() {
                     onEdit={setFormState}
                     onDelete={handleDelete}
                     onComplete={handleOpenCompleteModal}
-                    onRowClick={(id) => navigate(`/trade/${id}`)}
+                    onRowClick={(id) => navigate(`/account/${selectedAccount?.id}/trade/${id}`)}
                   />
                 ))}
               </div>

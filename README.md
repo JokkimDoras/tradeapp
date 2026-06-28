@@ -1,14 +1,14 @@
-
 # TradeVault
 
 A professional trade journal and trade management platform built for Forex traders. Log, organize, review, and analyze your trades in a structured and clean environment.
 
 This is not a trading platform. This is not a broker. This is a trade journaling tool built to help retail traders track performance, identify patterns, and improve their edge.
+
 ---
 
 ## Live
 
-- Frontend: jokkim.xyz
+- Frontend: https://tradevault.vercel.app
 - Backend API: https://tradeapp-43tb.onrender.com
 
 ---
@@ -118,7 +118,7 @@ tradevault/
 /                   Landing page
 /login              Login
 /register           Register
-/account-selector   Account selector
+/select-account     Account selector
 /dashboard          Main dashboard with stats and charts
 /history            Full trade history with filters
 /analytics          Deep performance analytics

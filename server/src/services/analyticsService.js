@@ -168,7 +168,8 @@ const calculatePerformanceMetrics = (trades = []) => {
       worst_trade: Math.round(worst_trade * 100) / 100,  // Appended here
       max_drawdown: Math.round(maxDrawdown * 100) / 100,
       max_win_streak: maxWinStreak,
-      max_loss_streak: maxLossStreak
+      max_loss_streak: maxLossStreak,
+      
     },
     chart_data 
   };
@@ -208,7 +209,14 @@ const calculateTradeMetrics = (tradeData) => {
   return {
     pips: Math.round(pips * 10) / 10,
     profit_loss: Math.round(profit_loss * 100) / 100,
-    risk_reward_ratio: Math.round(risk_reward_ratio * 100) / 100
+    risk_reward_ratio: Math.round(risk_reward_ratio * 100) / 100,
+    result: isClosed      
+      ? profit_loss > 0
+        ? "win"
+        : profit_loss < 0
+        ? "loss"
+        : "breakeven"
+      : null
   };
 };
 

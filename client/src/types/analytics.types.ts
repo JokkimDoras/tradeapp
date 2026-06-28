@@ -32,8 +32,18 @@ export interface Summary {
     analyticsData: AnalyticsDataType | null;
     loading: boolean;
     error: string | null;
-    getAnalyticsData: (some?:boolean) => Promise<void>;
-    refreshAnalyticsData:() => Promise<void>;
+    getAnalyticsData: any;
+    refreshAnalyticsData:(accountId:string) => Promise<void>;
     isOld:boolean;
     setIsOld: React.Dispatch<React.SetStateAction<boolean>>; 
   }
+
+  // export interface AnalyticsContextType {
+  //   analyticsData: any ;
+  //   loading: any;
+  //   error: any ;
+  //   getAnalyticsData: (some?:any) => any;
+  //   refreshAnalyticsData:any;
+  //   isOld:any;
+  //   setIsOld: any; 
+  // }

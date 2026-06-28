@@ -17,6 +17,8 @@ import TradeDetails from "./pages/TradeDetails.tsx";
 import News from "./pages/News.tsx";
 import AnalyticsProvider from "./context/AnalyticsContext.tsx";
 import AccountSelector from "./pages/AcoountSelector.tsx";
+import NotFound from "./pages/404.tsx";
+import  Calendar  from "./pages/Calendar.tsx";
 
 
 const router = createBrowserRouter([
@@ -41,7 +43,7 @@ const router = createBrowserRouter([
         element: <DashboardLayout />,
         children: [
           {
-            path: "/dashboard",
+            path: "/dashboard/:id",
             element: <DashBoard />
           },
           {
@@ -53,7 +55,7 @@ const router = createBrowserRouter([
             element: <Settings />
           },
           {
-            path:'/history',
+            path:'/history/:id',
             element:<History/>
           },
           {
@@ -65,11 +67,11 @@ const router = createBrowserRouter([
             element:<TradeJournal/>
           },
           {
-            path:'/analytics',
+            path:'/analytics/:id',
             element:<Analytics/>
           },
           {
-            path:'/trade/:id',
+            path:'/account/:id/trade/:id',
             element:<TradeDetails/>
           },
           {
@@ -79,6 +81,14 @@ const router = createBrowserRouter([
           {
             path:'/account-selector',
             element:<AccountSelector/>
+          },
+          {
+            path:'/calendar/:id',
+            element:<Calendar/>
+          },
+          {
+            path:'*',
+            element:<NotFound/>
           }
           
         ]

@@ -4,12 +4,9 @@ import {
   type ReactNode,
   type Dispatch,
   type SetStateAction,
-  useEffect,
 } from "react";
-import { createTradeApi, updateTradeApi } from "../services/tradeApi";
+import { createTradeApi, updateTradeApi,getTradeApi } from "../services/tradeApi";
 import { deleteTradeApi, type TradeFormData } from "../services/tradeApi";
-import { getTradeApi } from "../services/tradeApi";
-import { useUser } from "../hooks/useUser";
 import { useAnalytics } from "../hooks/useAnalytics";
 
 interface LoadingState {
@@ -23,9 +20,11 @@ interface TradeContextType {
   trades: any[];
   setTrades: Dispatch<SetStateAction<any[]>>;
   addTrade: (formData: any) => Promise<void>;
+  fetchTradesData: (accountId: string) => Promise<void>; 
   removeTrade: (idToDel: number) => Promise<void>;
   updateTrade: (idToUpdate: number, formData: any) => Promise<void>;
   loading: LoadingState;
+  setLoading:any;
 }
 
 export const TradeContext = createContext<TradeContextType | null>(null);
@@ -43,36 +42,30 @@ export default function TradeProvider({ children }: TradeProviderProps) {
     updatingTradeId: null,
     deletingTradeId: null,
   });
-  const { user } = useUser();
-  const { setIsOld } = useAnalytics()
+  const [currentAccountId, setCurrentAccountId] = useState<string | null>(null);
 
-  useEffect(() => {
-    const fetchInitialState = async () => {
-      try {
-        setLoading((prev) => ({
-          ...prev,
-          fetchTrades: true,
-        }));
-        const { data } = await getTradeApi();
-        setTrades(data);
-      } catch (err) {
-        console.error(err);
-      } finally {
-        setLoading((prev) => ({
-          ...prev,
-          fetchTrades: false,
-        }));
-      }
-    };
+  const { setIsOld } = useAnalytics();
 
-    if (!user) return;
+  
 
-    const timer = setTimeout(() => {
-      fetchInitialState();
-    }, 1000);
+  const fetchTradesData = async (accountId: string) => {
+    if (currentAccountId === accountId && trades.length > 0) {
+      return;
+    }
 
-    return () => clearTimeout(timer);
-  }, [user]);
+    try {
+      setLoading((prev) => ({ ...prev, fetchTrades: true }));
+      const { data } = await getTradeApi(accountId);
+      setTrades(data);
+      setCurrentAccountId(accountId); // Save this account ID to memory
+    } catch (err) {
+      console.error("Error fetching trades inside context:", err);
+      throw err;
+    } finally {
+      setLoading((prev) => ({ ...prev, fetchTrades: false }));
+    }
+  };
+
 
   const addTrade = async (formData: TradeFormData) => {
     try {
@@ -160,6 +153,8 @@ export default function TradeProvider({ children }: TradeProviderProps) {
         removeTrade,
         updateTrade,
         loading,
+        setLoading,
+        fetchTradesData
       }}
     >
       {children}

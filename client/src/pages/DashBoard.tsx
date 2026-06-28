@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useSidebar } from "../hooks/useSidebar";
 import useTrade from "../hooks/useTrade";
-import Navbar from "../component/NavBar";
+import Navbar from "../component/ui/NavBar";
 import AddTrade from "../component/addtrade/AddTrade";
 import DashboardSkeleton from "../component/skeltons/DashBoardSkelton";
 import StatsGrid from "../component/dashboard/StatsGrid";
@@ -10,29 +10,59 @@ import TradeRow from "../component/dashboard/TradeRow";
 import { FiPlus } from "react-icons/fi";
 import { toast } from "sonner";
 import { useAnalytics } from "../hooks/useAnalytics";
+import useAccount from "../hooks/useAccount";
+import { useUser } from "../hooks/useUser";
+// import { useLocation } from "react-router";
 
 export default function Dashboard() {
   const { toggleSidebar } = useSidebar();
   const { loading } = useTrade();
   const [formState, setFormState] = useState<boolean | any>(false);
   const [deleteingId, setDeleleteingId] = useState<null | number>(null);
-
-  const { trades, removeTrade } = useTrade();
-  const { getAnalyticsData,isOld } = useAnalytics()
+  const { trades, removeTrade, fetchTradesData } = useTrade();
+  const { getAnalyticsData, isOld, analyticsData } = useAnalytics();
+  const { selectedAccount } = useAccount();
+  const { user } = useUser();
   const recentTrades = trades.slice(0, 5);
 
+  
   useEffect(() => {
-       getAnalyticsData()
-  },[])
+    getAnalyticsData();
+    // getParticularAccount()
+  }, [])
+  // useEffect(() => {
+  //   getParticularAccount();
+
+  // },[selectedAccount?.id])
+  const hasLoadedData = selectedAccount && analyticsData?.summary;
+  const currentBalance = hasLoadedData 
+    ? (selectedAccount.starting_balance || 0) + (analyticsData.summary.net_profit_loss || 0)
+    : (selectedAccount?.starting_balance || 0);
+
+  // useEffect(() => {
+  //   if (!user || !selectedAccount?.id || ) return;
+    
+  //   getParticularAccount(); 
+    
+  // }, [user, selectedAccount?.id]);
+  
 
   useEffect(() => {
-    if (formState === false) {
-      if(isOld){
-        getAnalyticsData(true); // Force the context to bypass the cache and fetch fresh data
+    if (!selectedAccount || !selectedAccount.id || selectedAccount.id === "undefined") return;
 
-      }
+    if (formState === false && isOld) {
+      getAnalyticsData(true, selectedAccount.id);
+    } else {
+      getAnalyticsData(false, selectedAccount.id);
     }
-  },[formState])
+  }, [selectedAccount?.id, formState, isOld]);
+
+  useEffect(() => {
+    if (!user || !selectedAccount?.id) return;
+    
+    fetchTradesData(selectedAccount.id); 
+    
+  }, [user, selectedAccount?.id]);
 
   const handleDelete = async (idToDel: number) => {
     try {
@@ -64,7 +94,16 @@ export default function Dashboard() {
 
       <div className="flex flex-col gap-8 w-full max-w-7xl mx-auto flex-1 p-6 pb-24">
         
-        <StatsGrid totalExecutions={trades.length} />
+        <StatsGrid 
+        totalwin={analyticsData?.summary.overall_wins} 
+        totalLosses={analyticsData?.summary.overall_losses} 
+        currentBalance={currentBalance} 
+        margin={selectedAccount?.starting_balance} 
+        analyticsData={analyticsData} 
+        totalExecutions={trades.length}
+        avgWin={analyticsData?.summary.average_win}
+        avgLoss={analyticsData?.summary.average_loss}
+        />
 
         <SystemAnalysis hasTrades={trades.length > 0} />
 
@@ -79,13 +118,13 @@ export default function Dashboard() {
             </div>
           ) : (
             <div className="w-full border border-zinc-900 bg-zinc-950 rounded-lg overflow-hidden shadow-md">
-              <div className="grid grid-cols-7 p-4 border-b border-zinc-900 text-xs font-mono text-zinc-500 uppercase tracking-wider font-semibold bg-zinc-950">
+              {/* Clean 6-column header split */}
+              <div className="grid grid-cols-6 p-4 border-b border-zinc-900 text-xs font-mono text-zinc-500 uppercase tracking-wider font-semibold bg-zinc-950">
                 <div>Asset / Risk</div>
                 <div>Action / Size</div>
                 <div>Entry / Exit</div>
-                <div>Targets (SL/TP)</div>
-                <div>P&L / Pips</div>
-                <div>Status / Notes</div>
+                <div>Stop Loss</div>
+                <div>Take Profit</div>
                 <div className="text-right">Actions</div>
               </div>
 
@@ -106,7 +145,6 @@ export default function Dashboard() {
         </div>
       </div>
 
-      {/* Floating Action Button */}
       <div className="fixed bottom-6 right-6 z-50">
         <button
           onClick={() => setFormState(true)}

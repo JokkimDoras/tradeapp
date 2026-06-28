@@ -1,14 +1,15 @@
 import { useEffect, useState } from "react";
 import { useSidebar } from "../hooks/useSidebar";
 import { useAnalytics } from "../hooks/useAnalytics";
-import Navbar from "../component/NavBar";
+import Navbar from "../component/ui/NavBar";
 import AnalyticsSkeleton from "../component/skeltons/AnalyticsSkelton";
 import MetricCardGrid from "../component/analytics/MetricCardGrid";
 import PerformanceCharts from "../component/analytics/PerformanceCharts";
 import RiskAnalysisMatrix from "../component/analytics/RiskAnalysisMatrix";
 import type { Summary } from "../types/analytics.types";
-
+import { useLocation } from "react-router";
 import { FiActivity, FiArrowUpRight, FiArrowDownRight } from "react-icons/fi";
+import useAccount from "../hooks/useAccount";
 
 // interface AnalyticsSummary {
 //   total_trades: number;
@@ -57,11 +58,13 @@ const CustomChartTooltip = ({ active, payload }: any) => {
 export default function Analytics() {
   const { toggleSidebar } = useSidebar();
   const { getAnalyticsData, analyticsData, loading } = useAnalytics();
+  const { selectedAccount } = useAccount()
   const [activeTimeframe, setActiveTimeframe] = useState<"ALL" | "MTD" | "YTD">("ALL");
-
+  const location = useLocation()
   useEffect(() => {
-    getAnalyticsData();
-  }, []);
+    
+    getAnalyticsData(undefined,selectedAccount?.id);
+  }, [location.pathname]);
 
 
   if (loading) return <AnalyticsSkeleton />;

@@ -15,20 +15,31 @@ export default function AnalyticsProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const [analyticsData, setAnalyticsData] = useState<AnalyticsDataType | null>(
+  const [analyticsData, setAnalyticsData] = useState<AnalyticsDataType | null >(
     null
   );
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isOld, setIsOld] = useState(true);
+  const [currentAccountId, setCurrentAccountId] = useState<string | null>(null);
 
-  const getAnalyticsData = async (force = false) => {
+  const getAnalyticsData = async (force: boolean | undefined = false,accountId:string) => {
+    if (!accountId || accountId === "undefined") return;
     try {
       setLoading(true);
-      if (!analyticsData || isOld || force) {
-        const { data } = await getAnalyticsDataApi();
+
+      const isDifferentAccount = accountId !== currentAccountId;
+
+      if (isDifferentAccount) {
+        setAnalyticsData(null);
+      }
+
+      if (!analyticsData || isOld || force || isDifferentAccount) {
+        const { data } = await getAnalyticsDataApi(accountId);
         setAnalyticsData(data);
+        setCurrentAccountId(accountId);
         setIsOld(false);
+        return data 
       }
     } catch (err: any) {
       setError(err?.message || "Error from AnalyticsContext");
@@ -37,10 +48,11 @@ export default function AnalyticsProvider({
       setLoading(false);
     }
   };
-  const refreshAnalyticsData = async () => {
+
+  const refreshAnalyticsData = async (accountId:string) => {
     try {
       setLoading(true);
-      const { data } = await getAnalyticsDataApi();
+      const { data } = await getAnalyticsDataApi(accountId);
       setAnalyticsData(data);
       setIsOld(false); // Reset the stale flag to false since it's now fresh
     } catch (err: any) {

@@ -1,11 +1,9 @@
-```bash
 
 # TradeVault
 
 A professional trade journal and trade management platform built for Forex traders. Log, organize, review, and analyze your trades in a structured and clean environment.
 
 This is not a trading platform. This is not a broker. This is a trade journaling tool built to help retail traders track performance, identify patterns, and improve their edge.
-```
 ---
 
 ## Live

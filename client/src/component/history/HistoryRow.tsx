@@ -1,5 +1,5 @@
 import { FiEdit2, FiTrash2, FiCheckSquare } from "react-icons/fi";
-
+import React from "react";
 interface HistoryRowProps {
   trade: any;
   isDeleting: boolean;
@@ -8,8 +8,9 @@ interface HistoryRowProps {
   onComplete: (id: number) => void;
   onRowClick: (id: number) => void;
 }
+import { useEffect,useRef } from "react";
 
-export default function HistoryRow({ 
+export default React.memo(function HistoryRow({ 
   trade, 
   isDeleting, 
   onEdit, 
@@ -17,9 +18,30 @@ export default function HistoryRow({
   onComplete,
   onRowClick
 }: HistoryRowProps) {
+  const prevRef = useRef({
+    trade,
+    onDelete,
+    onComplete,
+    onRowClick,
+  });
+  
+  useEffect(() => {
+    console.log("trade same?", prevRef.current.trade === trade);
+    console.log("onDelete same?", prevRef.current.onDelete === onDelete);
+    console.log("onComplete same?", prevRef.current.onComplete === onComplete);
+    console.log("onRowClick same?", prevRef.current.onRowClick === onRowClick);
+  
+    prevRef.current = {
+      trade,
+      onDelete,
+      onComplete,
+      onRowClick,
+    };
+  });
+
   const isBuy = trade.trade_type?.toLowerCase() === "buy";
   const isOpen = trade.status?.toLowerCase() === "open";
-
+console.log('am i rendering')
   const formatTime = (dateString: string) => {
     if (!dateString) return "—";
     try {
@@ -166,3 +188,4 @@ export default function HistoryRow({
     </div>
   );
 }
+)

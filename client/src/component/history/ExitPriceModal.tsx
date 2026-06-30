@@ -19,7 +19,6 @@ export default function ExitPriceModal({
   const [exitPrice, setExitPrice] = useState<string>("");
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
-  // Reset local states on toggle open
   useEffect(() => {
     if (isOpen) {
       setExitPrice("");
@@ -36,7 +35,6 @@ export default function ExitPriceModal({
     if (!isNaN(priceNum) && priceNum > 0) {
       setIsSubmitting(true);
       try {
-        // Await the update tracking to let the spinner render
         await onSubmit(priceNum);
       } catch (err) {
         setIsSubmitting(false);

@@ -1,42 +1,42 @@
+import { lazy, Suspense } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router";
-import LandingPage from "./pages/LandingPage.tsx"; 
-import Register from "./pages/Register.tsx";
-import Login from "./pages/Login.tsx";
-import DashBoard from "./pages/DashBoard.tsx"; 
-import ProtectedRoute from "./component/ProtectedRoute.tsx";
-import DashboardLayout from "./component/DashboardLayout.tsx";
-import History from "./pages/History.tsx";
-import Strategies from "./pages/Strategies.tsx";
-import TradeJournal from "./pages/TradeJournal.tsx";
-import Profile from "./pages/Profile.tsx";
-import Settings from "./pages/Settings.tsx";
 import { AuthProvider } from "./context/UserContext.tsx";
 import { Toaster } from "sonner";
-import Analytics from "./pages/Analytics.tsx";
-import TradeDetails from "./pages/TradeDetails.tsx";
-import News from "./pages/News.tsx";
 import AnalyticsProvider from "./context/AnalyticsContext.tsx";
 import AccountSelector from "./pages/AcoountSelector.tsx";
+import LandingPage from "./pages/LandingPage.tsx";
+import Register from "./pages/Register.tsx";
+import Login from "./pages/Login.tsx";
+import DashBoard from "./pages/DashBoard.tsx";
 import NotFound from "./pages/404.tsx";
-import  Calendar  from "./pages/Calendar.tsx";
-
+import ProtectedRoute from "./component/ProtectedRoute.tsx";
+import DashboardLayout from "./component/DashboardLayout.tsx";
+const History = lazy(() => import("./pages/History.tsx"));
+const Strategies = lazy(() => import("./pages/Strategies.tsx"));
+const TradeJournal = lazy(() => import("./pages/TradeJournal.tsx"));
+const Profile = lazy(() => import("./pages/Profile.tsx"));
+const Settings = lazy(() => import("./pages/Settings.tsx"));
+const Analytics = lazy(() => import("./pages/Analytics.tsx"));
+const TradeDetails = lazy(() => import("./pages/TradeDetails.tsx"));
+const News = lazy(() => import("./pages/News.tsx"));
+const Calendar = lazy(() => import("./pages/Calendar.tsx"));
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <LandingPage />
+    element: <LandingPage />,
   },
   {
     path: "/login",
-    element: <Login />
+    element: <Login />,
   },
   {
     path: "/register",
-    element: <Register />
+    element: <Register />,
   },
   {
     // Layer 1: Security Shield (Protects all child nodes)
-    element: <ProtectedRoute />, 
+    element: <ProtectedRoute />,
     children: [
       {
         // Layer 2: Visual Frame Layout (Holds the Sidebar frame)
@@ -44,68 +44,95 @@ const router = createBrowserRouter([
         children: [
           {
             path: "/dashboard/:id",
-            element: <DashBoard />
+            element: <DashBoard />,
           },
           {
             path: "/profile",
-            element: <Profile />
+            element: <Profile />,
           },
           {
             path: "/setting",
-            element: <Settings />
+            element: <Settings />,
           },
           {
-            path:'/history/:id',
-            element:<History/>
+            path: "/history/:id",
+            element: (
+              <Suspense fallback={<h1>Loading...</h1>}>
+                <History />
+              </Suspense>
+            ),
           },
           {
-            path:'/strategies',
-            element:<Strategies/>
+            path: "/strategies",
+            element: (
+              <Suspense fallback={<h1>Loading...</h1>}>
+                <Strategies />
+              </Suspense>
+            ),
           },
           {
-            path:'/journal',
-            element:<TradeJournal/>
+            path: "/journal",
+            element: (
+              <Suspense fallback={<h1>Loading</h1>}>
+                <TradeJournal />,
+              </Suspense>
+            ),
           },
           {
-            path:'/analytics/:id',
-            element:<Analytics/>
+            path: "/analytics/:id",
+            element: (
+              <Suspense fallback={<h1>Loading</h1>}>
+                <Analytics />,
+              </Suspense>
+            ),
           },
           {
-            path:'/account/:id/trade/:id',
-            element:<TradeDetails/>
+            path: "/account/:id/trade/:id",
+            element: (
+              <Suspense fallback={<h1>Loading</h1>}>
+                <TradeDetails />,
+              </Suspense>
+            ),
           },
           {
-            path:'/news',
-            element:<News/>
+            path: "/news",
+            element: (
+              <Suspense fallback={<h1>Loading</h1>}>
+                <News />,
+              </Suspense>
+            ),
           },
           {
-            path:'/account-selector',
-            element:<AccountSelector/>
+            path: "/account-selector",
+            element: <AccountSelector />,
           },
           {
-            path:'/calendar/:id',
-            element:<Calendar/>
+            path: "/calendar/:id",
+            element: (
+              <Suspense fallback={<h1>Loading</h1>}>
+                <Calendar />,
+              </Suspense>
+            ),
           },
           {
-            path:'*',
-            element:<NotFound/>
-          }
-          
-        ]
-      }
-    ]
-  }
+            path: "*",
+            element: <NotFound />,
+          },
+        ],
+      },
+    ],
+  },
 ]);
 
 export default function App() {
-  return(
+  return (
     <>
-    <Toaster/>
-<AuthProvider>
-  <AnalyticsProvider>
-  <RouterProvider router={router} />
-  </AnalyticsProvider>
-</AuthProvider>
+      <Toaster />
+      <AuthProvider>
+        <AnalyticsProvider>
+          <RouterProvider router={router} />
+        </AnalyticsProvider>
+      </AuthProvider>
     </>
   );
 }

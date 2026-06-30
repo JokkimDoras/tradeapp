@@ -1,6 +1,6 @@
 import { useSidebar } from "../hooks/useSidebar";
 import AddTrade from "../component/addtrade/AddTrade";
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect,useCallback } from "react";
 import useTrade from "../hooks/useTrade";
 import Navbar from "../component/ui/NavBar";
 import HistoryToolbar from "../component/history/HistoryToolbar";
@@ -36,26 +36,27 @@ export default function History() {
   
   }, [user, selectedAccount?.id]); 
 
-  const handleDelete = async (idToDel: number) => {
+  const handleDelete = useCallback(async (idToDel: number) => {
     try {
       setDeleleteingId(idToDel);
       await removeTrade(idToDel);
       toast.success("Deleted Successfully");
-    } catch (err: any) {
-      console.error(err);
+    } catch (err) {
       toast.error("Failed To Delete");
     } finally {
       setDeleleteingId(null);
     }
-  };
+  }, [removeTrade]);
 
-  const handleOpenCompleteModal = (id: number) => {
-    const targetTrade = trades.find((t: any) => t.id === id);
-    if (targetTrade) {
-      setActiveTradeToClose(targetTrade);
-      setIsModalOpen(true);
-    }
-  };
+
+const handleOpenCompleteModal = useCallback((id: number) => {
+  const targetTrade = trades.find((t: any) => t.id === id);
+
+  if (targetTrade) {
+    setActiveTradeToClose(targetTrade);
+    setIsModalOpen(true);
+  }
+}, [trades]);
 
   const handleFinalizeCompletion = async (finalExitPrice: number) => {
     if (!activeTradeToClose) return;
@@ -77,6 +78,12 @@ export default function History() {
       toast.error("Failed to update status changes.");
     }
   };
+  const handleRowClick = useCallback(
+    (id: number) => {
+      navigate(`/account/${selectedAccount?.id}/trade/${id}`);
+    },
+    [navigate, selectedAccount?.id]
+  );
 
   const filteredTrades = useMemo(() => {
     return trades.filter((trade: any) => {
@@ -151,7 +158,7 @@ export default function History() {
                     onEdit={setFormState}
                     onDelete={handleDelete}
                     onComplete={handleOpenCompleteModal}
-                    onRowClick={(id) => navigate(`/account/${selectedAccount?.id}/trade/${id}`)}
+                    onRowClick={handleRowClick}
                   />
                 ))}
               </div>

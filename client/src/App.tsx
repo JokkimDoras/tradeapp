@@ -11,6 +11,9 @@ import DashBoard from "./pages/DashBoard.tsx";
 import NotFound from "./pages/404.tsx";
 import ProtectedRoute from "./component/ProtectedRoute.tsx";
 import DashboardLayout from "./component/DashboardLayout.tsx";
+import HistorySkeleton from "./component/skeltons/HistorySkelton.tsx";
+import AnalyticsSkeleton from "./component/skeltons/AnalyticsSkelton.tsx";
+import CalendarSkeleton from "./component/skeltons/CalendarSkeleton.tsx";
 const History = lazy(() => import("./pages/History.tsx"));
 const Strategies = lazy(() => import("./pages/Strategies.tsx"));
 const TradeJournal = lazy(() => import("./pages/TradeJournal.tsx"));
@@ -57,7 +60,7 @@ const router = createBrowserRouter([
           {
             path: "/history/:id",
             element: (
-              <Suspense fallback={<h1>Loading...</h1>}>
+              <Suspense fallback={<HistorySkeleton/>}>
                 <History />
               </Suspense>
             ),
@@ -81,7 +84,7 @@ const router = createBrowserRouter([
           {
             path: "/analytics/:id",
             element: (
-              <Suspense fallback={<h1>Loading</h1>}>
+              <Suspense fallback={<AnalyticsSkeleton/>}>
                 <Analytics />,
               </Suspense>
             ),
@@ -109,7 +112,7 @@ const router = createBrowserRouter([
           {
             path: "/calendar/:id",
             element: (
-              <Suspense fallback={<h1>Loading</h1>}>
+              <Suspense fallback={<CalendarSkeleton/>}>
                 <Calendar />,
               </Suspense>
             ),

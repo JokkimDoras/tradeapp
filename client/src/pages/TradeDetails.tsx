@@ -179,7 +179,6 @@ setSelectedImage(url)
     <span className="text-xs text-zinc-400 uppercase tracking-widest font-semibold">Attached Visual Evidence / Screenshots</span>
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
       {screenshots.map((screenshot,index) => {
-        console.log(screenshot, 'from the tradeDetails');
         return (
           <div key={screenshot.id} className="border relative border-zinc-900 bg-zinc-950 p-2 rounded-lg overflow-hidden">
             <MdDeleteOutline onClick={() => handleDelete(screenshot,index)} size={20} className="absolute right-5  bottom-5 cursor-pointer  " color="red" />

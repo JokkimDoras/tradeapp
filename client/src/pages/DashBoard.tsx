@@ -24,8 +24,21 @@ export default function Dashboard() {
   const { selectedAccount } = useAccount();
   const { user } = useUser();
   const recentTrades = trades.slice(0, 5);
+useEffect(() => {
+const handleKeyDown = (e:KeyboardEvent) => {
 
+  if(e.key === 'c' && document.activeElement?.tagName !=='INPUT' && document.activeElement?.tagName !== 'TEXTAREA' ){
+    e.preventDefault();
+    setFormState(true)
+  }
+}
 
+window.addEventListener('keydown',handleKeyDown)
+return () => window.removeEventListener('keyup',handleKeyDown)
+ 
+},[])
+
+  
   useEffect(() => {
     getAnalyticsData();
     // getParticularAccount()
@@ -146,13 +159,19 @@ export default function Dashboard() {
       </div>
 
       <div className="fixed bottom-6 right-6 z-50">
-        <button
-          onClick={() => setFormState(true)}
-          className="h-12 px-5 bg-white hover:bg-zinc-200 text-black font-bold text-xs rounded-full shadow-2xl shadow-white/10 flex items-center gap-2 transition-all duration-200 ease-out hover:scale-105 active:scale-95 border border-zinc-200 cursor-pointer"
-        >
-          <FiPlus size={16} strokeWidth={3} />
-          <span>New Trade</span>
-        </button>
+      <button
+  onClick={() => setFormState(true)}
+  className="h-14 px-6 bg-white hover:bg-zinc-200 text-black rounded-full shadow-2xl shadow-white/10 flex flex-col justify-center items-center gap-0.5 transition-all duration-200 ease-out hover:scale-105 active:scale-95 border border-zinc-200 cursor-pointer group"
+> 
+  <div className="flex items-center gap-2 font-bold text-xs">
+    <FiPlus size={16} strokeWidth={3} />
+    <span>New Trade</span>
+  </div>
+  
+  <span className="text-[10px] font-mono text-zinc-500 group-hover:text-zinc-700 transition-colors">
+    Press <kbd className="bg-zinc-100 border border-zinc-300 px-1 rounded text-[9px] font-sans font-bold shadow-sm">C</kbd>
+  </span>
+</button>
       </div>
     </div>
   );

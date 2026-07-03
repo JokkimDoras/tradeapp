@@ -4,6 +4,8 @@ import { useUser } from "../hooks/useUser";
 export default function Profile() {
   const { toggleSidebar } = useSidebar();
   const { user } = useUser();
+  
+  
 
   const fullname = user.full_name;
   const country = user.country;

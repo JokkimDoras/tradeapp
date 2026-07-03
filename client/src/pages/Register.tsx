@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useState,useRef } from "react";
 import { Link, useNavigate } from "react-router";
 import useAuth from "../hooks/useAuth";
+import { toast } from "sonner";
 
 export default function Register() {
   const [formData, setFormData] = useState({
@@ -8,6 +9,8 @@ export default function Register() {
     email: "",
     password: "",
   });
+  const inputRef = useRef<HTMLInputElement | null>(null);
+
 
   const navigate = useNavigate();
   const { register, loading, error } = useAuth();
@@ -20,6 +23,11 @@ export default function Register() {
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.fullName.trim() || !formData.email.trim() || !formData.password.trim()) return;
+    if(formData.password.length < 8) {
+      toast.error('Password contains atleast 8 char')
+     inputRef.current?.focus()
+     return;
+    }
     try {
       await register(formData);
       navigate('/login')
@@ -82,6 +90,7 @@ export default function Register() {
               <input
                 type="password"
                 name="password"
+                ref={inputRef}
                 required
                 placeholder="••••••••"
                 value={formData.password}

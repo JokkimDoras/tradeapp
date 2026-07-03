@@ -1,15 +1,19 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router";
 import useAuth from "../hooks/useAuth";
+import { toast } from "sonner";
 
 export default function Login() {
   const [formData, setFormData] = useState({ email: "", password: "" });
+  const inputRef = useRef<HTMLInputElement | null>(null)
   const { login, loading, error } = useAuth();
 
   useEffect(() => {
     const savedEmail = localStorage.getItem("email");
     if (savedEmail) setFormData((prev) => ({ ...prev, email: savedEmail }));
   }, []);
+
+ 
 
   const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -19,6 +23,11 @@ export default function Login() {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.email || !formData.password) return;
+    if(formData.password.length < 8 ) {
+      toast.error('Password contain atleast 8 char')
+       inputRef.current?.focus();
+       return
+    }
     try {
        await login(formData);
      
@@ -70,6 +79,7 @@ export default function Login() {
               <input
                 type="password"
                 name="password"
+                ref={inputRef}
                 required
                 placeholder="••••••••"
                 value={formData.password}

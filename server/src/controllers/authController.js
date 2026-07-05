@@ -52,37 +52,67 @@ const loginUser = async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
 
     if (error) {
-      return res.status(401).json({ success: false, message: 'Invalid email or password' });
+      return res.status(401).json({
+        success: false,
+        message: "Invalid email or password",
+      });
     }
 
-    return res.json({
+    const { data: profile, error: profileError } = await supabase
+      .from("users")
+      .select("*")
+      .eq("id", data.user.id)
+      .single();
+
+    if (profileError) {
+      return res.status(404).json({
+        success: false,
+        message: "User profile not found",
+      });
+    }
+
+    return res.status(200).json({
       success: true,
-      message: 'Login successful',
+      message: "Login successful",
       data: {
         access_token: data.session.access_token,
         refresh_token: data.session.refresh_token,
         expires_at: data.session.expires_at,
         user: {
-          id: data.user.id,
-          email: data.user.email,
-          full_name: data.user.user_metadata?.full_name ?? null,
+          id: profile.id,
+          email: profile.email,
+          full_name: profile.full_name,
+          bio: profile.bio,
+          country: profile.country,
+          avatar_url: profile.avatar_url,
           email_verified: !!data.user.email_confirmed_at,
+          timezone:profile.timezone,
+          default_lot_size:profile.default_lot_size,
+          trading_experience:profile.trading_experience,
+          risk_per_trade:profile.risk_per_trade,
         },
       },
     });
   } catch (err) {
-    return res.status(500).json({ success: false, message: 'Internal authentication server exception.' });
+    console.error("LOGIN ERROR:", err);
+
+    return res.status(500).json({
+      success: false,
+      message: "Internal authentication server exception.",
+    });
   }
 };
-
 //LOGOUT
 
 const logoutUser = async (req, res) => {
   const authHeader = req.headers.authorization;
-  console.log(authHeader)
+
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
     return res.status(401).json({ success: false, message: 'No active session' });
   }

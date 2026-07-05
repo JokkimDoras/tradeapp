@@ -1,0 +1,163 @@
+import {
+  createContext,
+  useState,
+  type ReactNode,
+  type Dispatch,
+  type SetStateAction,
+} from "react";
+import { createTradeApi, updateTradeApi,getTradeApi } from "../services/tradeApi";
+import { deleteTradeApi, type TradeFormData } from "../services/tradeApi";
+import { useAnalytics } from "../hooks/useAnalytics";
+
+interface LoadingState {
+  fetchTrades: boolean;
+  addTrade: boolean;
+  updatingTradeId: number | null;
+  deletingTradeId: number | null;
+}
+
+interface TradeContextType {
+  trades: any[];
+  setTrades: Dispatch<SetStateAction<any[]>>;
+  addTrade: (formData: any) => Promise<void>;
+  fetchTradesData: (accountId: string) => Promise<void>; 
+  removeTrade: (idToDel: number) => Promise<void>;
+  updateTrade: (idToUpdate: number, formData: any) => Promise<void>;
+  loading: LoadingState;
+  setLoading:any;
+}
+
+export const TradeContext = createContext<TradeContextType | null>(null);
+
+interface TradeProviderProps {
+  children: ReactNode;
+}
+
+export default function TradeProvider({ children }: TradeProviderProps) {
+  const [trades, setTrades] = useState<any[]>([]);
+
+  const [loading, setLoading] = useState<LoadingState>({
+    fetchTrades: false,
+    addTrade: false,
+    updatingTradeId: null,
+    deletingTradeId: null,
+  });
+  const [currentAccountId, setCurrentAccountId] = useState<string | null>(null);
+
+  const { setIsOld } = useAnalytics();
+
+  
+
+  const fetchTradesData = async (accountId: string) => {
+    if (currentAccountId === accountId && trades.length > 0) {
+      return;
+    }
+
+    try {
+      setLoading((prev) => ({ ...prev, fetchTrades: true }));
+      const { data } = await getTradeApi(accountId);
+      setTrades(data);
+      setCurrentAccountId(accountId); // Save this account ID to memory
+    } catch (err) {
+      console.error("Error fetching trades inside context:", err);
+      throw err;
+    } finally {
+      setLoading((prev) => ({ ...prev, fetchTrades: false }));
+    }
+  };
+
+
+  const addTrade = async (formData: TradeFormData) => {
+    try {
+      setLoading((prev) => ({
+        ...prev,
+        addTrade: true,
+      }));
+
+      const { data } = await createTradeApi(formData);
+      setTrades((prev) => [data, ...prev]);
+      setIsOld(true)
+      setLoading((prev) => ({
+        ...prev,
+        addTrade: false,
+      }));
+      return data;
+    } catch (err: any) {
+      setLoading((prev) => ({
+        ...prev,
+        addTrade: false,
+      }));
+      console.log("error from tradeContext", err);
+      throw err;
+    }
+  };
+
+  const removeTrade = async (idToDel: number) => {
+    try {
+      setLoading((prev) => ({
+        ...prev,
+        deletingTradeId: idToDel,
+      }));
+
+      const response = await deleteTradeApi(idToDel);
+      if (response.success) {
+        setTrades((prev) => prev.filter((trade) => trade.id !== idToDel));
+      }
+      setIsOld(true)
+
+      setLoading((prev) => ({
+        ...prev,
+        deletingTradeId: null,
+      }));
+    } catch (err: any) {
+      setLoading((prev) => ({
+        ...prev,
+        deletingTradeId: null,
+      }));
+
+      console.log(err);
+      throw err;
+    }
+  };
+
+  const updateTrade = async (idToUpdate: number, formData: any) => {
+    try {
+      setLoading((prev) => ({
+        ...prev,
+        updatingTradeId: idToUpdate,
+      }));
+
+      const { data } = await updateTradeApi(idToUpdate, formData);
+      setTrades((prev) => prev.map((t) => (t.id === idToUpdate ? data : t)));
+      setIsOld(true)
+
+      setLoading((prev) => ({
+        ...prev,
+        updatingTradeId: null,
+      }));
+    } catch (err) {
+      setLoading((prev) => ({
+        ...prev,
+        updatingTradeId: null,
+      }));
+      throw err;
+    }
+  };
+
+  return (
+    <TradeContext.Provider
+      value={{
+        trades,
+        setTrades,
+        addTrade,
+        removeTrade,
+        updateTrade,
+        loading,
+        setLoading,
+        fetchTradesData
+      }}
+    >
+      {children}
+    </TradeContext.Provider>
+  );
+}

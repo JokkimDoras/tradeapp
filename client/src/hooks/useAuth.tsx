@@ -1,15 +1,14 @@
-// src/hooks/useAuth.ts
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import logOutUserApi, { loginUserApi, registerUserApi } from "../services/authApi";
+import { useUser } from "./useUser";
+import { clearAuth } from "../utils/auth";
+
 
 export default function useAuth() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  
-  const [token, setToken] = useState<string | null>(() => localStorage.getItem("token"));
-  const [fullname, setFullname] = useState<string | null>(() => localStorage.getItem("fullname"));
-  
+  const { setUser } = useUser(); 
   const navigate = useNavigate();
 
   const login = async (formData: any) => {
@@ -17,11 +16,13 @@ export default function useAuth() {
     setError(null);
     try {
       const payload = await loginUserApi(formData);
-      
-      setToken(payload.access_token);
-      setFullname(payload.user.full_name);
-      
-      navigate("/dashboard");
+       
+      setUser((prev) => ({
+        ...prev,
+        ...payload.user
+      }));
+
+      navigate("/account-selector");
     } catch (err: any) {
       const errMsg = err.response?.data?.message || "AUTHENTICATION_FAILED: Access denied.";
       setError(errMsg);
@@ -37,8 +38,11 @@ export default function useAuth() {
     try {
       const payload = await registerUserApi(formData);
       
-      setToken(payload.access_token);
-      setFullname(payload.user.full_name);
+      setUser((prev) => ({
+        ...prev,
+        full_name:payload.user?.full_name
+      }))
+      localStorage.setItem("token", payload.access_token);
       
       navigate("/dashboard");
     } catch (err: any) {
@@ -50,7 +54,7 @@ export default function useAuth() {
     }
   };
 
-  const logout = async (currentToken: string) => {
+  const logout = async (currentToken: string | null) => {
     setLoading(true);
     try {
       await logOutUserApi(currentToken);
@@ -58,11 +62,11 @@ export default function useAuth() {
       console.error("Hook runtime message: Server-side route invalidation bypassed.", err.message);
     } finally {
       // Storage registers wiped clean safely
-      localStorage.removeItem("token");
-      localStorage.removeItem("fullname");
-      
-      setToken(null);
-      setFullname(null);
+      clearAuth()
+      setUser((prev) => ({
+        ...prev,
+        full_name:''
+      }));
       
       setLoading(false);
       navigate("/login");
@@ -70,8 +74,6 @@ export default function useAuth() {
   }; 
 
   return {
-    token,
-    fullname, 
     loading,
     error,
     login,

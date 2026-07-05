@@ -12,19 +12,20 @@ interface UserDetails {
 interface AuthBackendPayload {
   data: {
     access_token: string;
+    refresh_token:string;
+    expire_at:string;
     user: UserDetails;
   };
 }
 
 export async function loginUserApi(formData: any) {
   try {
-    const response = await axios.post<AuthBackendPayload>(`${API_URL}/auth/login`, formData);
+    const response = await axios.post<AuthBackendPayload>(`${API_URL}/api/auth/login`, formData);
     const payload = response.data.data; 
 
     if (payload?.access_token) localStorage.setItem("token", payload.access_token);
-    if (payload?.user?.full_name) localStorage.setItem("fullname", payload.user.full_name);
-    if (payload?.user?.email) localStorage.setItem("email", payload.user.email);
-    
+    if(payload?.refresh_token) localStorage.setItem("refresh_token",payload.refresh_token)
+    if(payload?.expire_at) localStorage.setItem('expire_at',payload.expire_at)
     return payload;
   } catch (err: any) {
     console.error("Critical Network Error on Login Channel:", err.response?.data || err.message);
@@ -34,13 +35,13 @@ export async function loginUserApi(formData: any) {
 
 export async function registerUserApi(formData: any) {
   try {
-    const response = await axios.post<AuthBackendPayload>(`${API_URL}/auth/register`, {
+    const response = await axios.post<AuthBackendPayload>(`${API_URL}/api/auth/register`, {
       email: formData.email,
       password: formData.password,
       full_name: formData.fullName, 
     });
     const payload = response.data.data;
-
+console.log(payload)
     if (payload?.access_token) localStorage.setItem("token", payload.access_token);
     if (payload?.user?.full_name) localStorage.setItem("fullname", payload.user.full_name);
     if (payload?.user?.email) localStorage.setItem("email", payload.user.email);
@@ -52,9 +53,9 @@ export async function registerUserApi(formData: any) {
   }
 }
 
-export default async function logOutUserApi(token: string) {
+export default async function logOutUserApi(token: string | null) {
   try {
-    await axios.post(`${API_URL}/auth/logout`, {}, {
+    await axios.post(`${API_URL}/api/auth/logout`, {}, {
       headers: { Authorization: `Bearer ${token}` },
     });
   } catch (err) {

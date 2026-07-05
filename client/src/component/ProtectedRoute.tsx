@@ -1,14 +1,14 @@
-// src/component/ProtectedRoute.tsx
 import { Navigate, Outlet } from "react-router";
+import { useUser } from "../hooks/useUser";
+import { getToken } from "../utils/auth";
 
 export default function ProtectedRoute() {
-  const userToken = localStorage.getItem("token");
+  const userToken = getToken()
+  const { user } = useUser()
 
-  // If the browser storage lacks an auth token string, instantly bounce them out
-  if (!userToken) {
+  if (!user || !userToken) {
     return <Navigate to="/login" replace />;
   }
 
-  // If validation passes, smoothly render the matching layout route content
   return <Outlet />;
 }

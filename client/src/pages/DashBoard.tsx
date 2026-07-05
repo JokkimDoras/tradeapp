@@ -1,82 +1,159 @@
-// src/pages/DashBoard.tsx
-import useAuth from "../hooks/useAuth";
+import { useEffect, useState } from "react";
 import { useSidebar } from "../hooks/useSidebar";
+import useTrade from "../hooks/useTrade";
+import Navbar from "../component/ui/NavBar";
+import AddTrade from "../component/addtrade/AddTrade";
+import DashboardSkeleton from "../component/skeltons/DashBoardSkelton";
+import StatsGrid from "../component/dashboard/StatsGrid";
+import SystemAnalysis from "../component/dashboard/SystemAnalysis";
+import TradeRow from "../component/dashboard/TradeRow";
+import { FiPlus } from "react-icons/fi";
+import { toast } from "sonner";
+import { useAnalytics } from "../hooks/useAnalytics";
+import useAccount from "../hooks/useAccount";
+import { useUser } from "../hooks/useUser";
+// import { useLocation } from "react-router";
 
-export default function DashBoard() {
-  const { token, fullname, loading, logout } = useAuth();
+export default function Dashboard() {
+  const { toggleSidebar } = useSidebar();
+  const { loading } = useTrade();
+  const [formState, setFormState] = useState<boolean | any>(false);
+  const [deleteingId, setDeleleteingId] = useState<null | number>(null);
+  const { trades, removeTrade, fetchTradesData } = useTrade();
+  const { getAnalyticsData, isOld, analyticsData } = useAnalytics();
+  const { selectedAccount } = useAccount();
+  const { user } = useUser();
+  const recentTrades = trades.slice(0, 5);
+
+
+  useEffect(() => {
+    getAnalyticsData();
+    // getParticularAccount()
+  }, [])
+  // useEffect(() => {
+  //   getParticularAccount();
+
+  // },[selectedAccount?.id])
+  const hasLoadedData = selectedAccount && analyticsData?.summary;
+  const currentBalance = hasLoadedData 
+    ? (selectedAccount.starting_balance || 0) + (analyticsData.summary.net_profit_loss || 0)
+    : (selectedAccount?.starting_balance || 0);
+
+  // useEffect(() => {
+  //   if (!user || !selectedAccount?.id || ) return;
+    
+  //   getParticularAccount(); 
+    
+  // }, [user, selectedAccount?.id]);
   
-  // Hook directly into your global sidebar context engine
-  const { isOpen, toggleSidebar } = useSidebar(); 
 
-  const handleLogout = () => {
-    if (token) {
-      logout(token);
+  useEffect(() => {
+    if (!selectedAccount || !selectedAccount.id || selectedAccount.id === "undefined") return;
+
+    if (formState === false && isOld) {
+      getAnalyticsData(true, selectedAccount.id);
+    } else {
+      getAnalyticsData(false, selectedAccount.id);
+    }
+  }, [selectedAccount?.id, formState, isOld]);
+
+  useEffect(() => {
+    if (!user || !selectedAccount?.id) return;
+    
+    fetchTradesData(selectedAccount.id); 
+    
+  }, [user, selectedAccount?.id]);
+
+  const handleDelete = async (idToDel: number) => {
+    try {
+      setDeleleteingId(idToDel);
+      await removeTrade(idToDel);
+      toast.success("Deleted Successfully");
+    } catch (err: any) {
+      console.log(err);
+      toast.error("Failed To Delete");
+    } finally {
+      setDeleleteingId(null);
     }
   };
 
-  return (
-    <>
-      {/* HEADER CONTROLLER NODE */}
-      <div className="flex justify-between items-center mb-6 border-b border-zinc-900 pb-4">
-        <div className="flex items-center gap-4">
-          
-          {/* GLOBAL MENU TOGGLE TRIGGER (Works on Laptop and Mobile) */}
-          <button 
-            onClick={toggleSidebar} 
-            className="border border-zinc-700 bg-zinc-900 text-zinc-300 hover:text-white px-3 py-1.5 rounded text-xs font-mono transition-colors cursor-pointer"
-          >
-            {isOpen ? "[ HIDE_SIDEBAR ]" : "[ SHOW_SIDEBAR ]"}
-          </button>
+  if (loading.fetchTrades) return <DashboardSkeleton />;
 
-          <div>
-            <h1 className="text-xl font-bold tracking-wider text-zinc-100">[ DASHBOARD_SECURE_NODE ]</h1>
-            <p className="text-sm text-zinc-400 mt-1">
-              Operator: <span className="text-indigo-400 font-medium">{fullname || "ESTABLISHING_IDENTITY..."}</span>
-            </p>
-          </div>
-        </div>
+  if (formState) {
+    return (
+      <AddTrade
+        setIsOpen={setFormState}
+        editData={typeof formState === "object" ? formState : null}
+      />
+    );
+  }
+
+  return (
+    <div className="flex flex-col flex-1 min-h-screen bg-black text-zinc-100 font-sans antialiased selection:bg-zinc-800 selection:text-white relative">
+      <Navbar toggleSidebar={toggleSidebar} >WorkSpace</Navbar>
+
+      <div className="flex flex-col gap-8 w-full max-w-7xl mx-auto flex-1 p-6 pb-24">
         
-        {/* SESSION TERMINATION INTERFACE */}
-        <button 
-          onClick={handleLogout} 
-          disabled={loading} 
-          className="bg-white text-black font-bold px-4 py-2 rounded hover:bg-gray-200 transition-colors disabled:opacity-50 text-sm font-mono"
+        <StatsGrid 
+        totalwin={analyticsData?.summary.overall_wins} 
+        totalLosses={analyticsData?.summary.overall_losses} 
+        currentBalance={currentBalance} 
+        margin={selectedAccount?.starting_balance} 
+        analyticsData={analyticsData} 
+        totalExecutions={trades.length}
+        avgWin={analyticsData?.summary.average_win}
+        avgLoss={analyticsData?.summary.average_loss}
+        />
+
+        <SystemAnalysis hasTrades={trades.length > 0} />
+
+        <div className="w-full flex-1 flex flex-col">
+          <span className="text-xs font-mono text-zinc-400 uppercase tracking-widest font-semibold mb-4">
+            Execution History
+          </span>
+
+          {trades.length === 0 ? (
+            <div className="text-zinc-500 font-mono text-sm p-6 rounded-lg border border-zinc-900 bg-zinc-950">
+              No execution history synchronized.
+            </div>
+          ) : (
+            <div className="w-full border border-zinc-900 bg-zinc-950 rounded-lg overflow-hidden shadow-md">
+              {/* Clean 6-column header split */}
+              <div className="grid grid-cols-6 p-4 border-b border-zinc-900 text-xs font-mono text-zinc-500 uppercase tracking-wider font-semibold bg-zinc-950">
+                <div>Asset / Risk</div>
+                <div>Action / Size</div>
+                <div>Entry / Exit</div>
+                <div>Stop Loss</div>
+                <div>Take Profit</div>
+                <div className="text-right">Actions</div>
+              </div>
+
+              <div className="divide-y divide-zinc-900">
+                {recentTrades.map((trade: any, idx: number) => (
+                  <TradeRow
+                    key={trade.id || idx}
+                    trade={trade}
+                    idx={idx}
+                    isDeleting={deleteingId === trade.id}
+                    onEdit={setFormState}
+                    onDelete={handleDelete}
+                  />
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+
+      <div className="fixed bottom-6 right-6 z-50">
+        <button
+          onClick={() => setFormState(true)}
+          className="h-12 px-5 bg-white hover:bg-zinc-200 text-black font-bold text-xs rounded-full shadow-2xl shadow-white/10 flex items-center gap-2 transition-all duration-200 ease-out hover:scale-105 active:scale-95 border border-zinc-200 cursor-pointer"
         >
-          {loading ? "TERMINATING..." : "Logout"}
+          <FiPlus size={16} strokeWidth={3} />
+          <span>New Trade</span>
         </button>
       </div>
-
-      {/* CORE CANVAS ENVIRONMENT WORKSPACE */}
-      <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-6">
-        
-        {/* Sample Metric Terminal Card 1 */}
-        <div className="bg-zinc-900 border border-zinc-800 p-6 rounded-md">
-          <h3 className="text-xs font-semibold text-zinc-500 tracking-widest uppercase font-mono">System Integrity</h3>
-          <p className="text-2xl font-bold mt-2 text-emerald-400 font-mono">SECURE_98%</p>
-        </div>
-
-        {/* Sample Metric Terminal Card 2 */}
-        <div className="bg-zinc-900 border border-zinc-800 p-6 rounded-md">
-          <h3 className="text-xs font-semibold text-zinc-500 tracking-widest uppercase font-mono">Active Streams</h3>
-          <p className="text-2xl font-bold mt-2 text-indigo-400 font-mono">4_NODES_ONLINE</p>
-        </div>
-
-        {/* Sample Metric Terminal Card 3 */}
-        <div className="bg-zinc-900 border border-zinc-800 p-6 rounded-md">
-          <h3 className="text-xs font-semibold text-zinc-500 tracking-widest uppercase font-mono">Session Uptime</h3>
-          <p className="text-2xl font-bold mt-2 text-zinc-300 font-mono">02:45:12</p>
-        </div>
-
-      </div>
-
-      <div className="mt-6">
-        <div className="bg-zinc-900 border border-zinc-800 p-6 rounded-md">
-          <h2 className="text-sm font-bold text-zinc-300 mb-2 font-mono uppercase">// Operational Logs</h2>
-          <p className="text-sm text-zinc-400 leading-relaxed font-mono">
-            Secure Environment Access Granted. All trading systems are synced to the primary datastore cluster. Toggle the navigation layout stream anytime using the workspace header control node above.
-          </p>
-        </div>
-      </div>
-    </>
+    </div>
   );
 }

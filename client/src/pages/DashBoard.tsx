@@ -104,11 +104,10 @@ return () => window.removeEventListener('keydown',handleKeyDown)
   }
 
   return (
-    <div className="flex flex-col flex-1 min-h-screen bg-black text-zinc-100 font-sans antialiased selection:bg-zinc-800 selection:text-white relative">
+    <div className="flex flex-col flex-1 min-h-screen bg-black text-zinc-100 font-sans antialiased selection:bg-zinc-800 selection:text-white relative w-full">
       <Navbar toggleSidebar={toggleSidebar} >WorkSpace</Navbar>
 
-      <div className="flex flex-col gap-8 w-full max-w-7xl mx-auto flex-1 p-6 pb-24">
-        
+      <div className="flex flex-col gap-8 w-full max-w-none flex-1 p-6 pb-24">        
         <StatsGrid 
         totalwin={analyticsData?.summary.overall_wins} 
         totalLosses={analyticsData?.summary.overall_losses} 

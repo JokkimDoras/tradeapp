@@ -44,7 +44,7 @@ export default function useAuth() {
       }))
       localStorage.setItem("token", payload.access_token);
       
-      navigate("/dashboard");
+      navigate("/account-selector");
     } catch (err: any) {
       const errMsg = err.response?.data?.message || "REGISTRATION_FAILED: Invalid identity data.";
       setError(errMsg);

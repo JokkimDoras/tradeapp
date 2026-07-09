@@ -45,7 +45,7 @@ function AccountSelector() {
     <div className="flex flex-col min-h-screen bg-black text-zinc-100 font-sans antialiased selection:bg-zinc-800 selection:text-white">
       <Navbar toggleSidebar={toggleSidebar}>Account Selector</Navbar>
 
-      <main className="flex-1 max-w-6xl w-full mx-auto px-6 py-12 flex flex-col gap-8">
+      <main className="flex-1 max-w-auto w-full mx-auto px-6 py-12 flex flex-col gap-8">
         <AccountHeader setIsModalOpen={setIsModalOpen} />
 
         {accounts && accounts.length > 0 ? (

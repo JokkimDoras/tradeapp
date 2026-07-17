@@ -1,7 +1,6 @@
-// src/services/authApi.ts
 import axios from "axios";
 
-const API_URL = import.meta.env.VITE_API_URL || "https://tradeapp-43tb.onrender.com";
+const API_URL = import.meta.env.VITE_API_URL 
 
 interface UserDetails {
   id: string;

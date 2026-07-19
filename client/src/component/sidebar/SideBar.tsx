@@ -77,32 +77,19 @@ export default function SideBar() {
         .slice(0, 2)
     : "TV";
 
-  useEffect(() => {
-    if (location.pathname.startsWith("/dashboard") && selectedAccount?.id) {
-      navigate(`/dashboard/${selectedAccount.id}`);
-    }
-  }, [selectedAccount?.id, location.pathname, navigate]);
-
-  useEffect(() => {
-    const isOnHistory = location.pathname.startsWith("/history");
-    if (isOnHistory && selectedAccount?.id) {
-      navigate(`/history/${selectedAccount.id}`);
-    }
-  }, [selectedAccount?.id]);
-
-  useEffect(() => {
-    const isOnCalendar = location.pathname.startsWith("/calendar");
-    if (isOnCalendar && selectedAccount?.id) {
-      navigate(`/calendar/${selectedAccount.id}`);
-    }
-  }, [selectedAccount?.id]);
-
-  useEffect(() => {
-    const isOnAnalytics = location.pathname.startsWith("/analytics");
-    if (isOnAnalytics && selectedAccount?.id) {
-      navigate(`/analytics/${selectedAccount.id}`);
-    }
-  }, [selectedAccount?.id]);
+    useEffect(() => {
+      if (!selectedAccount?.id) return;
+    
+      const pages = ["dashboard", "history", "calendar", "analytics"];
+    
+      const currentPage = pages.find((page) =>
+        location.pathname.startsWith(`/${page}`)
+      );
+    
+      if (currentPage) {
+        navigate(`/${currentPage}/${selectedAccount.id}`);
+      }
+    }, [selectedAccount?.id, location.pathname, navigate]);
 
   const handleNavigation = (item: { id: number; name: string; path: string }) => {
     if (

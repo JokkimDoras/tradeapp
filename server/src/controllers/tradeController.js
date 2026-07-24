@@ -27,7 +27,7 @@ const getTrade = async (req, res) => {
     console.log(err);
     return res.status(400).json({
       success: false,
-      message: "Faied",
+      message: "Failed",
       err,
     });
   }

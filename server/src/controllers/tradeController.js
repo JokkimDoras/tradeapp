@@ -192,9 +192,7 @@ const getTradingAnalytics = async (req, res) => {
   }
 };
 
-module.exports = {
-  getTradingAnalytics,
-};
+
 
 module.exports = {
   addTrade,

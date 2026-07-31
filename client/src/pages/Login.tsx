@@ -6,6 +6,7 @@ import { toast } from "sonner";
 export default function Login() {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const inputRef = useRef<HTMLInputElement | null>(null)
+  const emailRef = useRef<HTMLInputElement | null>(null);
   const { login, loading, error } = useAuth();
 
   useEffect(() => {
@@ -16,6 +17,8 @@ export default function Login() {
       console.warn('localStorage not available');
     }
   }, []);
+
+  useEffect(() => emailRef.current?.focus(),[]);
 
 
 
@@ -63,6 +66,7 @@ export default function Login() {
             <div className="flex flex-col gap-1.5">
               <label className="text-xs font-medium text-zinc-400">Email</label>
               <input
+              ref={emailRef}
                 type="email"
                 name="email"
                 required

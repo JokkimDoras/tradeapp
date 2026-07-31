@@ -1,3 +1,4 @@
+import { useEffect, useRef } from "react";
 import TradeTypeSelector from "./TradeTypeSelector";
 import TradeStatusSelector from "./TradeStatusSelector";
 
@@ -43,6 +44,8 @@ export default function AssetSelectionPanel({
   setStatus,
   isthatSell
 }: AssetSelectionPanelProps) {
+  const assetInput = useRef<HTMLInputElement>(null);
+
   const cleanQuery = searchQuery.trim().toUpperCase();
   const filteredPairs = POPULAR_PAIRS.filter(
     (pair) =>
@@ -56,6 +59,10 @@ export default function AssetSelectionPanel({
     setSearchQuery(symbol);
     setIsDropdownOpen(false);
   };
+
+  useEffect(() => {
+     assetInput.current?.focus()
+  },[])
 
   return (
     <div className="w-full bg-black border border-zinc-900 rounded-lg p-5 flex flex-col gap-5 select-none antialiased">
@@ -77,6 +84,7 @@ export default function AssetSelectionPanel({
 
         <div className="relative w-full">
           <input
+          ref={assetInput}
             type="text"
             placeholder="Search assets (e.g., BTC/USD)..."
             value={searchQuery}

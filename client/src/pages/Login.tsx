@@ -38,7 +38,9 @@ export default function Login() {
     try {
       await login(formData);
 
-    } catch { }
+    } catch (err:any){ 
+     console.warn(err)
+    }
   };
 
   return (

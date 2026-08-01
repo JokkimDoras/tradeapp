@@ -70,8 +70,8 @@ function AddAccount() {
     <div className="font-sans antialiased selection:bg-zinc-800 selection:text-white">
       <Navbar toggleSidebar={toggleSidebar}>Add an Account</Navbar>
 
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-[1px]">
-        <div className="w-full max-w-[430px] bg-black border border-zinc-900 rounded-lg shadow-2xl overflow-hidden flex flex-col">
+      <div onClick={() => setIsModalOpen(false)} className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-[1px]">
+        <div onClick={(e) => e.stopPropagation() } className="w-full max-w-[430px] bg-black border border-zinc-900 rounded-lg shadow-2xl overflow-hidden flex flex-col">
           <div className="p-5 border-b border-zinc-900 flex flex-col gap-1.5">
             <h3 className="text-[16px] font-bold text-zinc-50 tracking-tight">
               Add an Account

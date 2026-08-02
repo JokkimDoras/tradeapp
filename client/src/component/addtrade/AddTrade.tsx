@@ -313,6 +313,7 @@ export default function AddTrade({ setIsOpen, editData }: AddTradeProps) {
             {/* Section: Configuration Panels Grid Layout */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-start">
               <AssetSelectionPanel
+                editData={editData}
                 tradeType={formData.trade_type}
                 status={formData.status}
                 searchQuery={searchQuery}

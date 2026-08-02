@@ -30,6 +30,7 @@ interface AssetSelectionPanelProps {
   setType: (type: "buy" | "sell") => void;
   setStatus: (status: "open" | "closed") => void;
   isthatSell: TradeType;
+  editData:any;
 }
 
 export default function AssetSelectionPanel({
@@ -42,7 +43,8 @@ export default function AssetSelectionPanel({
   setFormData,
   setType,
   setStatus,
-  isthatSell
+  isthatSell,
+  editData
 }: AssetSelectionPanelProps) {
   const assetInput = useRef<HTMLInputElement>(null);
 
@@ -61,6 +63,7 @@ export default function AssetSelectionPanel({
   };
 
   useEffect(() => {
+    if(editData) return;
      assetInput.current?.focus()
   },[])
 

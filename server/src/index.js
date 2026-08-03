@@ -4,7 +4,8 @@ const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes')
 const tradeRoutes = require('./routes/tradeRoutes')
 const screenshotRoutes = require('./routes/screenshotRoutes')
-const accountRoutes = require('./routes/accountRoutes')
+const accountRoutes = require('./routes/accountRoutes');
+const newsRoutes = require('./routes/newsRouter')
 const app = express();
 
 app.use(cors());
@@ -19,6 +20,7 @@ app.use('/api/user',userRoutes)
 app.use('/api/trades',tradeRoutes)
 app.use('/api',screenshotRoutes)
 app.use('/api/accounts',accountRoutes)
+app.use('/api/news',newsRoutes)
 
 const PORT = process.env.PORT || 8000;
 

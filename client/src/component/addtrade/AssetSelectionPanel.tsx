@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import TradeTypeSelector from "./TradeTypeSelector";
 import TradeStatusSelector from "./TradeStatusSelector";
+import { useUser } from "../../hooks/useUser";
 
 type TradeType = "buy" | "sell";
 
@@ -47,6 +48,7 @@ export default function AssetSelectionPanel({
   editData
 }: AssetSelectionPanelProps) {
   const assetInput = useRef<HTMLInputElement>(null);
+  
 
   const cleanQuery = searchQuery.trim().toUpperCase();
   const filteredPairs = POPULAR_PAIRS.filter(

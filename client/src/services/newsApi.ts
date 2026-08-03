@@ -6,7 +6,7 @@ export async function newsApi () {
     try{
        const res = await axios.get(`${API_URL}/api/news/trade`);
      
-       return res.data
+       return res.data.data
     }catch(err) {
         console.log('Error from frontened',err)
     }

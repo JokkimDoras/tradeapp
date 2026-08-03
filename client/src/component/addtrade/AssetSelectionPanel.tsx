@@ -47,6 +47,7 @@ export default function AssetSelectionPanel({
   editData
 }: AssetSelectionPanelProps) {
   const assetInput = useRef<HTMLInputElement>(null);
+  
 
   const cleanQuery = searchQuery.trim().toUpperCase();
   const filteredPairs = POPULAR_PAIRS.filter(

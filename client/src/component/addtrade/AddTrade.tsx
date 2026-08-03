@@ -24,12 +24,12 @@ export default function AddTrade({ setIsOpen, editData }: AddTradeProps) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [images, setImages] = useState<any[]>([]);
   const [previews, setPreviews] = useState<any[]>([]);
-
-
+  
+  
   
   const { toggleSidebar } = useSidebar();
+  
   const { user } = useUser();
-
   const { addTrade, updateTrade } = useTrade();
 
   const { uploadScreenshots } = useScreenshot();

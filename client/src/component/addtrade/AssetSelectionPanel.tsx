@@ -1,7 +1,6 @@
 import { useEffect, useRef } from "react";
 import TradeTypeSelector from "./TradeTypeSelector";
 import TradeStatusSelector from "./TradeStatusSelector";
-import { useUser } from "../../hooks/useUser";
 
 type TradeType = "buy" | "sell";
 

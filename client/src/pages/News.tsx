@@ -3,22 +3,30 @@ import { newsApi } from "../services/newsApi"
 import type { newsResponse } from "../types/news.types";
 import Navbar from "../component/ui/NavBar";
 import { useSidebar } from "../hooks/useSidebar";
-
+import NewsSkeleton from "../component/skeltons/NewsSkelton";
 interface Res {
     results: newsResponse[];
   }
   
   export default function News() {
     const [news, setNews] = useState<newsResponse[]>([]);
+    const [loading,setLoading] = useState(false);
+
    const { toggleSidebar } = useSidebar()
     useEffect(() => {
       const getNews = async () => {
+        setLoading(true)
         const data: Res = await newsApi();
         setNews(data.results);
+        setLoading(false)
       };
   
       getNews();
     }, []);
+
+    if(loading) return <NewsSkeleton/>
+
+    
   
     return (
       <div>

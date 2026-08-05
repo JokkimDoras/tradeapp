@@ -39,7 +39,8 @@ export default function SidebarNavigation({
             {group.section}
           </p>
           {group.items.map((item:any) => {
-            const isActive = location.pathname === item.path;
+            const isActive = location.pathname === item.path || location.pathname.startsWith(`${item.path}/`);
+            
             return (
               <button
                 key={item.id}

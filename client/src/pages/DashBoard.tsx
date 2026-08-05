@@ -12,7 +12,7 @@ import { toast } from "sonner";
 import { useAnalytics } from "../hooks/useAnalytics";
 import useAccount from "../hooks/useAccount";
 import { useUser } from "../hooks/useUser";
-import useMediaQuery from "../hooks/useMediaQuery";
+// import useMediaQuery from "../hooks/useMediaQuery";
 // import { useLocation } from "react-router";
 
 export default function Dashboard() {
@@ -23,10 +23,9 @@ export default function Dashboard() {
   const { getAnalyticsData, isOld, analyticsData } = useAnalytics();
   const { selectedAccount } = useAccount();
   const { user } = useUser();
-  const { device } = useMediaQuery();
   const recentTrades = trades.slice(0, 5);
-  console.log(device)
-useEffect(() => {
+
+  useEffect(() => {
 const handleKeyDown = (e:KeyboardEvent) => {
 
   if(e.key === 'c' && document.activeElement?.tagName !=='INPUT' && document.activeElement?.tagName !== 'TEXTAREA' ){

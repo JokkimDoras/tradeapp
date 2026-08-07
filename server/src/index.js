@@ -21,6 +21,7 @@ app.use('/api/user',userRoutes)
 app.use('/api/trades',tradeRoutes)
 app.use('/api',screenshotRoutes)
 app.use('/api/accounts',accountRoutes)
+app.use('/api/news',newsRoutes)
 
 const PORT = process.env.PORT || 8000;
 

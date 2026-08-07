@@ -1,12 +1,16 @@
+import { useNavigate } from "react-router";
+import useAccount from '../../hooks/useAccount';
 
 interface SidebarHeaderProps {
   closeSidebar: () => void;
 }
 
 export default function SidebarHeader({ closeSidebar }: SidebarHeaderProps) {
+  const navigate = useNavigate();
+  const { selectedAccount } = useAccount();
   return (
     <div className="h-12 flex items-center justify-between px-5 pb-3 border-b border-zinc-900">
-      <span className="text-base font-bold text-zinc-50 tracking-tight">
+      <span onClick={() => navigate(`/dashboard/${selectedAccount?.id}`)} className="text-base font-bold text-zinc-50 tracking-tight cursor-pointer">
         TradeVault
       </span>
       <button

@@ -3,7 +3,7 @@ import Navbar from "../component/ui/NavBar";
 import useAccount from "../hooks/useAccount";
 import { useSidebar } from "../hooks/useSidebar";
 import AddAccount from "../component/addAccount/AddAccount";
-import DeleteAccountModal from "../component/DeleteAccountModal";
+import DeleteAccountModal from "../component/addAccount/DeleteAccountModal";
 import AccountSelectorSkeleton from "../component/skeltons/AccountSelectorSkeleton";
 import AccountHeader from "../component/addAccount/AccountHeader";
 import AccountCard from "../component/addAccount/AccountCard";

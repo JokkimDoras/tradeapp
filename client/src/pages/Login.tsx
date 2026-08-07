@@ -6,11 +6,16 @@ import { toast } from "sonner";
 export default function Login() {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const inputRef = useRef<HTMLInputElement | null>(null)
+  const emailRef = useRef<HTMLInputElement | null>(null);
   const { login, loading, error } = useAuth();
 
   useEffect(() => {
-    const savedEmail = localStorage.getItem("email");
-    if (savedEmail) setFormData((prev) => ({ ...prev, email: savedEmail }));
+    try {
+      const savedEmail = localStorage.getItem("email");
+      if (savedEmail) setFormData((prev) => ({ ...prev, email: savedEmail }));
+    } catch (err) {
+      console.warn('localStorage not available');
+    }
   }, []);
 
  const handleGoogleLogin = async() => {
@@ -31,15 +36,17 @@ export default function Login() {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.email || !formData.password) return;
-    if(formData.password.length < 8 ) {
+    if (formData.password.length < 8) {
       toast.error('Password contain atleast 8 char')
-       inputRef.current?.focus();
-       return
+      inputRef.current?.focus();
+      return
     }
     try {
-       await login(formData);
-     
-    } catch {}
+      await login(formData);
+
+    } catch (err:any){ 
+     console.warn(err)
+    }
   };
 
   return (
@@ -67,6 +74,7 @@ export default function Login() {
             <div className="flex flex-col gap-1.5">
               <label className="text-xs font-medium text-zinc-400">Email</label>
               <input
+              ref={emailRef}
                 type="email"
                 name="email"
                 required
@@ -117,7 +125,7 @@ export default function Login() {
               className="h-9 w-full flex items-center justify-center gap-2 border border-zinc-800 hover:border-zinc-700 hover:bg-zinc-900 text-white text-sm rounded-lg transition-all"
             >
               <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12.24 10.285V13.4h6.887c-.648 2.41-2.519 4.113-5.136 4.113-3.41 0-6.145-2.786-6.145-6.222 0-3.435 2.735-6.222 6.145-6.222 1.557 0 2.964.57 4.044 1.51l2.427-2.427C18.69 2.603 15.65 1.5 12.24 1.5 6.583 1.5 2 6.083 2 11.75s4.583 10.25 10.24 10.25c5.795 0 10.254-4.074 10.254-10.25 0-.695-.081-1.355-.232-1.965H12.24z"/>
+                <path d="M12.24 10.285V13.4h6.887c-.648 2.41-2.519 4.113-5.136 4.113-3.41 0-6.145-2.786-6.145-6.222 0-3.435 2.735-6.222 6.145-6.222 1.557 0 2.964.57 4.044 1.51l2.427-2.427C18.69 2.603 15.65 1.5 12.24 1.5 6.583 1.5 2 6.083 2 11.75s4.583 10.25 10.24 10.25c5.795 0 10.254-4.074 10.254-10.25 0-.695-.081-1.355-.232-1.965H12.24z" />
               </svg>
               Continue with Google
             </button>

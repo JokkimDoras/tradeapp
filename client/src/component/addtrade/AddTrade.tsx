@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSidebar } from "../../hooks/useSidebar";
 import AssetSelectionPanel from "./AssetSelectionPanel";
 import PricingPanel from "./PricingPanel";
@@ -24,12 +24,12 @@ export default function AddTrade({ setIsOpen, editData }: AddTradeProps) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [images, setImages] = useState<any[]>([]);
   const [previews, setPreviews] = useState<any[]>([]);
-
-
+  
+  
   
   const { toggleSidebar } = useSidebar();
+  
   const { user } = useUser();
-
   const { addTrade, updateTrade } = useTrade();
 
   const { uploadScreenshots } = useScreenshot();
@@ -205,7 +205,6 @@ export default function AddTrade({ setIsOpen, editData }: AddTradeProps) {
           toast.success("New Trade was Created");
           return handleCancel();
         }
-        console.log("i will not run");
 
         const imageData = new FormData();
 
@@ -223,6 +222,19 @@ export default function AddTrade({ setIsOpen, editData }: AddTradeProps) {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+
+    const handleClose = (e:any) => {
+      if(e.key !== 'Escape') return;
+      setIsOpen(false)
+
+         
+    }
+     window.addEventListener('keydown',handleClose)
+
+     return () => window.removeEventListener('keydown',handleClose)
+  },[])
 
   return (
     <div className="flex flex-col flex-1 min-h-screen bg-black text-zinc-100 font-sans antialiased selection:bg-zinc-800 selection:text-white">
@@ -301,6 +313,7 @@ export default function AddTrade({ setIsOpen, editData }: AddTradeProps) {
             {/* Section: Configuration Panels Grid Layout */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-start">
               <AssetSelectionPanel
+                editData={editData}
                 tradeType={formData.trade_type}
                 status={formData.status}
                 searchQuery={searchQuery}

@@ -14,6 +14,7 @@ export default function Login() {
   }, []);
 
  const handleGoogleLogin = async() => {
+  // googleRegister
   // await supabase.auth.signInWithOAuth({
   //   provider: "google",
   //   options: {

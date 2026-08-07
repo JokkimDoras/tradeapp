@@ -18,9 +18,15 @@ export default function Login() {
     }
   }, []);
 
-  useEffect(() => emailRef.current?.focus(),[]);
-
-
+ const handleGoogleLogin = async() => {
+  // googleRegister
+  // await supabase.auth.signInWithOAuth({
+  //   provider: "google",
+  //   options: {
+  //     redirectTo: window.location.origin,
+  //   },
+  // });
+ }
 
   const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -115,7 +121,7 @@ export default function Login() {
             </div>
 
             <button
-              onClick={() => window.location.href = "https://tradeapp-43tb.onrender.com/auth/google"}
+              onClick={handleGoogleLogin}
               className="h-9 w-full flex items-center justify-center gap-2 border border-zinc-800 hover:border-zinc-700 hover:bg-zinc-900 text-white text-sm rounded-lg transition-all"
             >
               <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">

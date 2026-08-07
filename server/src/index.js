@@ -4,8 +4,8 @@ const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes')
 const tradeRoutes = require('./routes/tradeRoutes')
 const screenshotRoutes = require('./routes/screenshotRoutes')
-const accountRoutes = require('./routes/accountRoutes');
-const newsRoutes = require('./routes/newsRouter')
+const accountRoutes = require('./routes/accountRoutes')
+const googleAuthRouter = require('./routes/googleAuthRouter')
 const app = express();
 
 app.use(cors());
@@ -16,6 +16,7 @@ app.get('/', (req, res) => {
 });
 
 app.use('/api/auth', authRoutes);
+app.use('/api/google/auth',googleAuthRouter)
 app.use('/api/user',userRoutes)
 app.use('/api/trades',tradeRoutes)
 app.use('/api',screenshotRoutes)

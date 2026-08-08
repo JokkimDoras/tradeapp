@@ -25,6 +25,8 @@ export default function Dashboard() {
   const { user } = useUser();
   const recentTrades = trades.slice(0, 5);
 
+  
+
   useEffect(() => {
 const handleKeyDown = (e:KeyboardEvent) => {
 

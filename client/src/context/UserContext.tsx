@@ -1,6 +1,7 @@
 import { createContext, useEffect, useState } from "react";
 import { getUser } from "../services/userApi";
 import type { User,AuthContextType } from "../types/user.types";
+import { useNavigate } from "react-router";
 
 export const AuthContext = createContext<AuthContextType | undefined>(
   undefined
@@ -19,6 +20,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     timezone:""
   });
 
+  const navigate = useNavigate();
+
+
 
   
   useEffect(() => {
@@ -28,7 +32,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setUser(data)
       }catch(err){
         console.log(err,'from also authContext useEffect')
-        throw err
+        navigate('/login')
       }
     }
     restoreuser()

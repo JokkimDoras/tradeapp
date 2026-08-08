@@ -153,7 +153,7 @@ export default function Login() {
 
         <div className="flex items-center justify-between text-xs text-zinc-700">
           <span>Edge is measured, not guessed.</span>
-          <span>TradeVault © 2025</span>
+          <span>TradeVault © 2026</span>
         </div>
       </div>
 

@@ -94,8 +94,8 @@ export default function SideBar() {
   const handleNavigation = (item: { id: number; name: string; path: string }) => {
     if (
       item.name === "Dashboard" ||
-      item.name === "History" ||
-      item.name === "Calendar" ||
+      item.name === "History"   ||
+      item.name === "Calendar"  ||
       item.name === "Analytics"
     ) {
       setCurrentPath(item.name);

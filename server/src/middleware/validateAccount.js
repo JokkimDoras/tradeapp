@@ -86,7 +86,13 @@ const validateDeleteAccount = async (req, res, next) => {
 
     req.user = user;
     next();
-  } catch (err) {}
+  } catch (err) {
+    return res.status(400).json({
+      success:false,
+      message:'Failed to validate account',
+      error:err
+    })
+  }
 };
 
 const validategetAccount = async(req,res,next) => {

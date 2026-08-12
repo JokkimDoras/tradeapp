@@ -49,6 +49,10 @@ export default function TradeDetails() {
     const risk = Math.abs(entry - sl);
     const reward = Math.abs(tp - entry);
 
+    if(isNaN(entry) || isNaN(sl) || isNaN(tp)){
+      return null
+    }
+    
     return {
       isBuy: trade.trade_type?.toLowerCase() === "buy",
       isOpen: trade.status?.toLowerCase() === "open",

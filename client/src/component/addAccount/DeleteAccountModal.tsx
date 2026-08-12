@@ -1,5 +1,6 @@
 import { useState } from "react";
-import useAccount from "../hooks/useAccount";
+import useAccount from "../../hooks/useAccount";
+import { toast } from "sonner";
 
 interface DeleteAccountModalProps {
   setIsDeleteModalOpen: (open: boolean) => void;
@@ -18,6 +19,7 @@ function DeleteAccountModal({ setIsDeleteModalOpen, children }: DeleteAccountMod
       setLoading(true)
       await deleteAccount(idToDel)
       setIsDeleteModalOpen(false)
+      toast.success('Account Deleted')
     }catch(err:any){
    throw err;
     }finally{

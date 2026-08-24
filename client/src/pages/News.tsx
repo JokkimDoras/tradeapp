@@ -17,7 +17,9 @@ interface Res {
       const getNews = async () => {
         setLoading(true)
         const data: Res = await newsApi();
-        setNews(data.results);
+        const uniqueNews = data.results.filter((n) => !n.duplicate)
+
+        setNews(uniqueNews);
         setLoading(false)
       };
   

@@ -2,12 +2,14 @@ import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router";
 import useAuth from "../hooks/useAuth";
 import { toast } from "sonner";
+import { useNavigate } from "react-router";
 
 export default function Login() {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const inputRef = useRef<HTMLInputElement | null>(null)
   const emailRef = useRef<HTMLInputElement | null>(null);
   const { login, loading, error } = useAuth();
+  const navigate = useNavigate();
 
   useEffect(() => {
     try {
@@ -48,7 +50,7 @@ export default function Login() {
 
       <div className="flex flex-col justify-between px-8 py-8 border-r border-zinc-900">
 
-        <div>
+        <div className="cursor-pointer" onClick={() => navigate('/')}>
           <span className="text-white font-semibold text-sm tracking-tight">TradeVault</span>
         </div>
 

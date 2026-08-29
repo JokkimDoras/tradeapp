@@ -1,7 +1,9 @@
+ import type { ReactNode } from "react";
+
  interface ConfirmModalPropType {
 
     title:string;
-    description:string;
+    description:ReactNode;
     loading:boolean;
     onDelete:() => void;
     onClose:() => void;

@@ -4,6 +4,7 @@ import type { newsResponse } from "../types/news.types";
 import Navbar from "../component/ui/NavBar";
 import { useSidebar } from "../hooks/useSidebar";
 import NewsSkeleton from "../component/skeltons/NewsSkelton";
+
 interface Res {
     results: newsResponse[];
   }

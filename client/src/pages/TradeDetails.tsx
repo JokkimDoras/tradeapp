@@ -20,6 +20,12 @@ import { toast } from "sonner";
 export default function TradeDetails() {
   const [screenshots, setScreenshots] = useState<responseScreenshotData[]>([]);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [deleteImageModal, setDeleteImageModal] = useState(false);
+  const [deleteImage, setDeleteImage] = useState<{
+    screenshot: responseScreenshotData;
+    index: number;
+  } | null>(null);
+  const [deleteScreenshotLoading, setDeleteScreenshotLoading] = useState(false)
   const { id = '' } = useParams();
   const navigate = useNavigate();
   const { toggleSidebar } = useSidebar();
@@ -49,10 +55,10 @@ export default function TradeDetails() {
     const risk = Math.abs(entry - sl);
     const reward = Math.abs(tp - entry);
 
-    if(isNaN(entry) || isNaN(sl) || isNaN(tp)){
+    if (isNaN(entry) || isNaN(sl) || isNaN(tp)) {
       return null
     }
-    
+
     return {
       isBuy: trade.trade_type?.toLowerCase() === "buy",
       isOpen: trade.status?.toLowerCase() === "open",
@@ -88,6 +94,7 @@ export default function TradeDetails() {
 
   const handleDelete = async (delDetails: responseScreenshotData, index: number) => {
     try {
+      setDeleteScreenshotLoading(true)
       const res = await deleteScreenshot(delDetails)
       if (res.success) {
         const filtered = screenshots.filter((_, i) => {
@@ -95,6 +102,10 @@ export default function TradeDetails() {
         })
         setScreenshots(filtered)
       }
+
+      setDeleteScreenshotLoading(false)
+
+      setDeleteImageModal(false);
 
     } catch (err: any) {
       console.error(err?.message || err)
@@ -189,7 +200,7 @@ export default function TradeDetails() {
           </div>
         </div>
       </div>
-
+      {/* //() => handleDelete(screenshot, index) */}
       {screenshots && screenshots.length > 0 && (
         <div className="w-full max-w-7xl mx-auto px-6 pb-24 flex flex-col gap-4">
           <span className="text-xs text-zinc-400 uppercase tracking-widest font-semibold">Attached Visual Evidence / Screenshots</span>
@@ -197,7 +208,10 @@ export default function TradeDetails() {
             {screenshots.map((screenshot, index) => {
               return (
                 <div key={screenshot.id} className="border relative border-zinc-900 bg-zinc-950 p-2 rounded-lg overflow-hidden">
-                  <MdDeleteOutline onClick={() => handleDelete(screenshot, index)} size={20} className="absolute right-5  bottom-5 cursor-pointer  " color="red" />
+                  <MdDeleteOutline onClick={() => {
+                    setDeleteImage({ screenshot, index });
+                    setDeleteImageModal(true);
+                  }} size={20} className="absolute right-5  bottom-5 cursor-pointer  " color="red" />
                   <img
                     onClick={() => handleFullView(screenshot.public_url)}
                     src={screenshot.public_url}
@@ -206,7 +220,50 @@ export default function TradeDetails() {
                   />
                 </div>
               );
+
             })}
+            {deleteImageModal && deleteImage &&  (
+              <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in duration-200 cursor-pointer font-sans antialiased selection:bg-zinc-800 selection:text-white" >
+                <div className="w-full max-w-[400px] bg-black border border-zinc-900 rounded-lg overflow-hidden shadow-2xl shadow-black animate-in zoom-in-95 duration-200 cursor-default">
+
+                  <div className="p-5 flex flex-col gap-2">
+                    <h2 className="text-[14px] font-semibold text-zinc-50 tracking-tight">
+                      Delete Scrrenshot
+                    </h2>
+                    <p className="text-[13px] text-zinc-400 leading-relaxed tracking-tight">
+                      Are you sure you want to permanently delete
+                    </p>
+
+                  </div>
+
+                  <div className="flex items-center justify-end gap-2 px-5 py-3 bg-[#050505] border-t border-zinc-900">
+                    <button
+                      type="button"
+                      onClick={() => setDeleteImageModal(false)}
+                      className="px-3 py-1.5 text-[12px] font-medium text-zinc-400 hover:text-zinc-100 bg-transparent hover:bg-zinc-900/50 rounded-md transition-all cursor-pointer"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="button"
+                      className="cursor-pointer px-3 py-1.5 text-[12px] font-medium bg-red-600 hover:bg-red-500 text-white border border-red-700 hover:border-red-600 rounded-md transition-all shadow-sm shadow-red-950/20 disabled:opacity-50 disabled:cursor-not-allowed"
+                      onClick={() => handleDelete(deleteImage.screenshot, deleteImage.index)}
+                    >
+                      {deleteScreenshotLoading ? (
+                        <span className="flex items-center gap-2">
+                          <span className="w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                          Deleting...
+                        </span>
+                      ) : (
+                        "Delete"
+                      )}
+                    </button>
+                  </div>
+
+                </div>
+
+              </div>
+            )}
           </div>
         </div>
       )}
@@ -227,7 +284,7 @@ export default function TradeDetails() {
             src={selectedImage}
             alt="Full Screen Evidence"
             className="max-w-full max-h-[90vh] object-contain rounded-md shadow-2xl border border-zinc-800"
-            onClick={(e) => e.stopPropagation()} // Prevents closing modal when clicking the image window
+            onClick={(e) => e.stopPropagation()}
           />
         </div>
       )}

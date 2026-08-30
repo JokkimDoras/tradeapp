@@ -8,9 +8,17 @@ interface SidebarHeaderProps {
 export default function SidebarHeader({ closeSidebar }: SidebarHeaderProps) {
   const navigate = useNavigate();
   const { selectedAccount } = useAccount();
+
+  const handleNavigate = (e:any) => {
+       if(e.ctrlKey){
+        window.open(`/dashboard/${selectedAccount?.id}`, "_blank");
+        return;
+      }
+       navigate(`/dashboard/${selectedAccount?.id}`)
+  }
   return (
     <div className="h-12 flex items-center justify-between px-5 pb-3 border-b border-zinc-900">
-      <span onClick={() => navigate(`/dashboard/${selectedAccount?.id}`)} className="text-base font-bold text-zinc-50 tracking-tight cursor-pointer">
+      <span onClick={(e) => handleNavigate(e)} className="text-base font-bold text-zinc-50 tracking-tight cursor-pointer">
         TradeVault
       </span>
       <button

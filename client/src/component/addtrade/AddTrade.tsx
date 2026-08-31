@@ -9,6 +9,7 @@ import { useUser } from "../../hooks/useUser";
 import useScreenshot from "../../hooks/useScreenshot";
 import { IoCloseCircle } from "react-icons/io5";
 import { useParams } from "react-router";
+import { FiX } from "react-icons/fi";
 
 type TradeType = "buy" | "sell";
 type TradeStatus = "open" | "closed";
@@ -24,6 +25,7 @@ export default function AddTrade({ setIsOpen, editData }: AddTradeProps) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [images, setImages] = useState<any[]>([]);
   const [previews, setPreviews] = useState<any[]>([]);
+  const[fullScreenImage,setFullScreenImage] = useState<string | null>(null);
   
   
   
@@ -223,6 +225,10 @@ export default function AddTrade({ setIsOpen, editData }: AddTradeProps) {
     }
   };
 
+  const handleFullScreen = (url:string) => {
+      setFullScreenImage(url)
+  }
+
   useEffect(() => {
 
     const handleClose = (e:any) => {
@@ -351,10 +357,31 @@ export default function AddTrade({ setIsOpen, editData }: AddTradeProps) {
                       >
                         <IoCloseCircle size={16} />
                       </button>
-                      <img src={img} alt={`preview-${index}`} className="max-w-full max-h-full object-contain rounded-sm" />
+                      <img onClick={() => handleFullScreen(img)} src={img} alt={`preview-${index}`} className="max-w-full max-h-full object-contain rounded-sm" />
                     </div>
                   ))}
                 </div>
+                     {fullScreenImage && (
+                        <div
+                          className="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4 transition-all duration-300"
+                          onClick={() => setFullScreenImage(null)}
+                        >
+                          <button
+                            className="absolute top-6 right-6 text-zinc-400 hover:text-white transition-colors"
+                            onClick={() => setFullScreenImage(null)}
+                          >
+                            <FiX size={24} />
+                          </button>
+                
+                          {/* Full Screen Image */}
+                          <img
+                            src={fullScreenImage}
+                            alt="Full Screen Evidence"
+                            className="max-w-full max-h-[90vh] object-contain rounded-md shadow-2xl border border-zinc-800"
+                            onClick={(e) => e.stopPropagation()}
+                          />
+                        </div>
+                      )}
               </div>
             )}
   

@@ -12,8 +12,8 @@
 
 function ConfirmModal ({title,description,loading,onDelete,onClose}:ConfirmModalPropType) {
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in duration-200 cursor-pointer font-sans antialiased selection:bg-zinc-800 selection:text-white" >
-        <div className="w-full max-w-[400px] bg-black border border-zinc-900 rounded-lg overflow-hidden shadow-2xl shadow-black animate-in zoom-in-95 duration-200 cursor-default">
+        <div onClick={onClose} className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in duration-200 cursor-pointer font-sans antialiased selection:bg-zinc-800 selection:text-white" >
+        <div onClick={(e) => e.stopPropagation()} className="w-full max-w-[400px] bg-black border border-zinc-900 rounded-lg overflow-hidden shadow-2xl shadow-black animate-in zoom-in-95 duration-200 cursor-default">
 
           <div className="p-5 flex flex-col gap-2">
             <h2 className="text-[14px] font-semibold text-zinc-50 tracking-tight">

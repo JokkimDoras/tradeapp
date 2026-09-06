@@ -1,12 +1,15 @@
+import { useUser } from "../../hooks/useUser"
+
 export default function SecuritySetting () {
-    const email = localStorage.getItem('email')
+    const { user } = useUser();
+
     return (
         <div className="flex flex-col gap-px">
           {/* Email */}
           <div className="flex items-center justify-between py-6 border-b border-zinc-900">
             <div className="flex-1 max-w-xs">
               <p className="text-sm font-medium text-white">Email address</p>
-              <p className="text-xs text-zinc-500 mt-0.5">{email || "—"}</p>
+              <p className="text-xs text-zinc-500 mt-0.5">{user.email || "—"}</p>
             </div>
             <button className="h-9 px-4 border border-zinc-800 hover:border-zinc-600 hover:bg-zinc-900 text-zinc-300 hover:text-white text-sm rounded-lg transition-all">
               Change email

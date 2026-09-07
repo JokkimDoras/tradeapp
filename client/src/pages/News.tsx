@@ -4,6 +4,7 @@ import type { newsResponse } from "../types/news.types";
 import Navbar from "../component/ui/NavBar";
 import { useSidebar } from "../hooks/useSidebar";
 import NewsSkeleton from "../component/skeltons/NewsSkelton";
+
 interface Res {
     results: newsResponse[];
   }
@@ -17,7 +18,9 @@ interface Res {
       const getNews = async () => {
         setLoading(true)
         const data: Res = await newsApi();
-        setNews(data.results);
+        const uniqueNews = data.results.filter((n) => !n.duplicate)
+
+        setNews(uniqueNews);
         setLoading(false)
       };
   

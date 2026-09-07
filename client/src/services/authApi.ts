@@ -40,6 +40,7 @@ export async function registerUserApi(formData: any) {
       full_name: formData.fullName, 
     });
     const payload = response.data.data;
+console.log(payload)
     if (payload?.access_token) localStorage.setItem("token", payload.access_token);
     if (payload?.user?.full_name) localStorage.setItem("fullname", payload.user.full_name);
     if (payload?.user?.email) localStorage.setItem("email", payload.user.email);
@@ -60,8 +61,4 @@ export default async function logOutUserApi(token: string | null) {
     console.error("Backend cache cleanup process rejected:", err);
     throw err;
   }
-}
-
-export async function signInWithGoogle ()  {
-    
 }

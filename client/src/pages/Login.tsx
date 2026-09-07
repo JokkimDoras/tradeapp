@@ -2,14 +2,12 @@ import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router";
 import useAuth from "../hooks/useAuth";
 import { toast } from "sonner";
-import { useNavigate } from "react-router";
 
 export default function Login() {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const inputRef = useRef<HTMLInputElement | null>(null)
   const emailRef = useRef<HTMLInputElement | null>(null);
   const { login, loading, error } = useAuth();
-  const navigate = useNavigate();
 
   useEffect(() => {
     try {
@@ -20,9 +18,15 @@ export default function Login() {
     }
   }, []);
 
-  useEffect(() => emailRef.current?.focus(),[]);
-
-
+ const handleGoogleLogin = async() => {
+  // googleRegister
+  // await supabase.auth.signInWithOAuth({
+  //   provider: "google",
+  //   options: {
+  //     redirectTo: window.location.origin,
+  //   },
+  // });
+ }
 
   const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -50,7 +54,7 @@ export default function Login() {
 
       <div className="flex flex-col justify-between px-8 py-8 border-r border-zinc-900">
 
-        <div className="cursor-pointer" onClick={() => navigate('/')}>
+        <div>
           <span className="text-white font-semibold text-sm tracking-tight">TradeVault</span>
         </div>
 
@@ -117,7 +121,7 @@ export default function Login() {
             </div>
 
             <button
-              onClick={() => window.location.href = "https://tradeapp-43tb.onrender.com/auth/google"}
+              onClick={handleGoogleLogin}
               className="h-9 w-full flex items-center justify-center gap-2 border border-zinc-800 hover:border-zinc-700 hover:bg-zinc-900 text-white text-sm rounded-lg transition-all"
             >
               <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
@@ -157,7 +161,7 @@ export default function Login() {
 
         <div className="flex items-center justify-between text-xs text-zinc-700">
           <span>Edge is measured, not guessed.</span>
-          <span>TradeVault © 2026</span>
+          <span>TradeVault © 2025</span>
         </div>
       </div>
 

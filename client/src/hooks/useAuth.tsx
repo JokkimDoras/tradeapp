@@ -73,11 +73,20 @@ export default function useAuth() {
     }
   }; 
 
+  const googleRegister = async() => {
+      
+  }
+
   return {
     loading,
     error,
     login,
     register,
     logout,
+    googleRegister,
   };
 }
+
+// const googleLogin = async() => {
+
+// }

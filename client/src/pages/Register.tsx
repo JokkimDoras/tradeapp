@@ -31,9 +31,7 @@ export default function Register() {
     try {
       await register(formData);
       navigate('/login')
-    } catch {
-      toast.error('Failed to Register')
-    }
+    } catch {}
   };
 
   return (
@@ -43,7 +41,7 @@ export default function Register() {
       <div className="flex flex-col justify-between px-8 py-8 border-r border-zinc-900">
 
         {/* Logo */}
-        <div className="cursor-pointer" onClick={() => navigate('/')}>
+        <div>
           <span className="text-white font-semibold text-sm tracking-tight">TradeVault</span>
         </div>
 

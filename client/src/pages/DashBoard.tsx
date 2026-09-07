@@ -12,7 +12,6 @@ import { toast } from "sonner";
 import { useAnalytics } from "../hooks/useAnalytics";
 import useAccount from "../hooks/useAccount";
 import { useUser } from "../hooks/useUser";
-import { useNavigate } from "react-router";
 // import useMediaQuery from "../hooks/useMediaQuery";
 // import { useLocation } from "react-router";
 
@@ -25,9 +24,6 @@ export default function Dashboard() {
   const { selectedAccount } = useAccount();
   const { user } = useUser();
   const recentTrades = trades.slice(0, 5);
-  const navigate = useNavigate();
-
-  
 
   useEffect(() => {
 const handleKeyDown = (e:KeyboardEvent) => {
@@ -125,7 +121,7 @@ return () => window.removeEventListener('keydown',handleKeyDown)
         <SystemAnalysis hasTrades={trades.length > 0} />
 
         <div className="w-full flex-1 flex flex-col">
-          <span onClick={() => navigate(`/history/${selectedAccount?.id}`)} className="text-xs font-mono text-zinc-400 uppercase tracking-widest font-semibold mb-4 cursor-pointer">
+          <span className="text-xs font-mono text-zinc-400 uppercase tracking-widest font-semibold mb-4">
             Execution History
           </span>
 

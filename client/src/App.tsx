@@ -1,6 +1,8 @@
 import { lazy, Suspense } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router";
+import { AuthProvider } from "./context/UserContext.tsx";
 import { Toaster } from "sonner";
+import AnalyticsProvider from "./context/AnalyticsContext.tsx";
 import AccountSelector from "./pages/AcoountSelector.tsx";
 import LandingPage from "./pages/LandingPage.tsx";
 import Register from "./pages/Register.tsx";
@@ -12,7 +14,6 @@ import DashboardLayout from "./component/DashboardLayout.tsx";
 import HistorySkeleton from "./component/skeltons/HistorySkelton.tsx";
 import AnalyticsSkeleton from "./component/skeltons/AnalyticsSkelton.tsx";
 import CalendarSkeleton from "./component/skeltons/CalendarSkeleton.tsx";
-import AppProvider from "./AppProvider.tsx";
 const History = lazy(() => import("./pages/History.tsx"));
 const Strategies = lazy(() => import("./pages/Strategies.tsx"));
 const TradeJournal = lazy(() => import("./pages/TradeJournal.tsx"));
@@ -25,119 +26,116 @@ const Calendar = lazy(() => import("./pages/Calendar.tsx"));
 
 const router = createBrowserRouter([
   {
-    element:<AppProvider />,
+    path: "/",
+    element: <LandingPage />,
+  },
+  {
+    path: "/login",
+    element: <Login />,
+  },
+  {
+    path: "/register",
+    element: <Register />,
+  },
+  {
+    // Layer 1: Security Shield (Protects all child nodes)
+    element: <ProtectedRoute />,
     children: [
       {
-        path: "/",
-        element: <LandingPage />,
-      },
-      {
-        path: "/login",
-        element: <Login />,
-      },
-      {
-        path: "/register",
-        element: <Register />,
-      },
-      {
-        // Layer 1: Security Shield (Protects all child nodes)
-        element: <ProtectedRoute />,
+        // Layer 2: Visual Frame Layout (Holds the Sidebar frame)
+        element: <DashboardLayout />,
         children: [
           {
-            // Layer 2: Visual Frame Layout (Holds the Sidebar frame)
-            element: <DashboardLayout />,
-            children: [
-              {
-                path: "/dashboard/:id",
-                element: <DashBoard />,
-              },
-              {
-                path: "/profile",
-                element: <Profile />,
-              },
-              {
-                path: "/setting",
-                element: <Settings />,
-              },
-              {
-                path: "/history/:id",
-                element: (
-                  <Suspense fallback={<HistorySkeleton/>}>
-                    <History />
-                  </Suspense>
-                ),
-              },
-              {
-                path: "/strategies",
-                element: (
-                  <Suspense fallback={<h1>Loading...</h1>}>
-                    <Strategies />
-                  </Suspense>
-                ),
-              },
-              {
-                path: "/journal",
-                element: (
-                  <Suspense fallback={<h1>Loading</h1>}>
-                    <TradeJournal />,
-                  </Suspense>
-                ),
-              },
-              {
-                path: "/analytics/:id",
-                element: (
-                  <Suspense fallback={<AnalyticsSkeleton/>}>
-                    <Analytics />,
-                  </Suspense>
-                ),
-              },
-              {
-                path: "/account/:id/trade/:id",
-                element: (
-                  <Suspense fallback={<h1>Loading</h1>}>
-                    <TradeDetails />,
-                  </Suspense>
-                ),
-              },
-              {
-                path: "/news",
-                element: (
-                  <Suspense fallback={<h1>Loading</h1>}>
-                    <News />,
-                  </Suspense>
-                ),
-              },
-              {
-                path: "/account-selector",
-                element: <AccountSelector />,
-              },
-              {
-                path: "/calendar/:id",
-                element: (
-                  <Suspense fallback={<CalendarSkeleton/>}>
-                    <Calendar />,
-                  </Suspense>
-                ),
-              },
-              {
-                path: "*",
-                element: <NotFound />,
-              },
-            ],
+            path: "/dashboard/:id",
+            element: <DashBoard />,
+          },
+          {
+            path: "/profile",
+            element: <Profile />,
+          },
+          {
+            path: "/setting",
+            element: <Settings />,
+          },
+          {
+            path: "/history/:id",
+            element: (
+              <Suspense fallback={<HistorySkeleton/>}>
+                <History />
+              </Suspense>
+            ),
+          },
+          {
+            path: "/strategies",
+            element: (
+              <Suspense fallback={<h1>Loading...</h1>}>
+                <Strategies />
+              </Suspense>
+            ),
+          },
+          {
+            path: "/journal",
+            element: (
+              <Suspense fallback={<h1>Loading</h1>}>
+                <TradeJournal />,
+              </Suspense>
+            ),
+          },
+          {
+            path: "/analytics/:id",
+            element: (
+              <Suspense fallback={<AnalyticsSkeleton/>}>
+                <Analytics />,
+              </Suspense>
+            ),
+          },
+          {
+            path: "/account/:id/trade/:id",
+            element: (
+              <Suspense fallback={<h1>Loading</h1>}>
+                <TradeDetails />,
+              </Suspense>
+            ),
+          },
+          {
+            path: "/news",
+            element: (
+              <Suspense fallback={<h1>Loading</h1>}>
+                <News />,
+              </Suspense>
+            ),
+          },
+          {
+            path: "/account-selector",
+            element: <AccountSelector />,
+          },
+          {
+            path: "/calendar/:id",
+            element: (
+              <Suspense fallback={<CalendarSkeleton/>}>
+                <Calendar />,
+              </Suspense>
+            ),
+          },
+          {
+            path: "*",
+            element: <NotFound />,
           },
         ],
       },
     ],
   },
 ]);
-     
-    
 
 export default function App() {
   return (
     <>
       <Toaster />
-      <RouterProvider router={router} />
+      <AuthProvider>
+        <AnalyticsProvider>
+          <RouterProvider router={router} />
+        </AnalyticsProvider>
+      </AuthProvider>
     </>
   );
 }

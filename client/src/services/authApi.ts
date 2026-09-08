@@ -62,3 +62,17 @@ export default async function logOutUserApi(token: string | null) {
     throw err;
   }
 }
+
+export async function googleLoginApi(token:string | null) {
+  try{
+    await axios.post(`${API_URL}/api/auth/google`),{},{
+      headers:{
+        Authorization:`Bearer ${token}`
+      }
+    }
+  }catch(err){
+    console.error("failed google login", err);
+    throw err;
+  }
+  
+}

@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
-import logOutUserApi, { loginUserApi, registerUserApi } from "../services/authApi";
+import logOutUserApi, { loginUserApi, registerUserApi,googleLoginApi } from "../services/authApi";
 import { useUser } from "./useUser";
-import { clearAuth } from "../utils/auth";
+import { clearAuth,getToken } from "../utils/auth";
 
 
 export default function useAuth() {
@@ -73,11 +73,22 @@ export default function useAuth() {
     }
   }; 
 
+  const googleLogin = async() => {
+    const token = getToken();
+    setLoading(true);
+    try{
+      await googleLoginApi(token)
+    }catch(err) {
+   console.error('Failed login via google')
+    }
+  }
+
   return {
     loading,
     error,
     login,
     register,
     logout,
+    googleLogin
   };
 }

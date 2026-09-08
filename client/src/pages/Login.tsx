@@ -3,6 +3,12 @@ import { Link } from "react-router";
 import useAuth from "../hooks/useAuth";
 import { toast } from "sonner";
 import { useNavigate } from "react-router";
+import { createClient } from "@supabase/supabase-js";
+
+export const supabase = createClient(
+  import.meta.env.VITE_SUPABASE_URL,
+  import.meta.env.VITE_SUPABASE_ANON_KEY
+);
 
 export default function Login() {
   const [formData, setFormData] = useState({ email: "", password: "" });
@@ -29,6 +35,15 @@ export default function Login() {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+ const handleGoogleLogin = async () => {
+  const { error } = await supabase.auth.signInWithOAuth({
+    provider: "google",
+  });
+
+  if (error) {
+    console.error("Google OAuth error:", error);
+  }
+};
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.email || !formData.password) return;
@@ -117,7 +132,7 @@ export default function Login() {
             </div>
 
             <button
-              onClick={() => window.location.href = "https://tradeapp-43tb.onrender.com/auth/google"}
+              onClick={() =>handleGoogleLogin()}
               className="h-9 w-full flex items-center justify-center gap-2 border border-zinc-800 hover:border-zinc-700 hover:bg-zinc-900 text-white text-sm rounded-lg transition-all"
             >
               <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">

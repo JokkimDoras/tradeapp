@@ -25,5 +25,9 @@ const validateRegisterInput = (req, res, next) => {
     }
     next();
   };
+
+  const validateGooglLogin = (req,res,next) => {
+
+  }
   
-  module.exports = { validateRegisterInput, validateLoginInput };
+  module.exports = { validateRegisterInput, validateLoginInput,validateGooglLogin };

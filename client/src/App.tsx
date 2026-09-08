@@ -79,7 +79,7 @@ const router = createBrowserRouter([
                 path: "/journal",
                 element: (
                   <Suspense fallback={<h1>Loading</h1>}>
-                    <TradeJournal />,
+                    <TradeJournal />
                   </Suspense>
                 ),
               },
@@ -87,7 +87,7 @@ const router = createBrowserRouter([
                 path: "/analytics/:id",
                 element: (
                   <Suspense fallback={<AnalyticsSkeleton/>}>
-                    <Analytics />,
+                    <Analytics />
                   </Suspense>
                 ),
               },
@@ -95,7 +95,7 @@ const router = createBrowserRouter([
                 path: "/account/:id/trade/:id",
                 element: (
                   <Suspense fallback={<h1>Loading</h1>}>
-                    <TradeDetails />,
+                    <TradeDetails />
                   </Suspense>
                 ),
               },
@@ -103,25 +103,25 @@ const router = createBrowserRouter([
                 path: "/news",
                 element: (
                   <Suspense fallback={<h1>Loading</h1>}>
-                    <News />,
+                    <News />
                   </Suspense>
                 ),
               },
               {
                 path: "/account-selector",
-                element: <AccountSelector />,
+                element: <AccountSelector />
               },
               {
                 path: "/calendar/:id",
                 element: (
                   <Suspense fallback={<CalendarSkeleton/>}>
-                    <Calendar />,
+                    <Calendar />
                   </Suspense>
                 ),
               },
               {
                 path: "*",
-                element: <NotFound />,
+                element: <NotFound />
               },
             ],
           },

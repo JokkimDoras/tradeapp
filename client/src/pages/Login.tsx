@@ -3,12 +3,12 @@ import { Link } from "react-router";
 import useAuth from "../hooks/useAuth";
 import { toast } from "sonner";
 import { useNavigate } from "react-router";
-import { createClient } from "@supabase/supabase-js";
+// import { createClient } from "@supabase/supabase-js";
 
-export const supabase = createClient(
-  import.meta.env.VITE_SUPABASE_URL,
-  import.meta.env.VITE_SUPABASE_ANON_KEY
-);
+// export const supabase = createClient(
+//   import.meta.env.VITE_SUPABASE_URL,
+//   import.meta.env.VITE_SUPABASE_ANON_KEY
+// );
 
 export default function Login() {
   const [formData, setFormData] = useState({ email: "", password: "" });
@@ -36,13 +36,14 @@ export default function Login() {
   };
 
  const handleGoogleLogin = async () => {
-  const { error } = await supabase.auth.signInWithOAuth({
-    provider: "google",
-  });
+  // const { error } = await supabase.auth.signInWithOAuth({
+  //   provider: "google",
+  // });
 
-  if (error) {
-    console.error("Google OAuth error:", error);
-  }
+  // if (error) {
+  //   console.error("Google OAuth error:", error);
+  // }
+  return;
 };
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();

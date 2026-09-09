@@ -31,10 +31,10 @@ export default function AddTrade({ setIsOpen, editData }: AddTradeProps) {
   const { toggleSidebar } = useSidebar();
   const { user } = useUser();
   const { addTrade, updateTrade } = useTrade();
-  const { uploadScreenshots, fetchScreenshots } = useScreenshot();
+  const { uploadScreenshots,deleteScreenshot, fetchScreenshots } = useScreenshot();
   const { id } = useParams()
   const [formData, setFormData] = useState({
-    id: editData?.id || null,
+    id: editData?.id || undefined,
     currency_pair: editData?.currency_pair || "",
     trade_type:
       (editData?.trade_type?.toLowerCase() as TradeType) ||
@@ -89,7 +89,7 @@ export default function AddTrade({ setIsOpen, editData }: AddTradeProps) {
   const handleCancel = () => {
     setSearchQuery("");
     setFormData({
-      id: '',
+      id: undefined,
       currency_pair: "",
       trade_type: "buy",
       status: "open",
@@ -233,6 +233,16 @@ export default function AddTrade({ setIsOpen, editData }: AddTradeProps) {
     }
   };
 
+  const handleDeleteScreenshot = async(img:responseScreenshotData) => {
+    try{
+      await deleteScreenshot(img)
+      const fil = [...scrrenShot].filter((s) => s.id !==img.id)
+      setScreenShot(fil)
+      toast.success('ScreenShot delete Succesfully')
+    }catch(err){
+       toast.error('Failed to delete')
+    }
+  }
 
   const handleFullScreen = (url: string) => {
     setFullScreenImage(url)
@@ -363,6 +373,7 @@ export default function AddTrade({ setIsOpen, editData }: AddTradeProps) {
                       className="relative group border border-zinc-900 rounded-md bg-[#050505] p-2 aspect-video flex items-center justify-center overflow-hidden"
                     >
                       <button
+                      onClick={() => handleDeleteScreenshot(img)}
                         type="button"
                         className="absolute top-2 right-2 z-10 p-1 bg-black/80 border border-zinc-800 rounded text-red-400 hover:text-red-300 opacity-0 group-hover:opacity-100 transition-opacity duration-150 cursor-pointer"
                       >

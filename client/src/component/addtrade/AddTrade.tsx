@@ -10,6 +10,7 @@ import useScreenshot from "../../hooks/useScreenshot";
 import { IoCloseCircle } from "react-icons/io5";
 import { useParams } from "react-router";
 import { FiX } from "react-icons/fi";
+import type { responseScreenshotData } from "../../types/screenshot.types";
 
 type TradeType = "buy" | "sell";
 type TradeStatus = "open" | "closed";
@@ -25,49 +26,53 @@ export default function AddTrade({ setIsOpen, editData }: AddTradeProps) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [images, setImages] = useState<any[]>([]);
   const [previews, setPreviews] = useState<any[]>([]);
-  const[fullScreenImage,setFullScreenImage] = useState<string | null>(null);
-  
-  
-  
+  const [fullScreenImage, setFullScreenImage] = useState<string | null>(null);
+  const [scrrenShot, setScreenShot] = useState<responseScreenshotData[] | []>([])
   const { toggleSidebar } = useSidebar();
-  
   const { user } = useUser();
   const { addTrade, updateTrade } = useTrade();
-
-  const { uploadScreenshots } = useScreenshot();
+  const { uploadScreenshots, fetchScreenshots } = useScreenshot();
   const { id } = useParams()
-  
   const [formData, setFormData] = useState({
+    id: editData?.id || null,
     currency_pair: editData?.currency_pair || "",
     trade_type:
-    (editData?.trade_type?.toLowerCase() as TradeType) ||
-    ("buy" as TradeType),
+      (editData?.trade_type?.toLowerCase() as TradeType) ||
+      ("buy" as TradeType),
     status:
-    (editData?.status?.toLowerCase() as TradeStatus) ||
-    ("open" as TradeStatus),
+      (editData?.status?.toLowerCase() as TradeStatus) ||
+      ("open" as TradeStatus),
     entry_price: editData?.entry_price ?? "",
     exit_price: editData?.exit_price ?? "",
     stop_loss: editData?.stop_loss ?? "",
     take_profit: editData?.take_profit ?? "",
     lot_size: editData?.lot_size ? editData?.lot_size : user.default_lot_size,
     risk_percentage: editData?.risk_percentage
-    ? editData?.risk_percentage
-    : user.risk_per_trade,
+      ? editData?.risk_percentage
+      : user.risk_per_trade,
     notes: editData?.notes || "",
     strategy: editData?.strategy || "",
-    account_id:id
-    
-    
-  });
-  
+    account_id: id
 
-  
+
+  });
+
+
+
+
+  useEffect(() => {
+    const getStoredScreenshot = async () => {
+      const res:any = await fetchScreenshots(formData?.id)
+      setScreenShot(res)
+    }
+    getStoredScreenshot()
+  }, [])
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
-    if(name == 'stop_loss'){
+    if (name == 'stop_loss') {
     }
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
@@ -75,7 +80,7 @@ export default function AddTrade({ setIsOpen, editData }: AddTradeProps) {
   const isThatSell = Number(formData.stop_loss) > Number(formData.entry_price) ? 'sell' : 'buy';
 
   const setType = (type: TradeType) => {
-    setFormData((p) => ({ ...p, trade_type: isThatSell?isThatSell:type }));
+    setFormData((p) => ({ ...p, trade_type: isThatSell ? isThatSell : type }));
   };
   const setStatus = (status: TradeStatus) => {
     setFormData((p) => ({ ...p, status }));
@@ -84,6 +89,7 @@ export default function AddTrade({ setIsOpen, editData }: AddTradeProps) {
   const handleCancel = () => {
     setSearchQuery("");
     setFormData({
+      id: '',
       currency_pair: "",
       trade_type: "buy",
       status: "open",
@@ -94,13 +100,15 @@ export default function AddTrade({ setIsOpen, editData }: AddTradeProps) {
       lot_size: "",
       risk_percentage: "",
       notes: "",
-      strategy:'',
-      account_id:''
+      strategy: '',
+      account_id: ''
     });
     setIsOpen(false);
     setPreviews([]);
     setImages([]);
   };
+
+
 
   const handleImage = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (images.length >= 3) {
@@ -225,22 +233,23 @@ export default function AddTrade({ setIsOpen, editData }: AddTradeProps) {
     }
   };
 
-  const handleFullScreen = (url:string) => {
-      setFullScreenImage(url)
+
+  const handleFullScreen = (url: string) => {
+    setFullScreenImage(url)
   }
 
   useEffect(() => {
 
-    const handleClose = (e:any) => {
-      if(e.key !== 'Escape') return;
+    const handleClose = (e: any) => {
+      if (e.key !== 'Escape') return;
       setIsOpen(false)
 
-         
-    }
-     window.addEventListener('keydown',handleClose)
 
-     return () => window.removeEventListener('keydown',handleClose)
-  },[])
+    }
+    window.addEventListener('keydown', handleClose)
+
+    return () => window.removeEventListener('keydown', handleClose)
+  }, [])
 
   return (
     <div className="flex flex-col flex-1 min-h-screen bg-black text-zinc-100 font-sans antialiased selection:bg-zinc-800 selection:text-white">
@@ -266,16 +275,16 @@ export default function AddTrade({ setIsOpen, editData }: AddTradeProps) {
           </div>
         </div>
       </header>
-  
+
       {/* Main Scrollable Canvas */}
       <div className="w-full flex-1 px-8 py-12 flex flex-col items-center overflow-y-auto">
         <div className="w-full max-w-5xl flex flex-col gap-8">
-          
+
           {/* Title Block & Upload Button Row */}
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-zinc-900/60 pb-6">
             <div className="flex flex-col gap-1.5">
               <h1 className="text-2xl font-bold text-zinc-50 tracking-tight">
-                {editData ? "Modify Position Node" : "New Position Node"}
+                {editData ? "Modify Trade" : "New Trade"}
               </h1>
               <p className="text-[13px] text-zinc-500 font-normal max-w-xl">
                 {editData
@@ -283,7 +292,7 @@ export default function AddTrade({ setIsOpen, editData }: AddTradeProps) {
                   : "Commit an active or closed ledger sequence to secure vault database analytics."}
               </p>
             </div>
-  
+
             <label className="flex items-center gap-2 px-3 py-1.5 bg-black hover:bg-[#050505] text-zinc-300 text-xs font-mono font-bold uppercase tracking-tight rounded-md border border-zinc-900 hover:border-zinc-800 cursor-pointer transition-all shrink-0 shadow-sm self-start sm:self-auto">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -312,10 +321,10 @@ export default function AddTrade({ setIsOpen, editData }: AddTradeProps) {
               />
             </label>
           </div>
-  
+
           {/* Master Workspace Form Container */}
           <form onSubmit={handleSubmit} className="w-full flex flex-col gap-6">
-            
+
             {/* Section: Configuration Panels Grid Layout */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-start">
               <AssetSelectionPanel
@@ -331,23 +340,45 @@ export default function AddTrade({ setIsOpen, editData }: AddTradeProps) {
                 setStatus={setStatus}
                 isthatSell={isThatSell}
               />
-  
+
               <PricingPanel formData={formData} handleChange={handleChange} />
-  
+
               <RiskConfigurationPanel
                 setFormData={setFormData}
                 formData={formData}
                 handleChange={handleChange}
               />
             </div>
-  
+
             {/* Section: Image Previews Grid Layout (Only renders if active) */}
-            {previews && previews.length > 0 && (
+            {(scrrenShot.length > 0  || previews.length > 0) && (
               <div className="w-full bg-black border border-zinc-900 rounded-lg p-5 flex flex-col gap-3">
                 <span className="text-[11px] font-mono font-medium tracking-wider text-zinc-600 uppercase">
                   Attached Media Nodes
                 </span>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                  {scrrenShot.map((img, index) => (
+                    <div
+                      key={`existing-${index}`}
+                      className="relative group border border-zinc-900 rounded-md bg-[#050505] p-2 aspect-video flex items-center justify-center overflow-hidden"
+                    >
+                      <button
+                        type="button"
+                        className="absolute top-2 right-2 z-10 p-1 bg-black/80 border border-zinc-800 rounded text-red-400 hover:text-red-300 opacity-0 group-hover:opacity-100 transition-opacity duration-150 cursor-pointer"
+                      >
+                        <IoCloseCircle size={16} />
+                      </button>
+
+                      <img
+                        onClick={() => handleFullScreen(img.public_url)}
+                        src={img?.public_url}
+                        alt={`screenshot-${index}`}
+                        className="max-w-full max-h-full object-contain rounded-sm"
+                      />
+                    </div>
+                  ))}
+
+
                   {previews.map((img, index) => (
                     <div key={index} className="relative group border border-zinc-900 rounded-md bg-[#050505] p-2 aspect-video flex items-center justify-center overflow-hidden">
                       <button
@@ -361,30 +392,30 @@ export default function AddTrade({ setIsOpen, editData }: AddTradeProps) {
                     </div>
                   ))}
                 </div>
-                     {fullScreenImage && (
-                        <div
-                          className="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4 transition-all duration-300"
-                          onClick={() => setFullScreenImage(null)}
-                        >
-                          <button
-                            className="absolute top-6 right-6 text-zinc-400 hover:text-white transition-colors"
-                            onClick={() => setFullScreenImage(null)}
-                          >
-                            <FiX size={24} />
-                          </button>
-                
-                          {/* Full Screen Image */}
-                          <img
-                            src={fullScreenImage}
-                            alt="Full Screen Evidence"
-                            className="max-w-full max-h-[90vh] object-contain rounded-md shadow-2xl border border-zinc-800"
-                            onClick={(e) => e.stopPropagation()}
-                          />
-                        </div>
-                      )}
+                {fullScreenImage && (
+                  <div
+                    className="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4 transition-all duration-300"
+                    onClick={() => setFullScreenImage(null)}
+                  >
+                    <button
+                      className="absolute top-6 right-6 text-zinc-400 hover:text-white transition-colors"
+                      onClick={() => setFullScreenImage(null)}
+                    >
+                      <FiX size={24} />
+                    </button>
+
+                    {/* Full Screen Image */}
+                    <img
+                      src={fullScreenImage}
+                      alt="Full Screen Evidence"
+                      className="max-w-full max-h-[90vh] object-contain rounded-md shadow-2xl border border-zinc-800"
+                      onClick={(e) => e.stopPropagation()}
+                    />
+                  </div>
+                )}
               </div>
             )}
-  
+
             {/* Section: Commentary Node Block */}
             <div className="w-full bg-black border border-zinc-900 rounded-lg p-5 flex flex-col gap-4">
               <div className="flex flex-col gap-1.5">
@@ -401,7 +432,7 @@ export default function AddTrade({ setIsOpen, editData }: AddTradeProps) {
                 />
               </div>
             </div>
-  
+
             {/* Section: Premium Footer Controls */}
             <div className="w-full bg-black border border-zinc-900 rounded-lg px-5 py-3 flex items-center justify-between text-xs font-mono font-medium text-zinc-500">
               <span className="text-[11px] tracking-tight text-zinc-600">Terminal Registry Stream Node</span>
@@ -422,7 +453,7 @@ export default function AddTrade({ setIsOpen, editData }: AddTradeProps) {
                 </button>
               </div>
             </div>
-  
+
           </form>
         </div>
       </div>

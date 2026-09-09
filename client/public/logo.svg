@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+  <defs>
+    <linearGradient id="green" x1="0" y1="1" x2="1" y2="0">
+      <stop offset="0" stop-color="#00a86b"/>
+      <stop offset="1" stop-color="#34e89e"/>
+    </linearGradient>
+    <linearGradient id="white" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset="1" stop-color="#d9dee5"/>
+    </linearGradient>
+    <filter id="shadow" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="5" stdDeviation="6" flood-opacity=".28"/>
+    </filter>
+  </defs>
+
+  <!-- Geometric T -->
+  <g filter="url(#shadow)">
+    <path fill="url(#white)" d="M36 42h184l-20 28H132v108l-28-25V70H56z"/>
+    <path fill="#eef1f5" d="M104 70h28v108l-28-25z"/>
+  </g>
+
+  <!-- Upward V / trend arrow -->
+  <path fill="url(#green)" filter="url(#shadow)"
+        d="M112 190l-27-35 39 38 73-103-25-2 53-28-1 57-17-17-78 110z"/>
+
+  <!-- Candlesticks -->
+  <g stroke-linecap="round">
+    <g stroke="#ff4545" fill="#ff4545">
+      <path d="M136 109v67" stroke-width="3"/>
+      <rect x="128" y="122" width="16" height="38" rx="2"/>
+    </g>
+    <g stroke="#22d995" fill="#22d995">
+      <path d="M158 99v72" stroke-width="3"/>
+      <rect x="150" y="111" width="16" height="43" rx="2"/>
+    </g>
+    <g stroke="#22d995" fill="#22d995">
+      <path d="M181 79v72" stroke-width="3"/>
+      <rect x="173" y="91" width="16" height="45" rx="2"/>
+    </g>
+  </g>
+</svg>

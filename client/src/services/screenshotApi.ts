@@ -34,7 +34,6 @@ export const getScreenshotApi =async (tradeId:string) => {
             Authorization:`Bearer ${token}`
         }
      })
-     console.log(response.data)
      return response.data
     }catch(err:any){
       console.log(err?.message || 'Failed in screenshotApi')

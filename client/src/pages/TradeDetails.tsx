@@ -34,6 +34,7 @@ export default function TradeDetails() {
   const { fetchScreenshots, deleteScreenshot } = useScreenshot();
   const { copy, copied } = useClipboard();
 
+  
   useEffect(() => {
     const getStuffs = async () => {
 

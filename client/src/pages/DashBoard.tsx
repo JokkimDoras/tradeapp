@@ -95,6 +95,7 @@ return () => window.removeEventListener('keydown',handleKeyDown)
     }
   };
 
+
   if (loading.fetchTrades) return <DashboardSkeleton />;
 
   if (formState) {

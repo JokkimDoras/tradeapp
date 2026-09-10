@@ -5,13 +5,13 @@ export default function Profile() {
   const { toggleSidebar } = useSidebar();
   const { user } = useUser();
   
-  
+  console.log(user)
 
   const fullname = user.full_name;
   const country = user.country;
   const bio = user.bio;
   
-  const email = localStorage.getItem("email") || "trader@tradevault.app";
+  const email = user.email || "trader@tradevault.app";
 
   const initials = fullname
     ? fullname

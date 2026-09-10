@@ -5,7 +5,7 @@ const API_URL = import.meta.env.VITE_API_URL
 export async function createAccountApi (accDetails:any) {
 const token = getToken();
     try{
-       const response = await axios.post(`${API_URL}/api/accounts/create`,accDetails,{
+       const response = await axios.post(`${API_URL}/api/accounts`,accDetails,{
             headers:{
                 Authorization:`Bearer ${token}`
             }
@@ -23,7 +23,7 @@ const token = getToken();
 export async function deleteAccountApi(idToDel:string) {
     const token = getToken();
   try{
-    const response = await axios.delete(`${API_URL}/api/accounts/delete/${idToDel}`,{
+    const response = await axios.delete(`${API_URL}/api/accounts/${idToDel}`,{
         headers:{
             Authorization:`Bearer ${token}`
         }

@@ -12,6 +12,7 @@ import { useParams } from "react-router";
 import { FiX } from "react-icons/fi";
 import type { responseScreenshotData } from "../../types/screenshot.types";
 import type { TradeDetails } from "../../types/trade.types";
+import ConfirmModal from "../ui/ConfirmModal";
 
 type TradeType = "buy" | "sell";
 type TradeStatus = "open" | "closed";
@@ -29,6 +30,8 @@ export default function AddTrade({ setIsOpen, editData }: AddTradeProps) {
   const [previews, setPreviews] = useState<any[]>([]);
   const [fullScreenImage, setFullScreenImage] = useState<string | null>(null);
   const [scrrenShot, setScreenShot] = useState<responseScreenshotData[] | []>([])
+  const [deleteModal,setDeleteModal] = useState(false);
+  const [imageDeleteDetails,setImageDeleteDetails] = useState<any>(null)
   const { toggleSidebar } = useSidebar();
   const { user } = useUser();
   const { addTrade, updateTrade } = useTrade();
@@ -247,6 +250,8 @@ export default function AddTrade({ setIsOpen, editData }: AddTradeProps) {
       await deleteScreenshot(img)
       const fil = [...scrrenShot].filter((s) => s.id !==img.id)
       setScreenShot(fil)
+      setDeleteModal(false)
+      setImageDeleteDetails(null)
       toast.success('ScreenShot delete Succesfully')
     }catch(err){
        toast.error('Failed to delete')
@@ -270,6 +275,10 @@ export default function AddTrade({ setIsOpen, editData }: AddTradeProps) {
     return () => window.removeEventListener('keydown', handleClose)
   }, [])
 
+
+  if(deleteModal) {
+ return <ConfirmModal  title="Delete Screenshot" description='This will permantely delete the screenshote of your Trade' onClose={() => setDeleteModal(false)} onDelete={() =>handleDeleteScreenshot(imageDeleteDetails)}/>
+  }
   return (
     <div className="flex flex-col flex-1 min-h-screen bg-black text-zinc-100 font-sans antialiased selection:bg-zinc-800 selection:text-white">
       {/* Header */}
@@ -382,7 +391,10 @@ export default function AddTrade({ setIsOpen, editData }: AddTradeProps) {
                       className="relative group border border-zinc-900 rounded-md bg-[#050505] p-2 aspect-video flex items-center justify-center overflow-hidden"
                     >
                       <button
-                      onClick={() => handleDeleteScreenshot(img)}
+                      onClick={() => {
+                        setImageDeleteDetails(img)
+                        setDeleteModal(true)
+                      }}
                         type="button"
                         className="absolute top-2 right-2 z-10 p-1 bg-black/80 border border-zinc-800 rounded text-red-400 hover:text-red-300 opacity-0 group-hover:opacity-100 transition-opacity duration-150 cursor-pointer"
                       >

@@ -4,7 +4,7 @@
 
     title:string;
     description:ReactNode;
-    loading:boolean;
+    loading?:boolean;
     onDelete:() => void;
     onClose:() => void;
 

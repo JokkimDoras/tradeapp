@@ -6,7 +6,7 @@ const API_URL = import.meta.env.VITE_API_URL
 export async function newsApi () {
     const token = getToken();
     try{
-       const res = await axios.get(`${API_URL}/api/news/trade`,{
+       const res = await axios.get(`${API_URL}/api/news`,{
         headers: {
             Authorization:`Bearer ${token}`
         }

@@ -20,7 +20,7 @@ export interface TradeFormData {
   export async function createTradeApi (formData:TradeFormData) {
   const token = getToken();
     try{
-      const response = await axios.post(`${URL}/api/trades/addtrade`,formData,{
+      const response = await axios.post(`${URL}/api/trades`,formData,{
         headers:{Authorization:`Bearer ${token}`}
        })
        console.log(response.data)
@@ -36,7 +36,7 @@ export async function getTradeApi (id:string) {
   const tokenToFix = getToken();
   console.log(id)
   try{
-    const response = await axios.get(`${URL}/api/trades/gettrade/${id}`,{
+    const response = await axios.get(`${URL}/api/trades/${id}`,{
       headers:{
         Authorization:`Bearer ${tokenToFix}`
       }
@@ -50,7 +50,7 @@ export async function getTradeApi (id:string) {
 export async function deleteTradeApi(tradeId:number) {
   const token = getToken()
   try{
-    const response = await axios.delete(`${URL}/api/trades/deletetrade/${tradeId}`,{
+    const response = await axios.delete(`${URL}/api/trades/${tradeId}`,{
       headers:{
         Authorization:`Bearer ${token}`
       }
@@ -65,7 +65,7 @@ export async function deleteTradeApi(tradeId:number) {
 export async function updateTradeApi(tradeId:number,formData:any){
   const token = getToken();
   try{
-   const response = await axios.put(`${URL}/api/trades/updatetrade/${tradeId}`,formData,{
+   const response = await axios.put(`${URL}/api/trades/${tradeId}`,formData,{
       headers:{
         Authorization:`Bearer ${token}`
       }

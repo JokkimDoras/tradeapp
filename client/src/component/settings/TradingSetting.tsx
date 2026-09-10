@@ -31,6 +31,7 @@ export default function TradingSetting() {
         ...formTrade,
       }));
       toast.success("Changed Successfully");
+      console.log(user,'save')
     } catch (error: any) {
       const serverMessage = error?.response?.data?.message;
       const generalMessage = error?.message;
@@ -42,6 +43,7 @@ export default function TradingSetting() {
   };
 
   const DEFAULT_USER_SETTINGS = {
+    bio:'No bio',
     account_currency: "USD",
     default_lot_size: 0.01,
     trading_experience: "beginner",

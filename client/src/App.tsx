@@ -12,6 +12,8 @@ import DashboardLayout from "./component/DashboardLayout.tsx";
 import HistorySkeleton from "./component/skeltons/HistorySkelton.tsx";
 import AnalyticsSkeleton from "./component/skeltons/AnalyticsSkelton.tsx";
 import CalendarSkeleton from "./component/skeltons/CalendarSkeleton.tsx";
+import NewsSkeleton from "./component/skeltons/NewsSkelton.tsx";
+// import AccountSelectorSkeleton from "./component/skeltons/AccountSelectorSkeleton.tsx";
 import AppProvider from "./AppProvider.tsx";
 const History = lazy(() => import("./pages/History.tsx"));
 const Strategies = lazy(() => import("./pages/Strategies.tsx"));
@@ -102,7 +104,7 @@ const router = createBrowserRouter([
               {
                 path: "/news",
                 element: (
-                  <Suspense fallback={<h1>Loading</h1>}>
+                  <Suspense fallback={<NewsSkeleton/>}>
                     <News />
                   </Suspense>
                 ),

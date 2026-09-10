@@ -32,18 +32,23 @@ vi.mock("../hooks/useTrade", () => ({
 }));
 
 vi.mock("../hooks/useScreenshot", () => ({
-  default: () => ({ uploadScreenshots: vi.fn() }),
+  default: () => (
+    {
+      uploadScreenshots: vi.fn(),
+      fetchScreenshots: vi.fn().mockResolvedValue([]),
+    }
+  ),
 }));
 
 // test case 
 
 test('should block submission and show an error toast if required fields are missing', async () => {
   const mockSetIsOpen = vi.fn();
-  const { container } = render(<AddTrade setIsOpen={mockSetIsOpen}/>);
+  const { container } = render(<AddTrade setIsOpen={mockSetIsOpen} />);
 
   const form = container.querySelector("form");
   if (!form) throw new Error("Form element not found");
-  
+
   fireEvent.submit(form);
 
   await waitFor(() => {
@@ -62,7 +67,7 @@ test("should successfully submit valid data and convert inputs to numbers", asyn
   if (!form) throw new Error("Form element not found");
 
   const assetInput = screen.getByPlaceholderText("Search assets (e.g., BTC/USD)...");
-    fireEvent.change(assetInput, { target: { value: "GBP/USD" } });
+  fireEvent.change(assetInput, { target: { value: "GBP/USD" } });
 
   const dropdownOption = screen.getByRole("button", { name: /GBP\/USD/i });
   fireEvent.click(dropdownOption);
@@ -76,7 +81,7 @@ test("should successfully submit valid data and convert inputs to numbers", asyn
 
   fireEvent.change(entryInput, { target: { value: "1.2500" } });
   fireEvent.change(lotInput, { target: { value: "1.00" } });
-  
+
   if (stopLossInput) fireEvent.change(stopLossInput, { target: { value: "1.2400" } });
   if (takeProfitInput) fireEvent.change(takeProfitInput, { target: { value: "1.2700" } });
 
@@ -99,6 +104,6 @@ test("should successfully submit valid data and convert inputs to numbers", asyn
 });
 
 test("renders add trade page", () => {
-  render(<AddTrade setIsOpen={() => {}} />);
-  expect(screen.getByText(/New Position Node/i)).toBeTruthy();
+  render(<AddTrade setIsOpen={() => { }} />);
+  expect(screen.getByText(/New Trade/i)).toBeTruthy();
 });

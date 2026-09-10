@@ -3,6 +3,7 @@ import { Link } from "react-router";
 import useAuth from "../hooks/useAuth";
 import { toast } from "sonner";
 import { useNavigate } from "react-router";
+import { useUser } from "../hooks/useUser";
 // import { createClient } from "@supabase/supabase-js";
 
 // export const supabase = createClient(
@@ -15,6 +16,7 @@ export default function Login() {
   const inputRef = useRef<HTMLInputElement | null>(null)
   const emailRef = useRef<HTMLInputElement | null>(null);
   const { login, loading, error } = useAuth();
+  const {user} = useUser();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -55,7 +57,7 @@ export default function Login() {
     }
     try {
       await login(formData);
-
+      localStorage.removeItem('email')
     } catch (err:any){ 
      console.warn(err)
     }

@@ -11,6 +11,7 @@ import { IoCloseCircle } from "react-icons/io5";
 import { useParams } from "react-router";
 import { FiX } from "react-icons/fi";
 import type { responseScreenshotData } from "../../types/screenshot.types";
+import type { TradeDetails } from "../../types/trade.types";
 
 type TradeType = "buy" | "sell";
 type TradeStatus = "open" | "closed";
@@ -33,7 +34,7 @@ export default function AddTrade({ setIsOpen, editData }: AddTradeProps) {
   const { addTrade, updateTrade } = useTrade();
   const { uploadScreenshots,deleteScreenshot, fetchScreenshots } = useScreenshot();
   const { id } = useParams()
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<TradeDetails>({
     id: editData?.id || undefined,
     currency_pair: editData?.currency_pair || "",
     trade_type:
@@ -202,11 +203,19 @@ export default function AddTrade({ setIsOpen, editData }: AddTradeProps) {
       setLoading(true);
 
       if (editData && editData.id) {
+        let trade:TradeDetails | null = null;
         if (typeof updateTrade === "function") {
-          await updateTrade(editData.id, payload);
+        trade =  await updateTrade(editData.id, payload);
           toast.success("Updated Succesfully");
         } else {
           console.warn("updateTrade method not found in hook registry.");
+        }
+        if(images.length>0){
+          const imageData = new FormData();
+          images.forEach((img) => {
+            imageData.append('screenshots',img)
+          })
+          await submitImage(trade?.id,imageData)
         }
       } else {
         // if the editData or editData.id is not true it will run the addTrade -> like it will run the new trade

@@ -8,6 +8,7 @@ import {
 import { createTradeApi, updateTradeApi,getTradeApi } from "../services/tradeApi";
 import { deleteTradeApi, type TradeFormData } from "../services/tradeApi";
 import { useAnalytics } from "../hooks/useAnalytics";
+import type { TradeDetails } from "../types/trade.types";
 
 interface LoadingState {
   fetchTrades: boolean;
@@ -22,7 +23,7 @@ interface TradeContextType {
   addTrade: (formData: any) => Promise<void>;
   fetchTradesData: (accountId: string) => Promise<void>; 
   removeTrade: (idToDel: number) => Promise<void>;
-  updateTrade: (idToUpdate: number, formData: any) => Promise<void>;
+  updateTrade: (idToUpdate: number, formData: any) => Promise<TradeDetails>;
   loading: LoadingState;
   setLoading:any;
 }
@@ -135,6 +136,7 @@ export default function TradeProvider({ children }: TradeProviderProps) {
         ...prev,
         updatingTradeId: null,
       }));
+      return data
     } catch (err) {
       setLoading((prev) => ({
         ...prev,

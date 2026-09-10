@@ -4,8 +4,8 @@ const {validateCreateAccount, validateDeleteAccount, validategetAccount, validat
 const {createAccount, deleteAccount, getAccount, getParticularAccount} = require('../controllers/accountController');
 
 
-router.post('/create',validateCreateAccount,createAccount);
-router.delete('/delete/:id',validateDeleteAccount,deleteAccount);
+router.post('/',validateCreateAccount,createAccount);
+router.delete('/:id',validateDeleteAccount,deleteAccount);
 router.get('/',validategetAccount,getAccount)
 router.get('/:id',validategetParticularAccount,getParticularAccount)
 

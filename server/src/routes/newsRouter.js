@@ -5,6 +5,6 @@ const { validateNews } = require('../middleware/validateNews');
 
 
 
-router.get('/trade',validateNews,newsController);
+router.get('/',validateNews,newsController);
 
 module.exports =  router 

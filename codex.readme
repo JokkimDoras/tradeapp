@@ -1,0 +1,85 @@
+# TradeVault - AI Project Guide
+
+Read this guide before changing UI, adding a page, or introducing a component.
+
+## Product and stack
+
+TradeVault is a Forex trade-journaling and performance-management application. It helps users log trades, review execution quality, identify patterns, and improve their process. It is not a broker or trading terminal.
+
+- Client: React 19, TypeScript, Vite, Tailwind CSS v4, React Router, Recharts, Lucide React, and React Icons.
+- Server: Node.js, Express, Supabase PostgreSQL, and Supabase Auth.
+- `client/src/pages/`: route-level views.
+- `client/src/component/`: reusable UI grouped by feature.
+- `client/src/context/`, `hooks/`, `services/`, and `types/`: shared app state, accessors, API calls, and types.
+- `server/src/`: routes, controllers, middleware, services, and configuration.
+
+`client/src/component/DashboardLayout.tsx` is the protected app shell. It provides sidebar, account, and trade context. Shell pages should use the shared `Navbar` and preserve its layout conventions.
+
+## Design direction
+
+The design was inspired by Vercel: quiet, high-contrast, minimal, functional, and product-focused. It should feel like a precise trading workstation, not a colorful consumer finance app.
+
+### Font style
+
+- Use Tailwind `font-sans` for standard interface text; it uses the native system sans stack.
+- Use `font-mono` for metadata, compact stats, table headers, breadcrumbs, labels, and technical trading values.
+- Use `font-semibold` or `font-bold` with `tracking-tight` for headings.
+- Technical labels should use uppercase, `text-[10px]` or `text-[11px]`, `font-semibold`, and `tracking-widest` or `tracking-[0.2em]`.
+- Body copy is normally `text-sm`; helper copy is `text-xs` and muted.
+- Do not introduce a web font unless the entire product is intentionally rebranded.
+
+### Color system
+
+Use Tailwind zinc colors as the primary visual system. Avoid arbitrary colors for ordinary UI.
+
+| Role | Preferred classes / color |
+| --- | --- |
+| Page canvas | `bg-black`, `#000000` |
+| Main text | `text-white`, `text-zinc-100` |
+| Strong surface | `bg-zinc-950`, `#050505` |
+| Raised or selected surface | `bg-zinc-900` |
+| Sidebar surface | `bg-[#121212]` |
+| Standard border | `border-zinc-900` |
+| Interactive/input border | `border-zinc-800` |
+| Secondary text | `text-zinc-400` or `text-zinc-500` |
+| Quiet/helper text | `text-zinc-600` or `text-zinc-700` |
+| Positive P&L/status | `text-emerald-400`, subtle `emerald-500/20` border |
+| Negative P&L/status | `text-rose-400` or `text-rose-500`, subtle `rose-500/20` border |
+| Neutral/breakeven | `text-yellow-400` only when meaningful |
+
+Use emerald and rose only for performance, outcomes, or destructive feedback. Do not use gradients, rainbow charts, saturated accent fills, or large colored backgrounds.
+
+### Layout and interactions
+
+- Use thin one-pixel zinc borders instead of heavy shadows or large colored cards.
+- Use `rounded-md` for controls and `rounded-lg` for panels.
+- Typical page spacing: `px-6 py-8` or `p-6`; major groups use `gap-6` to `gap-8`.
+- Main content commonly uses `w-full max-w-7xl mx-auto`.
+- Dense data uses mono labels and `divide-y divide-zinc-900`.
+- Keep pages responsive: stack at small sizes, use multi-column grids at `sm`/`lg`.
+- Standard controls: `border-zinc-800 bg-zinc-950 text-zinc-400`, hovering to `border-zinc-700 text-zinc-200` or `text-white`.
+- Primary action: `bg-zinc-100 text-black`, hovering to white. It is intentionally neutral, not brand-blue.
+- Inputs use dark backgrounds, `border-zinc-800`, and `focus:border-zinc-600`.
+- Use subtle transitions, 14-17px icons, accessible labels, and visible focus styles.
+
+## Implementation and data rules
+
+1. Reuse `Navbar`, sidebar state, account state, and trade context instead of building replacements.
+2. Start shell pages with `min-h-screen bg-black text-zinc-100 font-sans antialiased`.
+3. Preserve existing account-aware routes. Dashboard, History, Calendar, and Analytics include account IDs; the journal is `/journal` and uses selected account context.
+4. For account-scoped trade data, use `useTrade()` and `fetchTradesData(selectedAccount.id)`.
+5. Match existing Tailwind classes and keep styles local unless a real global token is required.
+6. Make empty, loading, error, and no-account states intentional and visually consistent.
+7. Prefer actual trade data over static placeholders, and label derived or local-only data clearly.
+8. Supabase Auth handles authentication; `AccountContext` persists the selected account; `TradeContext` owns cached trades and trade CRUD.
+9. Trade Journal reflections are locally stored per account/date under `trade-journal:<account-id>:<YYYY-MM-DD>`. Do not describe them as server-synced unless persistence is added.
+
+## Validation
+
+For client changes, run from `client/`:
+
+```bash
+npm.cmd run build
+```
+
+On this Windows setup, PowerShell may block `npm`; use `npm.cmd`. Do not overwrite or revert unrelated dirty-worktree changes.

@@ -10,18 +10,18 @@ export default function TradeStatusSelector({
   onChange,
 }: TradeStatusSelectorProps) {
   return (
-    <div className="flex flex-col gap-1.5 select-none antialiased">
-      <label className="text-[12px] font-medium text-zinc-400 tracking-tight">
+    <div className="flex flex-col gap-2 select-none antialiased">
+      <label className="font-mono text-[10px] font-semibold uppercase tracking-widest text-zinc-500">
         Lifecycle Status
       </label>
 
-      <div className="grid grid-cols-2 p-1 bg-[#050505] border border-zinc-900 rounded-lg">
+      <div className="grid grid-cols-2 gap-1 rounded-md border border-zinc-800 bg-black p-1">
         <button
           type="button"
           onClick={() => onChange("open")}
-          className={`py-1.5 text-[11px] font-mono font-bold uppercase tracking-tight rounded-md transition-all duration-150 cursor-pointer ${
+          className={`py-2 text-[10px] font-mono font-bold uppercase tracking-wider rounded transition-all duration-150 cursor-pointer ${
             value === "open"
-              ? "bg-zinc-900 text-zinc-100 border border-zinc-800 shadow-sm"
+              ? "bg-zinc-800 text-zinc-100 border border-zinc-700 shadow-sm"
               : "text-zinc-500 hover:text-zinc-400 border border-transparent"
           }`}
         >
@@ -31,9 +31,9 @@ export default function TradeStatusSelector({
         <button
           type="button"
           onClick={() => onChange("closed")}
-          className={`py-1.5 text-[11px] font-mono font-bold uppercase tracking-tight rounded-md transition-all duration-150 cursor-pointer ${
+          className={`py-2 text-[10px] font-mono font-bold uppercase tracking-wider rounded transition-all duration-150 cursor-pointer ${
             value === "closed"
-              ? "bg-zinc-900 text-zinc-100 border border-zinc-800 shadow-sm"
+              ? "bg-zinc-800 text-zinc-100 border border-zinc-700 shadow-sm"
               : "text-zinc-500 hover:text-zinc-400 border border-transparent"
           }`}
         >

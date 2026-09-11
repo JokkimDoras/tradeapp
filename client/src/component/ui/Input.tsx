@@ -9,7 +9,7 @@ export default function Input({ className = "", ...props }: InputProps) {
       <input
         {...props}
         onWheel={(e) => e.currentTarget.blur()}
-        className={`w-full bg-black border border-zinc-900 focus:border-zinc-700 rounded-md px-3 py-2 text-[13px] font-mono text-zinc-100 placeholder-zinc-800 focus:outline-none transition-colors duration-150 shadow-sm [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${className}`}
+        className={`w-full rounded-md border border-zinc-800 bg-zinc-950 px-3 py-2.5 font-mono text-[13px] text-zinc-100 shadow-sm outline-none transition-all duration-150 placeholder:text-zinc-700 hover:border-zinc-700 focus:border-zinc-500 focus:bg-black focus:ring-2 focus:ring-zinc-800/70 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${className}`}
       />
     </div>
   );

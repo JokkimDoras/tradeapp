@@ -69,16 +69,16 @@ export default function AssetSelectionPanel({
   },[])
 
   return (
-    <div className="w-full bg-black border border-zinc-900 rounded-lg p-5 flex flex-col gap-5 select-none antialiased">
-      <div className="flex flex-col gap-1">
-        <span className="text-[11px] font-mono font-medium tracking-wider text-zinc-600 uppercase">
+    <div className="w-full rounded-xl border border-zinc-900 bg-zinc-950/60 p-5 flex flex-col gap-6 select-none antialiased shadow-sm">
+      <div className="flex flex-col gap-1 border-b border-zinc-900 pb-4">
+        <span className="text-[10px] font-mono font-semibold tracking-[0.16em] text-zinc-500 uppercase">
           01 // Position Type
         </span>
       </div>
 
       <div className="flex flex-col gap-1.5 relative">
         <div className="flex items-center justify-between">
-          <label className="text-[12px] font-medium text-zinc-400 tracking-tight">
+          <label className="font-mono text-[10px] font-semibold uppercase tracking-widest text-zinc-500">
             Asset Pair Selection
           </label>
           {searchQuery && (
@@ -97,21 +97,21 @@ export default function AssetSelectionPanel({
               setSearchQuery(e.target.value);
               setIsDropdownOpen(true);
             }}
-            className="w-full bg-black border border-zinc-900 focus:border-zinc-700 rounded-md px-3 py-2 text-[13px] font-mono text-zinc-100 placeholder-zinc-800 focus:outline-none transition-colors duration-150 shadow-sm"
+            className="w-full rounded-md border border-zinc-800 bg-black px-3 py-2.5 text-[13px] font-mono text-zinc-100 shadow-sm outline-none transition-all placeholder:text-zinc-700 hover:border-zinc-700 focus:border-zinc-500 focus:ring-2 focus:ring-zinc-800/70"
           />
         </div>
 
         {isDropdownOpen && (
           <>
             <div className="fixed inset-0 z-30" onClick={() => setIsDropdownOpen(false)} />
-            <div className="absolute top-[64px] left-0 w-full bg-[#050505] border border-zinc-900 rounded-md max-h-60 overflow-y-auto z-40 shadow-2xl divide-y divide-zinc-950">
+            <div className="absolute top-[66px] left-0 w-full bg-zinc-950 border border-zinc-800 rounded-lg max-h-60 overflow-y-auto z-40 shadow-2xl divide-y divide-zinc-900">
               {filteredPairs.length > 0 ? (
                 filteredPairs.map((pair) => (
                   <button
                     key={pair.symbol}
                     type="button"
                     onClick={() => handleSelect(pair.symbol)}
-                    className="w-full text-left px-3 py-2 hover:bg-black transition-colors flex items-center justify-between text-xs group cursor-pointer"
+                    className="w-full text-left px-3 py-2.5 hover:bg-zinc-900/70 transition-colors flex items-center justify-between text-xs group cursor-pointer"
                   >
                     <div className="flex items-baseline gap-2">
                       <span className="font-mono font-bold text-[13px] text-zinc-200 group-hover:text-white transition-colors">
@@ -149,7 +149,7 @@ export default function AssetSelectionPanel({
         )}
       </div>
 
-      <div className="flex flex-col gap-3.5 border-t border-zinc-900/80 pt-4 mt-1">
+      <div className="flex flex-col gap-4 border-t border-zinc-900 pt-5">
         <TradeTypeSelector isthatSell={isthatSell} value={tradeType} onChange={setType} />
         <TradeStatusSelector value={status} onChange={setStatus} />
       </div>

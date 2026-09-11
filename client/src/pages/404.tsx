@@ -1,7 +1,6 @@
 import { useNavigate } from "react-router"; 
 import Navbar from "../component/ui/NavBar";
 import { useSidebar } from "../hooks/useSidebar";
-
 export default function Page404() {
   const { toggleSidebar } = useSidebar();
   const navigate = useNavigate();

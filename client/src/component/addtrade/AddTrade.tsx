@@ -32,6 +32,7 @@ export default function AddTrade({ setIsOpen, editData }: AddTradeProps) {
   const [scrrenShot, setScreenShot] = useState<responseScreenshotData[] | []>([])
   const [deleteModal,setDeleteModal] = useState(false);
   const [imageDeleteDetails,setImageDeleteDetails] = useState<any>(null)
+  const [imageDeleteLoading,setImageDeleteLoading] = useState(false)
   const { toggleSidebar } = useSidebar();
   const { user } = useUser();
   const { addTrade, updateTrade } = useTrade();
@@ -247,6 +248,7 @@ export default function AddTrade({ setIsOpen, editData }: AddTradeProps) {
 
   const handleDeleteScreenshot = async(img:responseScreenshotData) => {
     try{
+      setImageDeleteLoading(true)
       await deleteScreenshot(img)
       const fil = [...scrrenShot].filter((s) => s.id !==img.id)
       setScreenShot(fil)
@@ -255,6 +257,8 @@ export default function AddTrade({ setIsOpen, editData }: AddTradeProps) {
       toast.success('ScreenShot delete Succesfully')
     }catch(err){
        toast.error('Failed to delete')
+    }finally{
+      setImageDeleteLoading(false)
     }
   }
 
@@ -277,7 +281,7 @@ export default function AddTrade({ setIsOpen, editData }: AddTradeProps) {
 
 
   if(deleteModal) {
- return <ConfirmModal  title="Delete Screenshot" description='This will permantely delete the screenshote of your Trade' onClose={() => setDeleteModal(false)} onDelete={() =>handleDeleteScreenshot(imageDeleteDetails)}/>
+ return <ConfirmModal loading={imageDeleteLoading}  title="Delete Screenshot" description='This will permantely delete the screenshote of your Trade' onClose={() => setDeleteModal(false)} onDelete={() =>handleDeleteScreenshot(imageDeleteDetails)}/>
   }
   return (
     <div className="flex flex-col flex-1 min-h-screen bg-black text-zinc-100 font-sans antialiased selection:bg-zinc-800 selection:text-white">

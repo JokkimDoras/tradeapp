@@ -9,7 +9,7 @@ import { useUser } from "../../hooks/useUser";
 import useScreenshot from "../../hooks/useScreenshot";
 import { IoCloseCircle } from "react-icons/io5";
 import { useParams } from "react-router";
-import { FiX } from "react-icons/fi";
+import { FiCamera, FiMenu, FiX } from "react-icons/fi";
 import type { responseScreenshotData } from "../../types/screenshot.types";
 import type { TradeDetails } from "../../types/trade.types";
 import ConfirmModal from "../ui/ConfirmModal";
@@ -293,14 +293,7 @@ export default function AddTrade({ setIsOpen, editData }: AddTradeProps) {
             type="button"
             className="w-9 h-9 flex items-center justify-center rounded-md border border-zinc-800 bg-zinc-950 hover:border-zinc-700 hover:bg-zinc-900 text-zinc-400 hover:text-zinc-100 transition-all cursor-pointer"
           >
-            <svg width="16" height="16" viewBox="0 0 15 15" fill="none">
-              <path
-                d="M2 4.5h11M2 7.5h11M2 10.5h11"
-                stroke="currentColor"
-                strokeWidth="1.2"
-                strokeLinecap="round"
-              />
-            </svg>
+            <FiMenu size={16} />
           </button>
           <div className="flex items-center gap-2 text-[11px] font-mono font-semibold tracking-[0.16em] text-zinc-500">
             <span>EXECUTION_TERMINAL //</span>
@@ -327,25 +320,7 @@ export default function AddTrade({ setIsOpen, editData }: AddTradeProps) {
             </div>
 
             <label className="flex items-center gap-2 px-3 py-2 bg-zinc-950 hover:bg-zinc-900 text-zinc-300 text-[11px] font-mono font-semibold uppercase tracking-wider rounded-md border border-zinc-800 hover:border-zinc-700 cursor-pointer transition-all shrink-0 shadow-sm self-start sm:self-auto">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={2}
-                stroke="currentColor"
-                className="w-3.5 h-3.5 text-zinc-500"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M6.827 6.175A2.31 2.31 0 0 1 5.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 0 0-1.134-.175 2.31 2.31 0 0 1-1.64-1.055l-.822-1.316a2.192 2.192 0 0 0-1.736-1.039 48.774 48.774 0 0 0-5.232 0 2.192 2.192 0 0 0-1.736 1.039l-.821 1.316Z"
-                />
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M16.5 12.75a4.5 4.5 0 1 1-9 0 4.5 4.5 0 0 1 9 0ZM18.75 10.5h.008v.008h-.008V10.5Z"
-                />
-              </svg>
+              <FiCamera className="h-3.5 w-3.5 text-zinc-500" />
               <span>Add Screenshot</span>
               <input
                 type="file"

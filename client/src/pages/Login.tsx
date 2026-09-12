@@ -56,6 +56,7 @@ export default function Login() {
     try {
       await login(formData);
       localStorage.removeItem('email')
+      localStorage.removeItem('selectedAccount')
     } catch (err:any){ 
      console.warn(err)
     }

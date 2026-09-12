@@ -16,9 +16,9 @@ export default function PricingPanel({
   handleChange,
 }: PricingPanelProps) {
   return (
-    <div className="w-full bg-black border border-zinc-900 rounded-lg p-5 flex flex-col gap-5 select-none antialiased">
-      <div className="flex flex-col gap-1">
-        <span className="text-[11px] font-mono font-medium tracking-wider text-zinc-600 uppercase">
+    <div className="w-full rounded-xl border border-zinc-900 bg-zinc-950/60 p-5 flex flex-col gap-6 select-none antialiased shadow-sm">
+      <div className="flex flex-col gap-1 border-b border-zinc-900 pb-4">
+        <span className="text-[10px] font-mono font-semibold tracking-[0.16em] text-zinc-500 uppercase">
           02 // Entry & Volume
         </span>
       </div>
@@ -33,7 +33,7 @@ export default function PricingPanel({
             placeholder="0.00000000"
             value={formData.entry_price}
             onChange={handleChange}
-            className="w-full bg-black border border-zinc-900 focus:border-zinc-700 rounded-md px-3 py-2 text-[13px] font-mono text-zinc-100 placeholder-zinc-800 focus:outline-none transition-colors duration-150 shadow-sm"
+            className="bg-black"
           />
         </div>
       </FormField>
@@ -49,7 +49,7 @@ export default function PricingPanel({
             placeholder="1.00"
             value={formData.lot_size}
             onChange={handleChange}
-            className="w-full bg-black border border-zinc-900 focus:border-zinc-700 rounded-md px-3 py-2 text-[13px] font-mono text-zinc-100 placeholder-zinc-800 focus:outline-none transition-colors duration-150 shadow-sm"
+            className="bg-black"
           />
         </div>
       </FormField>
@@ -57,7 +57,7 @@ export default function PricingPanel({
       <div
         className={`transition-all duration-200 ease-in-out overflow-hidden flex flex-col ${
           formData.status === "closed"
-            ? "max-h-24 opacity-100 border-t border-zinc-900/60 pt-4 mt-1"
+            ? "max-h-28 opacity-100 border-t border-zinc-900 pt-5 mt-1"
             : "max-h-0 opacity-0 pointer-events-none"
         }`}
       >
@@ -71,7 +71,7 @@ export default function PricingPanel({
               placeholder="0.00000000"
               value={formData.exit_price}
               onChange={handleChange}
-              className="w-full bg-black border border-zinc-900 focus:border-zinc-700 rounded-md px-3 py-2 text-[13px] font-mono text-zinc-100 placeholder-zinc-800 focus:outline-none transition-colors duration-150 shadow-sm"
+              className="bg-black"
             />
           </div>
         </FormField>

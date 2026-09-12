@@ -42,16 +42,16 @@ export default function RiskConfigurationPanel({
   );
 
   return (
-    <div className="w-full bg-black border border-zinc-900 rounded-lg p-5 flex flex-col gap-5 select-none antialiased">
-      <div className="flex flex-col gap-1">
-        <span className="text-[11px] font-mono font-medium tracking-wider text-zinc-600 uppercase">
+    <div className="w-full rounded-xl border border-zinc-900 bg-zinc-950/60 p-5 flex flex-col gap-6 select-none antialiased shadow-sm">
+      <div className="flex flex-col gap-1 border-b border-zinc-900 pb-4">
+        <span className="text-[10px] font-mono font-semibold tracking-[0.16em] text-zinc-500 uppercase">
           03 // Risk Configuration
         </span>
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
-        <div className="flex flex-col gap-1.5">
-          <label className="text-[12px] font-medium text-zinc-400 tracking-tight">
+      <div className="grid grid-cols-2 gap-3">
+        <div className="flex flex-col gap-2">
+          <label className="font-mono text-[10px] font-semibold uppercase tracking-widest text-zinc-500">
             Stop Loss
           </label>
           <div className="relative w-full">
@@ -62,13 +62,13 @@ export default function RiskConfigurationPanel({
               placeholder="None"
               value={formData.stop_loss}
               onChange={handleChange}
-              className="w-full bg-black border border-zinc-900 focus:border-zinc-700 rounded-md px-3 py-2 text-[13px] font-mono text-zinc-100 placeholder-zinc-800 focus:outline-none transition-colors duration-150 shadow-sm"
+              className="bg-black"
             />
           </div>
         </div>
 
-        <div className="flex flex-col gap-1.5">
-          <label className="text-[12px] font-medium text-zinc-400 tracking-tight">
+        <div className="flex flex-col gap-2">
+          <label className="font-mono text-[10px] font-semibold uppercase tracking-widest text-zinc-500">
             Take Profit
           </label>
           <div className="relative w-full">
@@ -79,15 +79,15 @@ export default function RiskConfigurationPanel({
               placeholder="None"
               value={formData.take_profit}
               onChange={handleChange}
-              className="w-full bg-black border border-zinc-900 focus:border-zinc-700 rounded-md px-3 py-2 text-[13px] font-mono text-zinc-100 placeholder-zinc-800 focus:outline-none transition-colors duration-150 shadow-sm"
+              className="bg-black"
             />
           </div>
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
-        <div className="flex flex-col gap-1.5">
-          <label className="text-[12px] font-medium text-zinc-400 tracking-tight">
+      <div className="grid grid-cols-2 gap-3">
+        <div className="flex flex-col gap-2">
+          <label className="font-mono text-[10px] font-semibold uppercase tracking-widest text-zinc-500">
             Risk Delta (%)
           </label>
           <div className="relative w-full">
@@ -98,14 +98,14 @@ export default function RiskConfigurationPanel({
               placeholder="0.00%"
               value={formData.risk_percentage}
               onChange={handleChange}
-              className="w-full bg-black border border-zinc-900 focus:border-zinc-700 rounded-md px-3 py-2 text-[13px] font-mono text-zinc-100 placeholder-zinc-800 focus:outline-none transition-colors duration-150 shadow-sm"
+              className="bg-black"
             />
           </div>
         </div>
       </div>
 
-      <div className="flex flex-col gap-1.5 relative">
-        <label className="text-[12px] font-medium text-zinc-400 tracking-tight">
+      <div className="flex flex-col gap-2 relative">
+        <label className="font-mono text-[10px] font-semibold uppercase tracking-widest text-zinc-500">
           Strategies
         </label>
         <div className="relative w-full">
@@ -117,13 +117,13 @@ export default function RiskConfigurationPanel({
             onFocus={() => setIsOpen(true)}
             onBlur={() => setTimeout(() => setIsOpen(false), 200)}
             onChange={handleChange} 
-            className="w-full bg-black border border-zinc-900 focus:border-zinc-700 rounded-md px-3 py-2 text-[13px] font-mono text-zinc-100 placeholder-zinc-800 focus:outline-none transition-colors duration-150 shadow-sm"
+            className="bg-black"
           />
         </div>
 
         {isOpen && filteredStrategies.length > 0 && (
           <>
-            <div className="absolute top-[68px] left-0 w-full bg-[#050505] border border-zinc-900 rounded-md max-h-48 overflow-y-auto z-50 shadow-2xl divide-y divide-zinc-950">
+            <div className="absolute top-[70px] left-0 w-full bg-zinc-950 border border-zinc-800 rounded-lg max-h-48 overflow-y-auto z-50 shadow-2xl divide-y divide-zinc-900">
               {filteredStrategies.map((item, index) => (
                 <div 
                   key={index}

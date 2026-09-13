@@ -4,10 +4,10 @@ import { getToken } from "../utils/auth";
 
 const API_URL = import.meta.env.VITE_API_URL
 
-export async function deleteAccountApi () {
+export async function deleteUserAccountApi () {
     const token = getToken()
     try{
-       const response = await axios.post(`${API_URL}/api/account/users/me`,{
+       const response = await axios.delete(`${API_URL}/api/user/me`,{
         headers:{
             Authorization:`Bearer ${token}`
         }

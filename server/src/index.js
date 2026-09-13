@@ -6,6 +6,7 @@ const tradeRoutes = require('./routes/tradeRoutes')
 const screenshotRoutes = require('./routes/screenshotRoutes')
 const accountRoutes = require('./routes/accountRoutes');
 const newsRoutes = require('./routes/newsRouter')
+const deleteUserRoutes = require('./routes/deleteUserRoutes')
 const app = express();
 
 app.use(cors());
@@ -21,6 +22,7 @@ app.use('/api/trades',tradeRoutes)
 app.use('/api',screenshotRoutes)
 app.use('/api/accounts',accountRoutes)
 app.use('/api/news',newsRoutes)
+app.use('/api/user',deleteUserRoutes)
 
 const PORT = process.env.PORT || 8000;
 

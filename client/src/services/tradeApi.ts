@@ -76,3 +76,17 @@ export async function updateTradeApi(tradeId:number,formData:any){
     throw err
   }
 }
+
+export async function deleteAllTradeApi (account_id:string | null) {
+  const token = getToken();
+  try{
+const res = await axios.delete(`${URL}/api/trades/account/${account_id}`,{
+  headers:{
+    Authorization:`Bearer ${token}`
+  }
+})
+return res.data
+  }catch(err){
+    throw err
+  }
+}

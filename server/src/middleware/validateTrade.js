@@ -231,6 +231,37 @@ const validateUpdateTrade = async (req, res, next) => {
   }
 };
 
+const validateDeleteAllTrade = async (req,res,next) => {
+   const authHeader = req.headers.authorization;
+   const {account_id} = req.params;
+   if(!authHeader || !authHeader.startsWith('Bearer')){
+       return res.status(401).json({
+        success:false,
+        message:'Unauthorized Invaid Token'
+       })
+   }
+
+   const token = authHeader.split(' ')[1];
+   try{
+    const {data:{user},error} = await supabaseAdmin.auth.getUser(token);
+    if(error || !user){
+      return res.status(401).json({
+        success:false,
+        message:"user not Found"
+      })
+    }
+    req.user_id = user.id;
+    req.account_id = account_id
+    next()
+
+   }catch(err){
+      return res.status(400).json({
+        success:false,
+        message:'Failed to Get user id'
+      })
+   }
+}
+
 const validateStats = async (req, res, next) => {
   const authHeader = req.headers.authorization;
   const token = authHeader.split(" ")[1];
@@ -269,5 +300,5 @@ module.exports = {
   validateDeleteTrade,
   validateUpdateTrade,
   validateStats,
-  
+  validateDeleteAllTrade
 };

@@ -192,6 +192,36 @@ const getTradingAnalytics = async (req, res) => {
   }
 };
 
+const deleteAllTrade = async(req,res) => {
+   const user_id = req.user_id;
+   const account_id = req.account_id;
+   try{
+    const {error} = await supabaseAdmin
+    .from("trades")
+      .delete()
+      .eq("user_id", user_id)
+      .eq('account_id',account_id)
+
+      if(error) {
+        return res.status(500).json({
+          success:false,
+          message:'Failed to Delete All Trades',
+          error
+        })
+      }
+
+     return res.status(200).json({
+      success:true,
+      message:'All Trades was Deleted SuccessFully'
+     })
+   }catch(err){
+      return res.status(500).json({
+          success:false,
+          message:'Failed to Delete All Trades',
+          err
+        })
+   }
+}
 
 
 module.exports = {
@@ -200,5 +230,5 @@ module.exports = {
   deleteTrade,
   updateTrade,
   getTradingAnalytics,
-  
+  deleteAllTrade
 };

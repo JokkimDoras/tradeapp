@@ -24,6 +24,7 @@ app.use('/api/accounts',accountRoutes)
 app.use('/api/news',newsRoutes)
 app.use('/api/user',deleteUserRoutes)
 
+
 const PORT = process.env.PORT || 8000;
 
 app.listen(PORT, '0.0.0.0', () => {

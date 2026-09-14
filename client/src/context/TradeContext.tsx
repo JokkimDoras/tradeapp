@@ -5,7 +5,7 @@ import {
   type Dispatch,
   type SetStateAction,
 } from "react";
-import { createTradeApi, updateTradeApi,getTradeApi } from "../services/tradeApi";
+import { createTradeApi, updateTradeApi,getTradeApi, deleteAllTradeApi } from "../services/tradeApi";
 import { deleteTradeApi, type TradeFormData } from "../services/tradeApi";
 import { useAnalytics } from "../hooks/useAnalytics";
 import type { TradeDetails } from "../types/trade.types";
@@ -15,6 +15,8 @@ interface LoadingState {
   addTrade: boolean;
   updatingTradeId: number | null;
   deletingTradeId: number | null;
+      deleteAllTrade:boolean,
+
 }
 
 interface TradeContextType {
@@ -24,6 +26,7 @@ interface TradeContextType {
   fetchTradesData: (accountId: string) => Promise<void>; 
   removeTrade: (idToDel: number) => Promise<void>;
   updateTrade: (idToUpdate: number, formData: any) => Promise<TradeDetails>;
+  deleteAllTrade:(accID:string) => Promise<void>
   loading: LoadingState;
   setLoading:any;
 }
@@ -42,6 +45,7 @@ export default function TradeProvider({ children }: TradeProviderProps) {
     addTrade: false,
     updatingTradeId: null,
     deletingTradeId: null,
+    deleteAllTrade:false,
   });
   const [currentAccountId, setCurrentAccountId] = useState<string | null>(null);
 
@@ -145,6 +149,24 @@ export default function TradeProvider({ children }: TradeProviderProps) {
       throw err;
     }
   };
+  const deleteAllTrade = async(acc_id:string | null) => {
+    try{
+      setLoading((prev) => ({
+        ...prev,
+        deleteAllTrade:true
+      }))
+
+     const res = await deleteAllTradeApi(acc_id)
+     return res
+    }catch(err){
+      throw err
+    }finally{
+      setLoading((prev) => ({
+        ...prev,
+        deleteAllTrade:false
+      }))
+    }
+  }
 
   return (
     <TradeContext.Provider
@@ -156,7 +178,8 @@ export default function TradeProvider({ children }: TradeProviderProps) {
         updateTrade,
         loading,
         setLoading,
-        fetchTradesData
+        fetchTradesData,
+        deleteAllTrade
       }}
     >
       {children}

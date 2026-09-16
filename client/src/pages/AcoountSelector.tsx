@@ -9,6 +9,7 @@ import AccountHeader from "../component/addAccount/AccountHeader";
 import AccountCard from "../component/addAccount/AccountCard";
 import EmptyState from "../component/addAccount/EmptyState";
 
+
 type whichOneState = {
   name: string;
   id: number | null;
@@ -17,7 +18,6 @@ type whichOneState = {
 function AccountSelector() {
   const { toggleSidebar } = useSidebar();
   const { accounts, loading,setIsModalOpen,isModalOpen } = useAccount();
-  console.log("Type of setIsModalOpen:", typeof setIsModalOpen);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [whichOne, setWhichOne] = useState<whichOneState>({
     name: "",

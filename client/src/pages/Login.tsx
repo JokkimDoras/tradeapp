@@ -3,6 +3,7 @@ import { Link } from "react-router";
 import useAuth from "../hooks/useAuth";
 import { toast } from "sonner";
 import { useNavigate } from "react-router";
+import { useUser } from "../hooks/useUser";
 // import { createClient } from "@supabase/supabase-js";
 
 // export const supabase = createClient(
@@ -14,6 +15,7 @@ export default function Login() {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const inputRef = useRef<HTMLInputElement | null>(null)
   const emailRef = useRef<HTMLInputElement | null>(null);
+  const {user} = useUser()
   const { login, loading, error } = useAuth();
   const navigate = useNavigate();
 
@@ -57,6 +59,7 @@ export default function Login() {
       await login(formData);
       localStorage.removeItem('email')
       localStorage.removeItem('selectedAccount')
+      toast.message(`Welcome Back ${user.full_name}`)
     } catch (err:any){ 
      console.warn(err)
     }

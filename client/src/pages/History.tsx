@@ -11,18 +11,21 @@ import { useNavigate } from "react-router";
 import useAccount from "../hooks/useAccount";
 import { useUser } from "../hooks/useUser";
 import HistorySkeleton from "../component/skeltons/HistorySkelton";
+import ConfirmModal from "../component/ui/ConfirmModal";
 
 export default function History() {
   const { toggleSidebar } = useSidebar();
-  const { trades, removeTrade, updateTrade, fetchTradesData,  loading } = useTrade(); 
+  const { trades, removeTrade, updateTrade, fetchTradesData,  loading,deleteAllTrade,setTrades } = useTrade(); 
   const { selectedAccount} = useAccount();
+  
   const navigate = useNavigate();
   const { user } = useUser();
-
+  const [isChecked,setIsChecked] = useState(false);
   const [formState, setFormState] = useState<boolean | any>(false);
   const [deleteingId, setDeleleteingId] = useState<null | number>(null);
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
+  const [deleteAllModal,setDeleteAllModal] = useState(false)
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeTradeToClose, setActiveTradeToClose] = useState<any>(null);
@@ -93,6 +96,24 @@ const handleOpenCompleteModal = useCallback((id: number) => {
     });
   }, [trades, searchQuery, statusFilter]);
 
+  const handleDeleteAllTrade = async() => {
+    try{
+      if (!selectedAccount?.id) {
+        toast.warning('Failed to Delete')
+  return;
+
+}
+      await deleteAllTrade(selectedAccount?.id)
+    setDeleteAllModal(false)
+    setTrades([])
+    toast.success('All Trade Deleted Successfully')
+    setIsChecked(false)
+    }catch(err){
+      toast.warning('Failed To Delete')
+      throw err
+    }
+  }
+
   if (formState) {
     return (
       <AddTrade 
@@ -103,6 +124,13 @@ const handleOpenCompleteModal = useCallback((id: number) => {
   }
 
   if(loading.fetchTrades) return <HistorySkeleton/>
+  if(deleteAllModal) return <ConfirmModal 
+  title="Delete All Trades" 
+  description='This Action will Delete all the trade in the Particular Account'
+  onClose={() => setDeleteAllModal(false)}
+  onDelete={handleDeleteAllTrade}
+  loading={loading.deleteAllTrade}
+   />
 
   return (
     <div className="flex flex-col flex-1 min-h-screen bg-black text-zinc-100 font-sans antialiased relative selection:bg-zinc-800 selection:text-white">
@@ -127,10 +155,22 @@ const handleOpenCompleteModal = useCallback((id: number) => {
         />
 
         <div className="w-full flex-1 flex flex-col">
+          <div className="flex justify-between ">
+
           <span className="text-xs font-mono text-zinc-400 uppercase tracking-widest font-semibold mb-4">
             Sequence Registry ({filteredTrades.length})
           </span>
-
+         <div className="text-xs flex gap-3 font-mono text-zinc-400 uppercase tracking-widest font-semibold mb-4">
+          <input className="" checked={isChecked} onChange={() => setIsChecked(!isChecked)} type="checkbox"/>
+         {isChecked ?
+          <button onClick={() => setDeleteAllModal(true)} className="text-xs border-red-500 cursor-pointer hover:underline font-mono text-red-400 uppercase tracking-widest font-semibold">
+            Delete all
+            </button> 
+          :
+           <span className="cursor-pointer" onClick={() => setIsChecked(true)}>Select All</span>
+           }
+         </div>
+          </div>
           {filteredTrades.length === 0 ? (
             <div className="text-zinc-500 font-mono text-sm p-6 rounded-lg border border-zinc-900 bg-zinc-950">
               No matching execution patterns found in the archive.

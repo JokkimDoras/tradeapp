@@ -1,4 +1,4 @@
-import {  useEffect, useState } from "react";
+import {  useState } from "react";
 import Navbar from "../component/ui/NavBar";
 import useAccount from "../hooks/useAccount";
 import { useSidebar } from "../hooks/useSidebar";
@@ -8,8 +8,7 @@ import AccountSelectorSkeleton from "../component/skeltons/AccountSelectorSkelet
 import AccountHeader from "../component/addAccount/AccountHeader";
 import AccountCard from "../component/addAccount/AccountCard";
 import EmptyState from "../component/addAccount/EmptyState";
-import { toast } from "sonner";
-import { useUser } from "../hooks/useUser";
+
 
 type whichOneState = {
   name: string;

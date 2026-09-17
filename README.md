@@ -85,6 +85,30 @@ The backend is already deployed and running on Render. You do not need to run th
 
 ---
 
+## Docker
+
+Docker runs the React client and Express API locally while continuing to use the hosted Supabase project.
+
+1. Ensure `server/.env` contains the server-side Supabase values.
+2. Copy `.env.docker.example` to `.env.docker` and add the public values from `client/.env`. Do not add a Supabase service-role key to this file.
+3. Start the production-like stack:
+
+```bash
+docker compose --env-file .env.docker up --build
+```
+
+Open `http://localhost:5173`. The API is also exposed at `http://localhost:8000`.
+
+For development with source mounts and hot reload:
+
+```bash
+docker compose --env-file .env.docker -f docker-compose.yml -f docker-compose.dev.yml up --build
+```
+
+Stop either stack with `Ctrl+C`, then use `docker compose down` (include the same `-f` options for the development stack). The Docker configuration does not start a local database or Supabase Auth service.
+
+---
+
 ## Project Structure
 
 ```

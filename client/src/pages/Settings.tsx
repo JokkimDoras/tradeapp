@@ -3,6 +3,7 @@ import { useSidebar } from "../hooks/useSidebar";
 import TradingSetting from "../component/settings/TradingSetting";
 import GeneralSetting from "../component/settings/GeneralSetting";
 import SecuritySetting from "../component/settings/SecuritySetting";
+import Navbar from "../component/ui/NavBar";
 
 const tabs = ["General", "Trading", "Security"] as const;
 type Tab = (typeof tabs)[number];
@@ -13,27 +14,9 @@ export default function Settings() {
 
   return (
     <div className="flex flex-col flex-1 min-h-screen bg-black font-sans antialiased selection:bg-zinc-800 selection:text-white">
-      {/* ── TOPBAR ── */}
-      <header className="h-16  border-b border-zinc-900 flex items-center justify-between px-8 shrink-0">
-        <div className="flex items-center gap-3">
-          <button
-            onClick={toggleSidebar}
-            className="w-9 h-9 flex items-center justify-center rounded-md border border-zinc-800 hover:border-zinc-700 hover:bg-zinc-900 text-zinc-400 hover:text-zinc-100 transition-all"
-          >
-            <svg width="16" height="16" viewBox="0 0 15 15" fill="none">
-              <path
-                d="M2 4.5h11M2 7.5h11M2 10.5h11"
-                stroke="currentColor"
-                strokeWidth="1.2"
-                strokeLinecap="round"
-              />
-            </svg>
-          </button>
-          <div className="flex items-center gap-2 text-base font-medium tracking-tight text-zinc-400">
-            <span>Settings</span>
-          </div>
-        </div>
-      </header>
+    
+          <Navbar toggleSidebar={toggleSidebar}>Settings</Navbar>
+      
 
       {/* ── MAIN CONTENT CONTAINER ── */}
       <div className="w-full flex-1 px-8 py-12 flex flex-col gap-10">

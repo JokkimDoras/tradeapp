@@ -1,5 +1,6 @@
 import { useSidebar } from "../hooks/useSidebar";
 import { useUser } from "../hooks/useUser";
+import Navbar from "../component/ui/NavBar";
 
 export default function Profile() {
   const { toggleSidebar } = useSidebar();
@@ -27,7 +28,7 @@ export default function Profile() {
     <div className="flex flex-col flex-1 min-h-screen bg-black text-zinc-100 font-sans antialiased selection:bg-zinc-800 selection:text-white">
 
       {/* ── TOPBAR ── */}
-      <header className="h-16 border-b border-zinc-900 flex items-center justify-between px-8 shrink-0">
+      {/* <header className="h-16 border-b border-zinc-900 flex items-center justify-between px-8 shrink-0">
         <div className="flex items-center gap-3">
           <button
             onClick={toggleSidebar}
@@ -41,8 +42,8 @@ export default function Profile() {
             <span>Profile Overview</span>
           </div>
         </div>
-      </header>
-
+      </header> */}
+    <Navbar toggleSidebar={toggleSidebar}>Profile</Navbar>
       <div className="w-full flex-1 px-8 py-12 flex flex-col gap-10">
         
         {/* Page Header matched cleanly to Settings spacing */}

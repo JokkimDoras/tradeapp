@@ -8,7 +8,7 @@ interface NavbarProps {
 export default function Navbar({ toggleSidebar,children }: NavbarProps) {
   return (
     <header className="sticky top-0 z-40 w-full h-16 border-b border-zinc-900 bg-black/70 backdrop-blur-md px-6 flex items-center">
-      <div className="max-w-7xl mx-auto flex items-center justify-between w-full">
+      <div className=" mx-auto flex items-center justify-between w-full">
         
         <div className="flex items-center gap-4">
           {/* SIDEBAR TOGGLE BUTTON */}

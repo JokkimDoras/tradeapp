@@ -20,6 +20,7 @@ import SidebarHeader from "./SidebarHeader";
 import AccountDropdown from "./AccountDropdown";
 import SidebarNavigation from "./SidebarNavigation";
 import SidebarFooter from "./SidebarFooter";
+import ConfirmModal from "../ui/ConfirmModal";
 
 type Account = {
   id: string;
@@ -60,12 +61,15 @@ export default function SideBar() {
   const { logout } = useAuth();
   const { selectedAccount, accounts, setSelectedAccount, setIsModalOpen } = useAccount();
   const [accountDropdownOpen, setAccountDropdownOpen] = useState(false);
+  const [isLogout,setIsLogout] = useState<boolean>(false);
 
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const handleLogout = async (e: any) => {
     const token = getToken();
     e.stopPropagation();
-    await logout(token);
+ 
+      await logout(token);
+    
   };
 
   const initials = user.full_name
@@ -120,7 +124,7 @@ export default function SideBar() {
       setAccountDropdownOpen(false);
     }, 1000);
   };
-
+if(isLogout) return <ConfirmModal onClose={() => setIsLogout(false)} title="Logout" description='Sure u wanna logout' onDelete={handleLogout}/>
   return (
     <div className="flex flex-col w-64 h-screen bg-black border-r border-zinc-900 py-4 font-sans antialiased selection:bg-zinc-800 selection:text-white">
       <SidebarHeader closeSidebar={closeSidebar} />
@@ -147,7 +151,7 @@ export default function SideBar() {
         user={user}
         setCurrentPath={setCurrentPath}
         navigate={navigate}
-        handleLogout={handleLogout}
+        setIsLogout={setIsLogout}
       />
     </div>
   );

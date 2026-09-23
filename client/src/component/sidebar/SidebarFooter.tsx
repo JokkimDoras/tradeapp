@@ -1,11 +1,12 @@
 import { IoIosLogOut } from "react-icons/io";
+import type{ Dispatch,SetStateAction } from "react";
 
 interface SidebarFooterProps {
   initials: string;
   user: any;
   setCurrentPath: (path: string) => void;
   navigate: any;
-  handleLogout: (e: any) => void;
+  setIsLogout:Dispatch<SetStateAction<boolean>>
 }
 
 export default function SidebarFooter({
@@ -13,7 +14,8 @@ export default function SidebarFooter({
   user,
   setCurrentPath,
   navigate,
-  handleLogout,
+  setIsLogout,
+
 }: SidebarFooterProps) {
   return (
     <div className="px-4 pt-4 border-t border-zinc-900">
@@ -38,7 +40,7 @@ export default function SidebarFooter({
         <div className="absolute ml-47">
           <IoIosLogOut
             size={20}
-            onClick={handleLogout}
+            onClick={() => setIsLogout(true)}
             className="hover:text-red-800"
           />
         </div>

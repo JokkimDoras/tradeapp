@@ -5,7 +5,7 @@
     title:string;
     description:ReactNode;
     loading?:boolean;
-    onDelete:() => void;
+    onDelete:(e?:any) => Promise<void>;
     onClose:() => void;
 
 }

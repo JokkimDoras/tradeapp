@@ -82,7 +82,6 @@ export default function SideBar() {
     : "TV";
 
     useEffect(() => {
-      console.log('from the sidebar',accounts)
       if (!selectedAccount?.id){
         setSelectedAccount(accounts[0])
       }

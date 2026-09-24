@@ -32,7 +32,7 @@ export default function TradeJournal() {
   useEffect(() => {
     if (!selectedAccount?.id || selectedAccount.id === "undefined") return;
     fetchTradesData(selectedAccount.id).catch(() => undefined);
-  }, [fetchTradesData, selectedAccount?.id]);
+  }, [selectedAccount?.id]);
 
   useEffect(() => {
     const stored = localStorage.getItem(storageKey);

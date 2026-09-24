@@ -82,7 +82,10 @@ export default function SideBar() {
     : "TV";
 
     useEffect(() => {
-      if (!selectedAccount?.id) return;
+      console.log('from the sidebar',accounts)
+      if (!selectedAccount?.id){
+        setSelectedAccount(accounts[0])
+      }
     
       const pages = ["dashboard", "history", "calendar", "analytics"];
     
@@ -91,11 +94,12 @@ export default function SideBar() {
       );
     
       if (currentPage) {
-        navigate(`/${currentPage}/${selectedAccount.id}`);
+        navigate(`/${currentPage}/${selectedAccount?.id}`);
       }
-    }, [selectedAccount?.id, location.pathname, navigate]);
+    }, [selectedAccount?.id, location.pathname, navigate,accounts]);
 
   const handleNavigation = (item: { id: number; name: string; path: string }) => {
+    if(!selectedAccount?.id) return;
     if (
       item.name === "Dashboard" ||
       item.name === "History"   ||

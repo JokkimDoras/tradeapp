@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { useSidebar } from "../hooks/useSidebar";
-import { useAnalytics } from "../hooks/useAnalytics";
+import { useSidebar } from "@hooks/useSidebar";
+import { useAnalytics } from "@hooks/useAnalytics";
 import Navbar from "../component/ui/NavBar";
 import AnalyticsSkeleton from "../component/skeltons/AnalyticsSkelton";
 import MetricCardGrid from "../component/analytics/MetricCardGrid";
@@ -9,7 +9,7 @@ import RiskAnalysisMatrix from "../component/analytics/RiskAnalysisMatrix";
 import type { Summary } from "../types/analytics.types";
 import { useLocation } from "react-router";
 import { FiActivity, FiArrowUpRight, FiArrowDownRight } from "react-icons/fi";
-import useAccount from "../hooks/useAccount";
+import useAccount from "@hooks/useAccount";
 
 // interface AnalyticsSummary {
 //   total_trades: number;

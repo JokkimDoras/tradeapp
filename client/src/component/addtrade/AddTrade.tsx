@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
-import { useSidebar } from "../../hooks/useSidebar";
+import { useSidebar } from "@hooks/useSidebar";
 import AssetSelectionPanel from "./AssetSelectionPanel";
 import PricingPanel from "./PricingPanel";
 import RiskConfigurationPanel from "./RiskConfigurationPanel";
-import useTrade from "../../hooks/useTrade";
+import useTrade from "@hooks/useTrade";
 import { toast } from "sonner";
-import { useUser } from "../../hooks/useUser";
-import useScreenshot from "../../hooks/useScreenshot";
+import { useUser } from "@hooks/useUser";
+import useScreenshot from "@hooks/useScreenshot";
 import { IoCloseCircle } from "react-icons/io5";
 import { useParams } from "react-router";
 import { FiCamera, FiMenu, FiX } from "react-icons/fi";

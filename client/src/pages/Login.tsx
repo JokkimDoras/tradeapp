@@ -1,9 +1,9 @@
 import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router";
-import useAuth from "../hooks/useAuth";
+import useAuth from "@hooks/useAuth";
 import { toast } from "sonner";
 import { useNavigate } from "react-router";
-import { useUser } from "../hooks/useUser";
+import { useUser } from "@hooks/useUser";
 // import { createClient } from "@supabase/supabase-js";
 
 // export const supabase = createClient(

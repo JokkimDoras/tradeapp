@@ -1,6 +1,6 @@
 // src/component/dashboard/AccountsOverview.tsx
-import useAccount from "../../hooks/useAccount";
-import useTrade from "../../hooks/useTrade";
+import useAccount from "@hooks/useAccount";
+import useTrade from "@hooks/useTrade";
 import { useMemo } from "react";
 
 export default function AccountsOverview() {

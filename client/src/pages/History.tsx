@@ -1,15 +1,15 @@
-import { useSidebar } from "../hooks/useSidebar";
+import { useSidebar } from "@hooks/useSidebar";
+import useTrade from "@hooks/useTrade";
+import useAccount from "@hooks/useAccount";
+import { useUser } from "@hooks/useUser";
 import AddTrade from "../component/addtrade/AddTrade";
 import { useState, useMemo, useEffect,useCallback } from "react";
-import useTrade from "../hooks/useTrade";
 import Navbar from "../component/ui/NavBar";
 import HistoryToolbar from "../component/history/HistoryToolbar";
 import HistoryRow from "../component/history/HistoryRow";
 import ExitPriceModal from "../component/history/ExitPriceModal";
 import { toast } from "sonner";
 import { useNavigate } from "react-router";
-import useAccount from "../hooks/useAccount";
-import { useUser } from "../hooks/useUser";
 import HistorySkeleton from "../component/skeltons/HistorySkelton";
 import ConfirmModal from "../component/ui/ConfirmModal";
 

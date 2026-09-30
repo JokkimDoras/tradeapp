@@ -7,7 +7,7 @@ import {
 } from "react";
 import { createTradeApi, updateTradeApi,getTradeApi, deleteAllTradeApi } from "../services/tradeApi";
 import { deleteTradeApi, type TradeFormData } from "../services/tradeApi";
-import { useAnalytics } from "../hooks/useAnalytics";
+import { useAnalytics } from "@hooks/useAnalytics";
 import type { TradeDetails } from "../types/trade.types";
 
 interface LoadingState {

@@ -1,5 +1,5 @@
-import { useSidebar } from "../hooks/useSidebar";
-import { useUser } from "../hooks/useUser";
+import { useSidebar } from "@hooks/useSidebar";
+import { useUser } from "@hooks/useUser";
 import Navbar from "../component/ui/NavBar";
 
 export default function Profile() {

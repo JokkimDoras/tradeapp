@@ -1,6 +1,6 @@
 import { useState,useRef } from "react";
 import { Link, useNavigate } from "react-router";
-import useAuth from "../hooks/useAuth";
+import useAuth from "@hooks/useAuth";
 import { toast } from "sonner";
 
 export default function Register() {

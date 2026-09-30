@@ -10,12 +10,12 @@ import {
 import { FaRegNewspaper } from "react-icons/fa";
 import { CiCalendarDate } from "react-icons/ci";
 import { useNavigate, useLocation } from "react-router";
-import { useSidebar } from "../../hooks/useSidebar";
-import { useUser } from "../../hooks/useUser";
-import useAuth from "../../hooks/useAuth";
+import { useSidebar } from "@hooks/useSidebar";
+import { useUser } from "@hooks/useUser";
+import useAuth from "@hooks/useAuth";
 import { getToken } from "../../utils/auth";
 import { useState, useRef, useEffect } from "react";
-import useAccount from "../../hooks/useAccount";
+import useAccount from "@hooks/useAccount";
 import SidebarHeader from "./SidebarHeader";
 import AccountDropdown from "./AccountDropdown";
 import SidebarNavigation from "./SidebarNavigation";

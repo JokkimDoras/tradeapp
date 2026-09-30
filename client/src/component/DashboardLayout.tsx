@@ -1,10 +1,10 @@
 import { Outlet } from "react-router";
 import SideBar from "./sidebar/SideBar";
-import { useSidebar } from "../hooks/useSidebar";
+import { useSidebar } from "@hooks/useSidebar";
 import { SidebarProvider } from "../context/SidebarContext";
 import TradeProvider from "../context/TradeContext";
 import AccountProvider from "../context/AccountContext";
-import useAccount from "../hooks/useAccount";
+import useAccount from "@hooks/useAccount";
 import AddAccount from "./addAccount/AddAccount";
 
 function DashboardLayoutContent() {

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useSidebar } from "../hooks/useSidebar";
+import { useSidebar } from "@hooks/useSidebar";
 import TradingSetting from "../component/settings/TradingSetting";
 import GeneralSetting from "../component/settings/GeneralSetting";
 import SecuritySetting from "../component/settings/SecuritySetting";

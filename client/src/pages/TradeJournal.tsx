@@ -1,9 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
 import { ChevronLeft, ChevronRight, ClipboardList, Save, Target } from "lucide-react";
 import Navbar from "../component/ui/NavBar";
-import { useSidebar } from "../hooks/useSidebar";
-import useAccount from "../hooks/useAccount";
-import useTrade from "../hooks/useTrade";
+import { useSidebar } from "@hooks/useSidebar";
+import useAccount from "@hooks/useAccount";
+import useTrade from "@hooks/useTrade";
 
 type JournalEntry = { focus: string; reflection: string; rating: number; updatedAt: string };
 

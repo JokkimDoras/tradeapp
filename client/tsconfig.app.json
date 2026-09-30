@@ -7,6 +7,12 @@
     "types": ["vite/client"],
     "skipLibCheck": true,
     "noImplicitAny": true,
+    "baseUrl": ".",
+    "ignoreDeprecations": "6.0",
+    "paths": {
+     "@hooks/*":["src/hooks/*"],
+     "@pages/*":["src/pages/*"]
+    },
 
     /* Bundler mode */
     "moduleResolution": "bundler",

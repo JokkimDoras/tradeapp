@@ -1,6 +1,6 @@
 import { MdDeleteOutline } from "react-icons/md";
 import { useNavigate } from "react-router";
-import useAccount from "../../hooks/useAccount";
+import useAccount from "@hooks/useAccount";
 
 interface AccountCardProps {
   account: any;

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { toast } from "sonner";
-import useProfile from "../../hooks/useUserSettings";
-import { useUser } from "../../hooks/useUser";
+import useProfile from "@hooks/useUserSettings";
+import { useUser } from "@hooks/useUser";
 
 export default function TradingSetting() {
   const { updateSettings, loading, defaultSetting } = useProfile();

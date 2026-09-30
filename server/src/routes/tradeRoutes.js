@@ -5,6 +5,7 @@ const { addTrade,getTrade,deleteTrade, updateTrade,getTradingAnalytics,deleteAll
 
 router.post('/',validateAddTrade,addTrade)
 router.get('/:id',validateGetTrade,getTrade)
+// router.get('/trade/:id',)
 router.delete('/:id',validateDeleteTrade,deleteTrade)
 router.put('/:id',validateUpdateTrade,updateTrade)
 router.get('/dashboard/stats/:id',validateStats,getTradingAnalytics)

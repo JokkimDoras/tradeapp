@@ -4,14 +4,11 @@ import useAuth from "@hooks/useAuth";
 import { toast } from "sonner";
 import { useNavigate } from "react-router";
 import { useUser } from "@hooks/useUser";
-// import { createClient } from "@supabase/supabase-js";
 
-// export const supabase = createClient(
-//   import.meta.env.VITE_SUPABASE_URL,
-//   import.meta.env.VITE_SUPABASE_ANON_KEY
-// );
+
 
 export default function Login() {
+  
   const [formData, setFormData] = useState({ email: "", password: "" });
   const inputRef = useRef<HTMLInputElement | null>(null)
   const emailRef = useRef<HTMLInputElement | null>(null);
@@ -93,6 +90,9 @@ export default function Login() {
               ref={emailRef}
                 type="email"
                 name="email"
+                // {...register('email'),{
+                //   required:true
+                // }}
                 required
                 placeholder="you@example.com"
                 value={formData.email}
@@ -111,6 +111,9 @@ export default function Login() {
               <input
                 type="password"
                 name="password"
+                // {...register('password'),{
+                //   required:true
+                // }}
                 ref={inputRef}
                 required
                 placeholder="••••••••"

@@ -5,7 +5,7 @@ import {
   type Dispatch,
   type SetStateAction,
 } from "react";
-import { createTradeApi, updateTradeApi,getTradeApi, deleteAllTradeApi } from "../services/tradeApi";
+import { createTradeApi, updateTradeApi, getTradeApi, deleteAllTradeApi } from "../services/tradeApi";
 import { deleteTradeApi, type TradeFormData } from "../services/tradeApi";
 import { useAnalytics } from "@hooks/useAnalytics";
 import type { TradeDetails } from "../types/trade.types";
@@ -15,20 +15,20 @@ interface LoadingState {
   addTrade: boolean;
   updatingTradeId: number | null;
   deletingTradeId: number | null;
-      deleteAllTrade:boolean,
+  deleteAllTrade: boolean,
 
 }
 
 interface TradeContextType {
-  trades: any[];
+  trades: Trade[];
   setTrades: Dispatch<SetStateAction<any[]>>;
   addTrade: (formData: any) => Promise<void>;
-  fetchTradesData: (accountId: string) => Promise<void>; 
+  fetchTradesData: (accountId: string) => Promise<void>;
   removeTrade: (idToDel: number) => Promise<void>;
   updateTrade: (idToUpdate: number, formData: any) => Promise<TradeDetails>;
-  deleteAllTrade:(accID:string) => Promise<void>
+  deleteAllTrade: (accID: string) => Promise<void>
   loading: LoadingState;
-  setLoading:any;
+  setLoading: any;
 }
 
 export const TradeContext = createContext<TradeContextType | null>(null);
@@ -36,22 +36,45 @@ export const TradeContext = createContext<TradeContextType | null>(null);
 interface TradeProviderProps {
   children: ReactNode;
 }
+interface Trade {
+  account_id: string,
+  close_date: null
+  created_at: string
+  currency_pair: string
+  entry_price: number
+  exit_price: null
+  id: string | number
+  lot_size: number
+  notes: string
+  pips: number
+  profit_loss: number
+  result: null
+  risk_percentage: number
+  risk_reward_ratio: number
+  status: string
+  stop_loss: number
+  strategy: string
+  take_profit: number
+  trade_date: string
+  trade_type: string
+  updated_at: string
+  user_id: string
+}
 
 export default function TradeProvider({ children }: TradeProviderProps) {
-  const [trades, setTrades] = useState<any[]>([]);
-
+  const [trades, setTrades] = useState<Trade[]>([]);
   const [loading, setLoading] = useState<LoadingState>({
     fetchTrades: false,
     addTrade: false,
     updatingTradeId: null,
     deletingTradeId: null,
-    deleteAllTrade:false,
+    deleteAllTrade: false,
   });
   const [currentAccountId, setCurrentAccountId] = useState<string | null>(null);
 
   const { setIsOld } = useAnalytics();
 
-  
+
 
   const fetchTradesData = async (accountId: string) => {
     if (currentAccountId === accountId && trades.length > 0) {
@@ -149,21 +172,21 @@ export default function TradeProvider({ children }: TradeProviderProps) {
       throw err;
     }
   };
-  const deleteAllTrade = async(acc_id:string | null) => {
-    try{
+  const deleteAllTrade = async (acc_id: string | null) => {
+    try {
       setLoading((prev) => ({
         ...prev,
-        deleteAllTrade:true
+        deleteAllTrade: true
       }))
 
-     const res = await deleteAllTradeApi(acc_id)
-     return res
-    }catch(err){
+      const res = await deleteAllTradeApi(acc_id)
+      return res
+    } catch (err) {
       throw err
-    }finally{
+    } finally {
       setLoading((prev) => ({
         ...prev,
-        deleteAllTrade:false
+        deleteAllTrade: false
       }))
     }
   }

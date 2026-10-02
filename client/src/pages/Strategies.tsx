@@ -12,7 +12,7 @@ export default function StrategiesPage() {
     const statsMap: Record<string, { name: string; total: number; wins: number; pnl: number }> = {};
   
     trades.forEach((trade) => {
-      const stratName = trade.strategy || trade.strategyName || trade.setup;
+      const stratName = trade.strategy
       if (!stratName || stratName.trim() === "") return;
   
       if (!statsMap[stratName]) {
@@ -25,16 +25,16 @@ export default function StrategiesPage() {
       }
   
       statsMap[stratName].total += 1;
+      // trade.profit_loss
+      // trade.
   
-      const pnlValue = trade.pnl ?? trade.netPnL ?? trade.net_pnl ?? trade.profit_loss ?? trade.amount ?? 0;
+      const pnlValue = trade.profit_loss  ?? 0;
       statsMap[stratName].pnl += Number(pnlValue);
   
       const isWin = 
-        trade.isWin === true || 
-        trade.is_win === true ||
+       
         trade.status === "WIN" || 
         trade.status === "Win" ||
-        trade.outcome === "WIN" ||
         Number(pnlValue) > 0;
   
       if (isWin) {

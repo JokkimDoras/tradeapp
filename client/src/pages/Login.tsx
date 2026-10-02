@@ -1,38 +1,38 @@
-import { useState, useEffect, useRef } from "react";
+import {  useEffect } from "react";
 import { Link } from "react-router";
 import useAuth from "@hooks/useAuth";
 import { toast } from "sonner";
 import { useNavigate } from "react-router";
 import { useUser } from "@hooks/useUser";
+import { useForm } from "react-hook-form";
 
 
-
+  type formField = {
+    email:string;
+    password:string;
+  }
 export default function Login() {
   
-  const [formData, setFormData] = useState({ email: "", password: "" });
-  const inputRef = useRef<HTMLInputElement | null>(null)
-  const emailRef = useRef<HTMLInputElement | null>(null);
+  const savedEmail = localStorage.getItem("email") ?? '';
   const {user} = useUser()
   const { login, loading, error } = useAuth();
   const navigate = useNavigate();
-
-  useEffect(() => {
-    try {
-      const savedEmail = localStorage.getItem("email");
-      if (savedEmail) setFormData((prev) => ({ ...prev, email: savedEmail }));
-    } catch (err) {
-      console.warn('localStorage not available');
+  const { register,handleSubmit,setFocus} = useForm<formField>({
+    defaultValues:{
+      email:savedEmail 
     }
-  }, []);
+  })
 
-  useEffect(() => emailRef.current?.focus(),[]);
+ 
+
+  useEffect(() => setFocus('password'),[]);
 
 
 
-  const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
+  // const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   const { name, value } = e.target;
+  //   setFormData((prev) => ({ ...prev, [name]: value }));
+  // };
 
  const handleGoogleLogin = async () => {
   // const { error } = await supabase.auth.signInWithOAuth({
@@ -44,16 +44,16 @@ export default function Login() {
   // }
   return;
 };
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!formData.email || !formData.password) return;
-    if (formData.password.length < 8) {
-      toast.error('Password contain atleast 8 char')
-      inputRef.current?.focus();
-      return
-    }
+  const handleLogin = async (data:formField) => {
+    // e.preventDefault();
+    // if (!formData.email || !formData.password) return;
+    // if (formData.password.length < 8) {
+    //   toast.error('Password contain atleast 8 char')
+    //   inputRef.current?.focus();
+    //   return
+    // }
     try {
-      await login(formData);
+      await login({email:data.email,password:data.password});
       localStorage.removeItem('email')
       localStorage.removeItem('selectedAccount')
       toast.message(`Welcome Back ${user.full_name}`)
@@ -77,7 +77,7 @@ export default function Login() {
             <p className="text-sm text-zinc-500">Sign in to your TradeVault account.</p>
           </div>
 
-          <form onSubmit={handleLogin} className="flex flex-col gap-4">
+          <form onSubmit={handleSubmit(handleLogin)} className="flex flex-col gap-4">
             {error && (
               <div className="text-xs text-red-400 bg-red-500/10 border border-red-500/20 rounded-lg px-4 py-3">
                 {error}
@@ -87,16 +87,14 @@ export default function Login() {
             <div className="flex flex-col gap-1.5">
               <label className="text-xs font-medium text-zinc-400">Email</label>
               <input
-              ref={emailRef}
                 type="email"
-                name="email"
-                // {...register('email'),{
-                //   required:true
-                // }}
+                {...register('email',{
+                  required:'Email is required to login'
+                })}
                 required
                 placeholder="you@example.com"
-                value={formData.email}
-                onChange={handleInput}
+                // value={formData.email}
+                // onChange={handleInput}
                 className="h-9 bg-zinc-950 border border-zinc-800 hover:border-zinc-700 focus:border-zinc-600 rounded-lg px-3 text-sm text-white placeholder-zinc-700 focus:outline-none transition-all"
               />
             </div>
@@ -110,15 +108,13 @@ export default function Login() {
               </div>
               <input
                 type="password"
-                name="password"
-                // {...register('password'),{
-                //   required:true
-                // }}
-                ref={inputRef}
+                {...register('password',{
+                  required:'Password is Required to Login'
+                })}
                 required
                 placeholder="••••••••"
-                value={formData.password}
-                onChange={handleInput}
+                // value={formData.password}
+                // onChange={handleInput}
                 className="h-9 bg-zinc-950 border border-zinc-800 hover:border-zinc-700 focus:border-zinc-600 rounded-lg px-3 text-sm text-white placeholder-zinc-700 focus:outline-none transition-all"
               />
             </div>

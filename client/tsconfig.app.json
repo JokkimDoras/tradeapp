@@ -11,7 +11,8 @@
     "ignoreDeprecations": "6.0",
     "paths": {
      "@hooks/*":["src/hooks/*"],
-     "@pages/*":["src/pages/*"]
+     "@pages/*":["src/pages/*"],
+     "@config/*":["src/config/*"]
     },
 
     /* Bundler mode */

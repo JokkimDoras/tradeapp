@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { ArrowUpRight, Menu, X } from 'lucide-react';
-import { Link, useNavigate } from 'react-router';
-
+import { Link } from 'react-router';
+import useAppNavigation from '@hooks/useAppNavigation';
+import { getRoute } from '@config/routes';
 // const quotes = [
 //   {
 //     text: "It's not about predicting what the market will do next. It's about protecting your capital when it does what you didn't expect.",
@@ -28,11 +29,11 @@ import { Link, useNavigate } from 'react-router';
 export default function TradeVaultLanding() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [emailInput, setEmailInput] = useState("");
-  const navigate = useNavigate();
+  const navigate = useAppNavigation();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    navigate('/login');
+    navigate('LOGIN');
   };
 
   return (
@@ -50,11 +51,12 @@ export default function TradeVaultLanding() {
           </nav>
 
           <div className="hidden md:flex items-center gap-4">
-            <Link to="/login" className="text-sm text-zinc-400 hover:text-white transition-colors">
+            <Link to={getRoute('LOGIN')} className="text-sm text-zinc-400 hover:text-white transition-colors">
               Sign in
             </Link>
+            {/* <button onClick={() =>navigate('LOGIN')}>Sign in</button> */}
             <Link
-              to="/register"
+              to={getRoute('REGISTER')}
               className="h-9 px-4 bg-white hover:bg-zinc-200 text-black text-sm font-medium rounded-lg transition-all flex items-center"
             >
               Get started
@@ -317,7 +319,7 @@ export default function TradeVaultLanding() {
                   </li>
                 ))}
               </ul>
-              <Link to="/register" className="h-9 border border-zinc-800 hover:border-zinc-600 hover:bg-zinc-900 text-white text-sm rounded-lg transition-all flex items-center justify-center mt-auto">
+              <Link to={getRoute('REGISTER')} className="h-9 border border-zinc-800 hover:border-zinc-600 hover:bg-zinc-900 text-white text-sm rounded-lg transition-all flex items-center justify-center mt-auto">
                 Get started free
               </Link>
             </div>

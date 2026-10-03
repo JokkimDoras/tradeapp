@@ -5,7 +5,7 @@ import { toast } from "sonner";
 import { useNavigate } from "react-router";
 import { useUser } from "@hooks/useUser";
 import { useForm } from "react-hook-form";
-
+import { getRoute } from '@config/routes'
 
   type formField = {
     email:string;
@@ -148,7 +148,7 @@ export default function Login() {
 
           <p className="text-center text-xs text-zinc-600">
             Don't have an account?{" "}
-            <Link to="/register" className="text-zinc-400 hover:text-white transition-colors">
+            <Link to={getRoute('REGISTER')} className="text-zinc-400 hover:text-white transition-colors">
               Sign up
             </Link>
           </p>

@@ -1,6 +1,6 @@
 import { MdDeleteOutline } from "react-icons/md";
-import { useNavigate } from "react-router";
 import useAccount from "@hooks/useAccount";
+import {useAppNavigation} from "@hooks/useAppNavigation";
 
 interface AccountCardProps {
   account: any;
@@ -14,7 +14,7 @@ export default function AccountCard({
   setIsDeleteModalOpen,
 }: AccountCardProps) {
 
-    const navigate = useNavigate();
+    const navigate = useAppNavigation()
     const { setSelectedAccount } = useAccount();
 
     const handleMultiTask = () => {
@@ -27,7 +27,10 @@ export default function AccountCard({
             starting_balance: account?.starting_balance,
         })
         localStorage.setItem('slectedAccount',account)
-        navigate(`/dashboard/${account.id}`)
+        // navigate(`/dashboard/${account.id}`)
+        navigate('DASHBOARD',{
+          accId:account.id
+        })
     }
 
   return (

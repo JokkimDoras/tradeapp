@@ -1,7 +1,7 @@
 import { createContext, useEffect, useState } from "react";
 import { getUser } from "../services/userApi";
 import type { User,AuthContextType } from "../types/user.types";
-import useAppNavigation from "@hooks/useAppNavigation";
+import {useAppNavigation} from "@hooks/useAppNavigation";
 
 export const AuthContext = createContext<AuthContextType | undefined>(
   undefined

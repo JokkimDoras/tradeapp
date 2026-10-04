@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { ArrowUpRight, Menu, X } from 'lucide-react';
 import { Link } from 'react-router';
-import useAppNavigation from '@hooks/useAppNavigation';
+import {useAppNavigation} from '@hooks/useAppNavigation';
 import { getRoute } from '@config/routes';
 // const quotes = [
 //   {

@@ -13,6 +13,7 @@ import { useAnalytics } from "@hooks/useAnalytics";
 import useAccount from "@hooks/useAccount";
 import { useUser } from "@hooks/useUser";
 import { useNavigate } from "react-router";
+// import { useBackNavigation } from "@hooks/useBackNavigation";
 // import useMediaQuery from "../hooks/useMediaQuery";
 // import { useLocation } from "react-router";
 
@@ -27,7 +28,7 @@ export default function Dashboard() {
   const recentTrades = trades.slice(0, 5);
   const navigate = useNavigate();
 
-  
+  // useBackNavigation(formState,() => setFormState(false))
 
   useEffect(() => {
 const handleKeyDown = (e:KeyboardEvent) => {

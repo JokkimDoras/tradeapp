@@ -12,6 +12,7 @@ import { toast } from "sonner";
 import { useNavigate } from "react-router";
 import HistorySkeleton from "../component/skeltons/HistorySkelton";
 import ConfirmModal from "../component/ui/ConfirmModal";
+import { PageHeader } from "../component/ui/PageHeader";
 
 export default function History() {
   const { toggleSidebar } = useSidebar();
@@ -134,7 +135,9 @@ const handleOpenCompleteModal = useCallback((id: number) => {
 
   return (
     <div className="flex flex-col flex-1 min-h-screen bg-black text-zinc-100 font-sans antialiased relative selection:bg-zinc-800 selection:text-white">
-      <Navbar toggleSidebar={toggleSidebar} >History</Navbar>
+      <Navbar toggleSidebar={toggleSidebar} >
+        <PageHeader/>
+        </Navbar>
 
       <div className="flex flex-col gap-8 w-full max-w-7xl mx-auto flex-1 p-6 pb-24">
         

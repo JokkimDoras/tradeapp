@@ -281,7 +281,7 @@ export default function AddTrade({ setIsOpen, editData }: AddTradeProps) {
 
 
   if(deleteModal) {
- return <ConfirmModal loading={imageDeleteLoading}  title="Delete Screenshot" description='This will permantely delete the screenshote of your Trade' onClose={() => setDeleteModal(false)} onDelete={() =>handleDeleteScreenshot(imageDeleteDetails)}/>
+ return <ConfirmModal type="DELETE" loading={imageDeleteLoading}  title="Delete Screenshot" description='This will permantely delete the screenshote of your Trade' onClose={() => setDeleteModal(false)} onDelete={() =>handleDeleteScreenshot(imageDeleteDetails)}/>
   }
   return (
     <div className="flex flex-col flex-1 min-h-screen bg-black text-zinc-100 font-sans antialiased selection:bg-zinc-800 selection:text-white">

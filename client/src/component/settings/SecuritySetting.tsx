@@ -27,7 +27,7 @@ export default function SecuritySetting() {
     }
   }
 
-  if (deleteModal) return <ConfirmModal title="Delete Entire Account" description='This will delete the entire Account and All the Trade and Account Details!!!' onClose={() => setDeleteModal(false)} onDelete={handleDelete} loading={loading} />
+  if (deleteModal) return <ConfirmModal type="DELETE" title="Delete Entire Account" description='This will delete the entire Account and All the Trade and Account Details!!!' onClose={() => setDeleteModal(false)} onDelete={handleDelete} loading={loading} />
 
 
   return (

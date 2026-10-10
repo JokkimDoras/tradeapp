@@ -127,7 +127,7 @@ export default function SideBar() {
       setAccountDropdownOpen(false);
     }, 1000);
   };
-if(isLogout) return <ConfirmModal onClose={() => setIsLogout(false)} title="Logout" description='Sure u wanna logout' onDelete={handleLogout}/>
+if(isLogout) return <ConfirmModal type="LOGOUT" onClose={() => setIsLogout(false)} title="Logout" description='Sure u wanna logout' onDelete={handleLogout}/>
   return (
     <div className="flex flex-col w-64 h-screen bg-black border-r border-zinc-900 py-4 font-sans antialiased selection:bg-zinc-800 selection:text-white">
       <SidebarHeader closeSidebar={closeSidebar} />

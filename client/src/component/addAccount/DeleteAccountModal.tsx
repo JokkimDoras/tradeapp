@@ -35,6 +35,7 @@ function DeleteAccountModal({
     return (
       <ConfirmModal
       title="Delete Workspace Account"
+      type="DELETE"
       description={
           <>
               Are you sure you want to permanently delete{" "}

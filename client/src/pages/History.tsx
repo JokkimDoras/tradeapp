@@ -125,6 +125,7 @@ const handleOpenCompleteModal = useCallback((id: number) => {
 
   if(loading.fetchTrades) return <HistorySkeleton/>
   if(deleteAllModal) return <ConfirmModal 
+  type="DELETE"
   title="Delete All Trades" 
   description='This Action will Delete all the trade in the Particular Account'
   onClose={() => setDeleteAllModal(false)}

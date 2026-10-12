@@ -15,17 +15,18 @@ import ConfirmModal from "../component/ui/ConfirmModal";
 
 export default function History() {
   const { toggleSidebar } = useSidebar();
-  const { trades, removeTrade, updateTrade, fetchTradesData,  loading,deleteAllTrade,setTrades } = useTrade(); 
-  const { selectedAccount} = useAccount();
-  
+  const { trades, removeTrade, updateTrade, fetchTradesData, loading, deleteAllTrade, setTrades } = useTrade();
+  const { selectedAccount } = useAccount();
+
   const navigate = useNavigate();
   const { user } = useUser();
-  const [isChecked,setIsChecked] = useState(false);
+  const [isChecked, setIsChecked] = useState(false);
   const [formState, setFormState] = useState<boolean | any>(false);
   const [deleteingId, setDeleleteingId] = useState<null | number>(null);
   const [searchQuery, setSearchQuery] = useState<string>("");
+  const [debouncedSearchQuery, setDebouncedSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
-  const [deleteAllModal,setDeleteAllModal] = useState(false)
+  const [deleteAllModal, setDeleteAllModal] = useState(false)
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeTradeToClose, setActiveTradeToClose] = useState<any>(null);
@@ -34,10 +35,19 @@ export default function History() {
     if (!user || !selectedAccount?.id || selectedAccount.id === "undefined") {
       return;
     }
-  
+
     fetchTradesData(selectedAccount.id);
-  
-  }, [user, selectedAccount?.id]); 
+
+  }, [user, selectedAccount?.id]);
+
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearchQuery(searchQuery);
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
 
   const handleDelete = useCallback(async (idToDel: number) => {
     try {
@@ -52,14 +62,14 @@ export default function History() {
   }, [removeTrade]);
 
 
-const handleOpenCompleteModal = useCallback((id: number) => {
-  const targetTrade = trades.find((t: any) => t.id === id);
+  const handleOpenCompleteModal = useCallback((id: number) => {
+    const targetTrade = trades.find((t: any) => t.id === id);
 
-  if (targetTrade) {
-    setActiveTradeToClose(targetTrade);
-    setIsModalOpen(true);
-  }
-}, [trades]);
+    if (targetTrade) {
+      setActiveTradeToClose(targetTrade);
+      setIsModalOpen(true);
+    }
+  }, [trades]);
 
   const handleFinalizeCompletion = async (finalExitPrice: number) => {
     if (!activeTradeToClose) return;
@@ -90,25 +100,31 @@ const handleOpenCompleteModal = useCallback((id: number) => {
 
   const filteredTrades = useMemo(() => {
     return trades.filter((trade: any) => {
-      const matchesSearch = trade.currency_pair?.toLowerCase().includes(searchQuery.toLowerCase());
-      const matchesStatus = statusFilter === "all" || trade.status?.toLowerCase() === statusFilter.toLowerCase();
+      const matchesSearch = trade.currency_pair
+        ?.toLowerCase()
+        .includes(debouncedSearchQuery.toLowerCase());
+
+      const matchesStatus =
+        statusFilter === "all" ||
+        trade.status?.toLowerCase() === statusFilter.toLowerCase();
+
       return matchesSearch && matchesStatus;
     });
-  }, [trades, searchQuery, statusFilter]);
+  }, [trades, debouncedSearchQuery, statusFilter]);
 
-  const handleDeleteAllTrade = async() => {
-    try{
+  const handleDeleteAllTrade = async () => {
+    try {
       if (!selectedAccount?.id) {
         toast.warning('Failed to Delete')
-  return;
+        return;
 
-}
+      }
       await deleteAllTrade(selectedAccount?.id)
-    setDeleteAllModal(false)
-    setTrades([])
-    toast.success('All Trade Deleted Successfully')
-    setIsChecked(false)
-    }catch(err){
+      setDeleteAllModal(false)
+      setTrades([])
+      toast.success('All Trade Deleted Successfully')
+      setIsChecked(false)
+    } catch (err) {
       toast.warning('Failed To Delete')
       throw err
     }
@@ -116,29 +132,29 @@ const handleOpenCompleteModal = useCallback((id: number) => {
 
   if (formState) {
     return (
-      <AddTrade 
-        setIsOpen={setFormState} 
-        editData={typeof formState === "object" ? formState : null} 
+      <AddTrade
+        setIsOpen={setFormState}
+        editData={typeof formState === "object" ? formState : null}
       />
     );
   }
 
-  if(loading.fetchTrades) return <HistorySkeleton/>
-  if(deleteAllModal) return <ConfirmModal 
-  type="DELETE"
-  title="Delete All Trades" 
-  description='This Action will Delete all the trade in the Particular Account'
-  onClose={() => setDeleteAllModal(false)}
-  onDelete={handleDeleteAllTrade}
-  loading={loading.deleteAllTrade}
-   />
+  if (loading.fetchTrades) return <HistorySkeleton />
+  if (deleteAllModal) return <ConfirmModal
+    type="DELETE"
+    title="Delete All Trades"
+    description='This Action will Delete all the trade in the Particular Account'
+    onClose={() => setDeleteAllModal(false)}
+    onDelete={handleDeleteAllTrade}
+    loading={loading.deleteAllTrade}
+  />
 
   return (
     <div className="flex flex-col flex-1 min-h-screen bg-black text-zinc-100 font-sans antialiased relative selection:bg-zinc-800 selection:text-white">
       <Navbar toggleSidebar={toggleSidebar} >History</Navbar>
 
       <div className="flex flex-col gap-8 w-full max-w-7xl mx-auto flex-1 p-6 pb-24">
-        
+
         <div className="flex flex-col gap-2 border-b border-zinc-900 pb-5">
           <h1 className="text-xl font-mono font-bold tracking-wider text-white uppercase">
             Archive / Execution Logs
@@ -148,7 +164,7 @@ const handleOpenCompleteModal = useCallback((id: number) => {
           </p>
         </div>
 
-        <HistoryToolbar 
+        <HistoryToolbar
           searchQuery={searchQuery}
           setSearchQuery={setSearchQuery}
           statusFilter={statusFilter}
@@ -158,19 +174,19 @@ const handleOpenCompleteModal = useCallback((id: number) => {
         <div className="w-full flex-1 flex flex-col">
           <div className="flex justify-between ">
 
-          <span className="text-xs font-mono text-zinc-400 uppercase tracking-widest font-semibold mb-4">
-            Sequence Registry ({filteredTrades.length})
-          </span>
-         <div className="text-xs flex gap-3 font-mono text-zinc-400 uppercase tracking-widest font-semibold mb-4">
-          <input className="" checked={isChecked} onChange={() => setIsChecked(!isChecked)} type="checkbox"/>
-         {isChecked ?
-          <button onClick={() => setDeleteAllModal(true)} className="text-xs border-red-500 cursor-pointer hover:underline font-mono text-red-400 uppercase tracking-widest font-semibold">
-            Delete all
-            </button> 
-          :
-           <span className="cursor-pointer" onClick={() => setIsChecked(true)}>Select All</span>
-           }
-         </div>
+            <span className="text-xs font-mono text-zinc-400 uppercase tracking-widest font-semibold mb-4">
+              Sequence Registry ({filteredTrades.length})
+            </span>
+            <div className="text-xs flex gap-3 font-mono text-zinc-400 uppercase tracking-widest font-semibold mb-4">
+              <input className="" checked={isChecked} onChange={() => setIsChecked(!isChecked)} type="checkbox" />
+              {isChecked ?
+                <button onClick={() => setDeleteAllModal(true)} className="text-xs border-red-500 cursor-pointer hover:underline font-mono text-red-400 uppercase tracking-widest font-semibold">
+                  Delete all
+                </button>
+                :
+                <span className="cursor-pointer" onClick={() => setIsChecked(true)}>Select All</span>
+              }
+            </div>
           </div>
           {filteredTrades.length === 0 ? (
             <div className="text-zinc-500 font-mono text-sm p-6 rounded-lg border border-zinc-900 bg-zinc-950">
@@ -178,7 +194,7 @@ const handleOpenCompleteModal = useCallback((id: number) => {
             </div>
           ) : (
             <div className="w-full border border-zinc-900 bg-zinc-950 rounded-lg overflow-hidden shadow-md">
-              
+
               <div className="grid grid-cols-8 p-4 border-b border-zinc-900 text-xs font-mono text-zinc-500 uppercase tracking-wider font-semibold bg-zinc-950">
                 <div>Asset / Risk</div>
                 <div>Action / Size</div>
@@ -192,7 +208,7 @@ const handleOpenCompleteModal = useCallback((id: number) => {
 
               <div className="divide-y divide-zinc-900">
                 {filteredTrades.map((trade: any, idx: number) => (
-                  <HistoryRow 
+                  <HistoryRow
                     key={trade.id || idx}
                     trade={trade}
                     isDeleting={deleteingId === trade.id}

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useSidebar } from "../../hooks/useSidebar";
 import Navbar from "../ui/NavBar";
 import { toast } from "sonner";
-import useAccount from "../../hooks/useAccount";
+import useAccount from "@hooks/useAccount";
 
 function AddAccount() {
   const [loading, setLoading] = useState(false);

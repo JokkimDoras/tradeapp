@@ -1,12 +1,12 @@
 import { lazy, Suspense } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router";
 import { Toaster } from "sonner";
-import AccountSelector from "./pages/AcoountSelector.tsx";
-import LandingPage from "./pages/LandingPage.tsx";
-import Register from "./pages/Register.tsx";
-import Login from "./pages/Login.tsx";
-import DashBoard from "./pages/DashBoard.tsx";
-import NotFound from "./pages/404.tsx";
+import AccountSelector from "@pages/AccountSelector.tsx";
+import LandingPage from "@pages/LandingPage.tsx";
+import Register from "@pages/Register.tsx";
+import Login from "@pages/Login.tsx";
+import DashBoard from "@pages/DashBoard.tsx";
+import NotFound from "@pages/404.tsx";
 import ProtectedRoute from "./component/ProtectedRoute.tsx";
 import DashboardLayout from "./component/DashboardLayout.tsx";
 import HistorySkeleton from "./component/skeltons/HistorySkelton.tsx";
@@ -15,15 +15,16 @@ import CalendarSkeleton from "./component/skeltons/CalendarSkeleton.tsx";
 import NewsSkeleton from "./component/skeltons/NewsSkelton.tsx";
 // import AccountSelectorSkeleton from "./component/skeltons/AccountSelectorSkeleton.tsx";
 import AppProvider from "./AppProvider.tsx";
-const History = lazy(() => import("./pages/History.tsx"));
-const Strategies = lazy(() => import("./pages/Strategies.tsx"));
-const TradeJournal = lazy(() => import("./pages/TradeJournal.tsx"));
-const Profile = lazy(() => import("./pages/Profile.tsx"));
-const Settings = lazy(() => import("./pages/Settings.tsx"));
-const Analytics = lazy(() => import("./pages/Analytics.tsx"));
-const TradeDetails = lazy(() => import("./pages/TradeDetails.tsx"));
-const News = lazy(() => import("./pages/News.tsx"));
-const Calendar = lazy(() => import("./pages/Calendar.tsx"));
+import { getRoute } from "@config/routes.ts";
+const History = lazy(() => import("@pages/History.tsx"));
+const Strategies = lazy(() => import("@pages/Strategies.tsx"));
+const TradeJournal = lazy(() => import("@pages/TradeJournal.tsx"));
+const Profile = lazy(() => import("@pages/Profile.tsx"));
+const Settings = lazy(() => import("@pages/Settings.tsx"));
+const Analytics = lazy(() => import("@pages/Analytics.tsx"));
+const TradeDetails = lazy(() => import("@pages/TradeDetails.tsx"));
+const News = lazy(() => import("@pages/News.tsx"));
+const Calendar = lazy(() => import("@pages/Calendar.tsx"));
 
 const router = createBrowserRouter([
   {
@@ -34,11 +35,11 @@ const router = createBrowserRouter([
         element: <LandingPage />,
       },
       {
-        path: "/login",
+        path: getRoute("LOGIN"),
         element: <Login />,
       },
       {
-        path: "/register",
+        path: getRoute('REGISTER'),
         element: <Register />,
       },
       {
@@ -54,11 +55,11 @@ const router = createBrowserRouter([
                 element: <DashBoard />,
               },
               {
-                path: "/profile",
+                path: getRoute('PROFILE'),
                 element: <Profile />,
               },
               {
-                path: "/setting",
+                path:getRoute('SETTING'),
                 element: <Settings />,
               },
               {
@@ -70,7 +71,7 @@ const router = createBrowserRouter([
                 ),
               },
               {
-                path: "/strategies",
+                path: getRoute('STRATEGIES'),
                 element: (
                   <Suspense fallback={<h1>Loading...</h1>}>
                     <Strategies />
@@ -78,7 +79,7 @@ const router = createBrowserRouter([
                 ),
               },
               {
-                path: "/journal",
+                path:getRoute('JOURNAL'),
                 element: (
                   <Suspense fallback={<h1>Loading</h1>}>
                     <TradeJournal />
@@ -102,7 +103,7 @@ const router = createBrowserRouter([
                 ),
               },
               {
-                path: "/news",
+                path:getRoute('NEWS'),
                 element: (
                   <Suspense fallback={<NewsSkeleton/>}>
                     <News />
@@ -110,7 +111,7 @@ const router = createBrowserRouter([
                 ),
               },
               {
-                path: "/account-selector",
+                path: getRoute('ACCOUNT_SELECTOR'),
                 element: <AccountSelector />
               },
               {

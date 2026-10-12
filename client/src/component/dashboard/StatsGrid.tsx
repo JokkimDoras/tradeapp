@@ -1,5 +1,5 @@
 import type { AnalyticsDataType } from "../../types/analytics.types";
-import useAccount from "../../hooks/useAccount";
+import useAccount from "@hooks/useAccount";
 
 interface StatsGridProps {
   totalExecutions: number;

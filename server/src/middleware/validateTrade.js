@@ -66,6 +66,42 @@ const validateAddTrade = async (req, res, next) => {
   }
 };
 
+const validateGetParticularTrade = async (req, res, next) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith("Bearer")) {
+    return res.status(401).json({
+      success: false,
+      message: "Unauthorized Invaild Token",
+    });
+  }
+  const token = authHeader.split(" ")[0];
+  const tradeId = req.params.tradeId;
+  const accountId = req.params.accountId;
+
+  try {
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser(token);
+
+    if (authError || !user) {
+      return res.status(401).json({
+        success: false,
+        message: "Unauthorized: Invalid token",
+        error: authError,
+      });
+    }
+    req.accountId = accountId;
+    req.tradeID = tradeId;
+    next();
+  } catch (err) {
+    return res.status(500).json({
+      success: false,
+      message: "Internal server Error",
+    });
+  }
+};
+
 const validateGetTrade = async (req, res, next) => {
   const authHeader = req.headers.authorization;
   if (!authHeader || !authHeader.startsWith("Bearer")) {
@@ -75,7 +111,7 @@ const validateGetTrade = async (req, res, next) => {
     });
   }
 
-  const accountId = req.params.id; 
+  const accountId = req.params.id;
   const token = authHeader.split(" ")[1];
 
   try {
@@ -92,13 +128,12 @@ const validateGetTrade = async (req, res, next) => {
       });
     }
 
-
-    // does this user own this account? 
+    // does this user own this account?
     const { data: account, error: accountError } = await supabaseAdmin
-      .from("accounts") 
+      .from("accounts")
       .select("id")
       .eq("id", accountId)
-      .eq("user_id", user.id) 
+      .eq("user_id", user.id)
       .single();
 
     if (accountError || !account) {
@@ -109,7 +144,7 @@ const validateGetTrade = async (req, res, next) => {
     }
 
     req.user_id = user.id;
-    req.account_id = accountId; 
+    req.account_id = accountId;
 
     next();
   } catch (err) {
@@ -173,7 +208,6 @@ const validateDeleteTrade = async (req, res, next) => {
   }
 };
 
-
 const validateUpdateTrade = async (req, res, next) => {
   const authHeader = req.headers.authorization;
   if (!authHeader || !authHeader.startsWith("Bearer")) {
@@ -231,36 +265,38 @@ const validateUpdateTrade = async (req, res, next) => {
   }
 };
 
-const validateDeleteAllTrade = async (req,res,next) => {
-   const authHeader = req.headers.authorization;
-   const {account_id} = req.params;
-   if(!authHeader || !authHeader.startsWith('Bearer')){
-       return res.status(401).json({
-        success:false,
-        message:'Unauthorized Invaid Token'
-       })
-   }
+const validateDeleteAllTrade = async (req, res, next) => {
+  const authHeader = req.headers.authorization;
+  const { account_id } = req.params;
+  if (!authHeader || !authHeader.startsWith("Bearer")) {
+    return res.status(401).json({
+      success: false,
+      message: "Unauthorized Invaid Token",
+    });
+  }
 
-   const token = authHeader.split(' ')[1];
-   try{
-    const {data:{user},error} = await supabaseAdmin.auth.getUser(token);
-    if(error || !user){
+  const token = authHeader.split(" ")[1];
+  try {
+    const {
+      data: { user },
+      error,
+    } = await supabaseAdmin.auth.getUser(token);
+    if (error || !user) {
       return res.status(401).json({
-        success:false,
-        message:"user not Found"
-      })
+        success: false,
+        message: "user not Found",
+      });
     }
     req.user_id = user.id;
-    req.account_id = account_id
-    next()
-
-   }catch(err){
-      return res.status(400).json({
-        success:false,
-        message:'Failed to Get user id'
-      })
-   }
-}
+    req.account_id = account_id;
+    next();
+  } catch (err) {
+    return res.status(400).json({
+      success: false,
+      message: "Failed to Get user id",
+    });
+  }
+};
 
 const validateStats = async (req, res, next) => {
   const authHeader = req.headers.authorization;
@@ -278,19 +314,16 @@ const validateStats = async (req, res, next) => {
         authError,
       });
     }
-  
-
 
     //here is the test user id
-    req.user_id = user.id
-    
-    next();
+    req.user_id = user.id;
 
+    next();
   } catch (err) {
     return res.status(500).json({
       success: false,
-      message: 'Failed',
-      err: err.message || err
+      message: "Failed",
+      err: err.message || err,
     });
   }
 };
@@ -300,5 +333,5 @@ module.exports = {
   validateDeleteTrade,
   validateUpdateTrade,
   validateStats,
-  validateDeleteAllTrade
+  validateDeleteAllTrade,
 };

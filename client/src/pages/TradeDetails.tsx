@@ -1,17 +1,17 @@
 import { useParams, useNavigate } from "react-router";
 import { useEffect, useMemo } from "react";
-import useTrade from "../hooks/useTrade";
-import { useSidebar } from "../hooks/useSidebar";
+import useTrade from "@hooks/useTrade";
+import { useSidebar } from "@hooks/useSidebar";
 import Navbar from "../component/ui/NavBar";
 import StatCard from "../component/tradeDetails/StatCard";
 import DataRow from "../component/tradeDetails/DataRow";
 import { FiArrowLeft, FiClock, FiActivity, FiLayers, FiShield, FiX } from "react-icons/fi";
-import useScreenshot from "../hooks/useScreenshot";
+import useScreenshot from "@hooks/useScreenshot";
 import { useState } from "react";
 import type { responseScreenshotData } from '../types/screenshot.types'
 import { MdDeleteOutline } from "react-icons/md";
 import { FaRegCopy } from "react-icons/fa6";
-import { useClipboard } from "../hooks/useClipboard";
+import { useClipboard } from "@hooks/useClipboard";
 import { FaCopy } from "react-icons/fa6";
 import { toast } from "sonner";
 import ConfirmModal from "../component/ui/ConfirmModal";

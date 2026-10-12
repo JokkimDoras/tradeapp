@@ -1,15 +1,15 @@
 import { useState } from "react";
-import { useNavigate } from "react-router";
 import logOutUserApi, { loginUserApi, registerUserApi,googleLoginApi } from "../services/authApi";
 import { useUser } from "./useUser";
 import { clearAuth,getToken } from "../utils/auth";
+import {useAppNavigation} from "./useAppNavigation";
 
 
 export default function useAuth() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const { setUser } = useUser(); 
-  const navigate = useNavigate();
+  const navigate = useAppNavigation();
 
   const login = async (formData: any) => {
     setLoading(true);
@@ -22,7 +22,7 @@ export default function useAuth() {
         ...payload.user
       }));
 
-      navigate("/account-selector");
+      navigate("ACCOUNT_SELECTOR");
     } catch (err: any) {
       const errMsg = err.response?.data?.message || "AUTHENTICATION_FAILED: Access denied.";
       setError(errMsg);
@@ -44,7 +44,7 @@ export default function useAuth() {
       }))
       localStorage.setItem("token", payload.access_token);
       
-      navigate("/account-selector");
+      navigate("ACCOUNT_SELECTOR");
     } catch (err: any) {
       const errMsg = err.response?.data?.message || "REGISTRATION_FAILED: Invalid identity data.";
       setError(errMsg);
@@ -69,7 +69,7 @@ export default function useAuth() {
       }));
       
       setLoading(false);
-      navigate("/login");
+      navigate("LOGIN");
     }
   }; 
 

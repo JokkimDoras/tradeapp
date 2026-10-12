@@ -1,5 +1,5 @@
 import { useState } from "react";
-import useAccount from "../../hooks/useAccount";
+import useAccount from "@hooks/useAccount";
 import { toast } from "sonner";
 import ConfirmModal from "../ui/ConfirmModal";
 

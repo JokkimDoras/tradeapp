@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router";
-import useAccount from '../../hooks/useAccount';
+import useAccount from '@hooks/useAccount';
 
 interface SidebarHeaderProps {
   closeSidebar: () => void;

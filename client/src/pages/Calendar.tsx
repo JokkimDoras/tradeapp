@@ -3,9 +3,9 @@ import { type MonthData } from '../types/calendar';
 import { MetricCards } from '../component/calendar/MetricCards';
 import { TradeInspector } from '../component/calendar/TradeInspector';
 import Navbar from '../component/ui/NavBar';
-import useTrade from '../hooks/useTrade';
-import { useSidebar } from '../hooks/useSidebar';
-import useAccount from '../hooks/useAccount';
+import useTrade from '@hooks/useTrade';
+import { useSidebar } from '@hooks/useSidebar';
+import useAccount from '@hooks/useAccount';
 import CalendarSkeleton from '../component/skeltons/CalendarSkeleton';
 
 export default function Calendar() {

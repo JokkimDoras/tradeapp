@@ -1,6 +1,6 @@
 import { FiEdit2, FiTrash2 } from "react-icons/fi";
 import { useNavigate } from "react-router";
-import useAccount from "../../hooks/useAccount";
+import useAccount from "@hooks/useAccount";
 
 
 interface TradeRowProps {

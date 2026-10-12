@@ -1,7 +1,7 @@
 import {  useState } from "react";
 import Navbar from "../component/ui/NavBar";
-import useAccount from "../hooks/useAccount";
-import { useSidebar } from "../hooks/useSidebar";
+import useAccount from "@hooks/useAccount";
+import { useSidebar } from "@hooks/useSidebar";
 import AddAccount from "../component/addAccount/AddAccount";
 import DeleteAccountModal from "../component/addAccount/DeleteAccountModal";
 import AccountSelectorSkeleton from "../component/skeltons/AccountSelectorSkeleton";

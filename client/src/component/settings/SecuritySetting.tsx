@@ -1,5 +1,5 @@
-import { useDeleteAccount } from "../../hooks/useDeleteAccount";
-import { useUser } from "../../hooks/useUser"
+import { useDeleteAccount } from "@hooks/useDeleteAccount";
+import { useUser } from "@hooks/useUser"
 import { useState } from "react";
 import ConfirmModal from "../ui/ConfirmModal";
 import { toast } from "sonner";

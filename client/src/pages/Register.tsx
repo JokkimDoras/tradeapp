@@ -1,36 +1,33 @@
-import { useState,useRef } from "react";
 import { Link, useNavigate } from "react-router";
-import useAuth from "../hooks/useAuth";
+import useAuth from "@hooks/useAuth";
 import { toast } from "sonner";
+import { useForm, type FieldErrors } from 'react-hook-form'
+import { getRoute } from "@config/routes";
 
+type formField = {
+  full_name: string;
+  email: string;
+  password: string;
+}
 export default function Register() {
-  const [formData, setFormData] = useState({
-    fullName: "",
-    email: "",
-    password: "",
-  });
-  const inputRef = useRef<HTMLInputElement | null>(null);
+
+  const { register: reg, handleSubmit } = useForm<formField>()
 
 
   const navigate = useNavigate();
   const { register, loading, error } = useAuth();
 
-  const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+  const handleValidationError = (errors: FieldErrors<formField>) => {
+    if (errors.password) {
+      toast.error(errors.password.message);
+    }
   };
 
-  const handleRegister = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!formData.fullName.trim() || !formData.email.trim() || !formData.password.trim()) return;
-    if(formData.password.length < 8) {
-      toast.error('Password contains atleast 8 char')
-     inputRef.current?.focus()
-     return;
-    }
+  const handleRegister = async (data: formField) => {
+
     try {
-      await register(formData);
-      localStorage.setItem('email',formData.email)
+      await register(data);
+      localStorage.setItem('email', data.email)
       navigate('/login')
     } catch {
       toast.error('Failed to Register')
@@ -55,7 +52,7 @@ export default function Register() {
             <p className="text-sm text-zinc-500">Start journaling your trades professionally.</p>
           </div>
 
-          <form onSubmit={handleRegister} className="flex flex-col gap-4">
+          <form onSubmit={handleSubmit(handleRegister, handleValidationError)} className="flex flex-col gap-4">
             {error && (
               <div className="text-xs text-red-400 bg-red-500/10 border border-red-500/20 rounded-lg px-4 py-3">
                 {error}
@@ -65,12 +62,11 @@ export default function Register() {
             <div className="flex flex-col gap-1.5">
               <label className="text-xs font-medium text-zinc-400">Full name</label>
               <input
+                {...reg('full_name', {
+                  required: 'Full Name is Required'
+                })}
                 type="text"
-                name="fullName"
-                required
                 placeholder="Alex Kumar"
-                value={formData.fullName}
-                onChange={handleInput}
                 className="h-9 bg-zinc-950 border border-zinc-800 hover:border-zinc-700 focus:border-zinc-600 rounded-lg px-3 text-sm text-white placeholder-zinc-700 focus:outline-none transition-all"
               />
             </div>
@@ -79,11 +75,11 @@ export default function Register() {
               <label className="text-xs font-medium text-zinc-400">Email</label>
               <input
                 type="email"
-                name="email"
+                {...reg('email', {
+                  required: true
+                })}
                 required
                 placeholder="you@example.com"
-                value={formData.email}
-                onChange={handleInput}
                 className="h-9 bg-zinc-950 border border-zinc-800 hover:border-zinc-700 focus:border-zinc-600 rounded-lg px-3 text-sm text-white placeholder-zinc-700 focus:outline-none transition-all"
               />
             </div>
@@ -92,15 +88,19 @@ export default function Register() {
               <label className="text-xs font-medium text-zinc-400">Password</label>
               <input
                 type="password"
-                name="password"
-                ref={inputRef}
+
+                {...reg('password', {
+                  required: 'Password is required',
+                  minLength: {
+                    value: 8,
+                    message: 'Password must be 8 Char'
+                  }
+                })}
                 required
                 placeholder="••••••••"
-                value={formData.password}
-                onChange={handleInput}
+
                 className="h-9 bg-zinc-950 border border-zinc-800 hover:border-zinc-700 focus:border-zinc-600 rounded-lg px-3 text-sm text-white placeholder-zinc-700 focus:outline-none transition-all"
               />
-              <p className="text-xs text-zinc-700">Must be at least 8 characters.</p>
             </div>
 
             <button
@@ -114,7 +114,7 @@ export default function Register() {
 
           <p className="text-center text-xs text-zinc-600">
             Already have an account?{" "}
-            <Link to="/login" className="text-zinc-400 hover:text-white transition-colors">
+            <Link to={getRoute('LOGIN')} className="text-zinc-400 hover:text-white transition-colors">
               Sign in
             </Link>
           </p>

@@ -1,7 +1,7 @@
 import { newsApi } from "../services/newsApi"
 import type { newsResponse } from "../types/news.types";
 import Navbar from "../component/ui/NavBar";
-import { useSidebar } from "../hooks/useSidebar";
+import { useSidebar } from "@hooks/useSidebar";
 import NewsSkeleton from "../component/skeltons/NewsSkelton";
 import { useQuery } from "@tanstack/react-query";
 

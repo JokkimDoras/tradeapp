@@ -1,5 +1,5 @@
 import { Navigate, Outlet } from "react-router";
-import { useUser } from "../hooks/useUser";
+import { useUser } from "@hooks/useUser";
 import { getToken } from "../utils/auth";
 
 export default function ProtectedRoute() {

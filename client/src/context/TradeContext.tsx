@@ -23,7 +23,7 @@ interface TradeContextType {
   trades: any[];
   setTrades: Dispatch<SetStateAction<any[]>>;
   addTrade: (formData: any) => Promise<void>;
-  fetchTradesData: (accountId: string) => Promise<void>; 
+  fetchTradesData: (accountId: string, force?: boolean) => Promise<void>;
   removeTrade: (idToDel: number) => Promise<void>;
   updateTrade: (idToUpdate: number, formData: any) => Promise<TradeDetails>;
   deleteAllTrade:(accID:string) => Promise<void>
@@ -53,8 +53,8 @@ export default function TradeProvider({ children }: TradeProviderProps) {
 
   
 
-  const fetchTradesData = async (accountId: string) => {
-    if (currentAccountId === accountId && trades.length > 0) {
+  const fetchTradesData = async (accountId: string, force = false) => {
+    if (!force && currentAccountId === accountId && trades.length > 0) {
       return;
     }
 
@@ -157,6 +157,10 @@ export default function TradeProvider({ children }: TradeProviderProps) {
       }))
 
      const res = await deleteAllTradeApi(acc_id)
+     if (res.success && currentAccountId === acc_id) {
+       setTrades([]);
+     }
+     setIsOld(true);
      return res
     }catch(err){
       throw err

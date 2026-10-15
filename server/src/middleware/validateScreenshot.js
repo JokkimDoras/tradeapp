@@ -1,5 +1,16 @@
 const { supabaseAdmin } = require('../config/supabase')
 
+const getOwnedTrade = async (tradeId, userId) => {
+  const { data, error } = await supabaseAdmin
+    .from('trades')
+    .select('id')
+    .eq('id', tradeId)
+    .eq('user_id', userId)
+    .single();
+
+  return { trade: data, error };
+};
+
 const validateaddScreenshot = async (req, res, next) => {
     const authHeader = req.headers.authorization;
   
@@ -42,6 +53,14 @@ const validateaddScreenshot = async (req, res, next) => {
           message: "Forbidden: Invalid or expired Supabase session",
         });
       }
+
+      const { trade, error: tradeError } = await getOwnedTrade(tradeID, user.id);
+      if (tradeError || !trade) {
+        return res.status(404).json({
+          success: false,
+          message: 'Trade not found or access denied',
+        });
+      }
   
       req.user = user;
       req.tradeId = tradeID;
@@ -55,7 +74,7 @@ const validateaddScreenshot = async (req, res, next) => {
     }
   };
 
-  const validategetScreenshot = (req,res,next) => {
+  const validategetScreenshot = async (req,res,next) => {
 
     const authHeader = req.headers.authorization;
 
@@ -75,8 +94,23 @@ const validateaddScreenshot = async (req, res, next) => {
         })
     }
 
-    req.tradeId = tradeId
-    next();
+    try {
+      const { data: { user }, error } = await supabaseAdmin.auth.getUser(token);
+      if (error || !user) {
+        return res.status(401).json({ success: false, message: 'Unauthorized invalid token' });
+      }
+
+      const { trade, error: tradeError } = await getOwnedTrade(tradeId, user.id);
+      if (tradeError || !trade) {
+        return res.status(404).json({ success: false, message: 'Trade not found or access denied' });
+      }
+
+      req.user = user;
+      req.tradeId = tradeId;
+      next();
+    } catch {
+      return res.status(500).json({ success: false, message: 'Unable to validate screenshot access' });
+    }
 
   }
   
@@ -118,9 +152,13 @@ const validateaddScreenshot = async (req, res, next) => {
      }
 
      if(screenshot.user_id !== user.id){
-        
+        return res.status(403).json({
+          success: false,
+          message: 'You do not have access to this screenshot',
+        });
      }
         req.user = user;
+        req.screenshot = screenshot;
         next()
     }catch(err){
         return res.status(500).json({

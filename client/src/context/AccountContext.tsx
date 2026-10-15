@@ -98,6 +98,9 @@ function AccountProvider({ children }: { children: React.ReactNode }) {
         return account.id !== idToDel;
       });
       setAccounts(filtered);
+      if (selectedAccount?.id === idToDel) {
+        setSelectedAccount(filtered[0] ?? null);
+      }
     } catch (err: any) {
       console.error(err);
       throw err;

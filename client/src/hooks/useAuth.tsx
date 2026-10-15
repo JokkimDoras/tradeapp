@@ -42,9 +42,11 @@ export default function useAuth() {
         ...prev,
         full_name:payload.user?.full_name
       }))
-      localStorage.setItem("token", payload.access_token);
-      
-      navigate("/account-selector");
+      if (payload.access_token) {
+        navigate("/account-selector");
+      } else {
+        navigate("/login");
+      }
     } catch (err: any) {
       const errMsg = err.response?.data?.message || "REGISTRATION_FAILED: Invalid identity data.";
       setError(errMsg);

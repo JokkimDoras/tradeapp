@@ -36,10 +36,24 @@ const registerUser = async (req, res) => {
       });
     }
 
+    const { data: sessionData, error: sessionError } = await supabase.auth.signInWithPassword({ email, password });
+    if (sessionError || !sessionData.session) {
+      return res.status(201).json({
+        success: true,
+        message: 'Account created successfully. Please sign in.',
+        data: { id: data.user.id, email: data.user.email, full_name },
+      });
+    }
+
     return res.status(201).json({
       success: true,
       message: 'Account created successfully.',
-      data: { id: data.user.id, email: data.user.email, full_name },
+      data: {
+        access_token: sessionData.session.access_token,
+        refresh_token: sessionData.session.refresh_token,
+        expires_at: sessionData.session.expires_at,
+        user: { id: data.user.id, email: data.user.email, full_name },
+      },
     });
 
   } catch (catchErr) {

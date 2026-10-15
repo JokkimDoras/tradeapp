@@ -33,11 +33,12 @@ const addScreenshot = async (req, res) => {
           throw new Error(`Storage Error: ${storageError.message}`);
         }
   
-        const { data: urlData } = supabaseAdmin.storage
+        const { data: urlData, error: urlError } = await supabaseAdmin.storage
           .from('trade-screenshots')
-          .getPublicUrl(filePath);
-  
-        const publicUrl = urlData.publicUrl;
+          .createSignedUrl(filePath, 60 * 60);
+        if (urlError) throw new Error(`URL Error: ${urlError.message}`);
+
+        const publicUrl = urlData.signedUrl;
   
         const { data: dbData, error: dbError } = await supabaseAdmin
           .from('trade_screenshots')
@@ -95,16 +96,13 @@ const addScreenshot = async (req, res) => {
         });
       }
   
-      const screenshots = data.map((screenshot) => {
-        const { data: urlData } = supabaseAdmin.storage
+      const screenshots = await Promise.all(data.map(async (screenshot) => {
+        const { data: urlData, error: urlError } = await supabaseAdmin.storage
           .from("trade-screenshots")
-          .getPublicUrl(screenshot.file_path);
-  
-        return {
-          ...screenshot,
-          public_url: urlData.publicUrl,
-        };
-      });
+          .createSignedUrl(screenshot.file_path, 60 * 60);
+        if (urlError) throw new Error(`Unable to create screenshot URL: ${urlError.message}`);
+        return { ...screenshot, public_url: urlData.signedUrl };
+      }));
   
       return res.status(200).json({
         success: true,
@@ -123,7 +121,7 @@ const deleteScreenshot = async(req,res) => {
     try{
 
         // here deleting only in  the storage bucket after we have to clear in table
-        const deleteDetails = req.body;
+        const deleteDetails = req.screenshot;
         
         if(!deleteDetails.id || !deleteDetails.file_path){
             return res.status(400).json({

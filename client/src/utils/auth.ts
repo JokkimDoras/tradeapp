@@ -3,7 +3,8 @@ export const getLastSelectedAccount = () => localStorage.getItem('selectedAccoun
 
 export const clearAuth = () => {
   localStorage.removeItem("token");
-  localStorage.removeItem("refreshToken");
+  localStorage.removeItem("refresh_token");
+  localStorage.removeItem("expires_at");
   localStorage.removeItem("fullname");
   localStorage.removeItem("email");
 };

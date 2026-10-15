@@ -1,5 +1,6 @@
 import { createContext, useEffect, useState } from "react";
 import { getUser } from "../services/userApi";
+import { clearAuth, getToken } from "../utils/auth";
 import type { User,AuthContextType } from "../types/user.types";
 import { useNavigate } from "react-router";
 
@@ -27,10 +28,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   
   useEffect(() => {
     const restoreuser = async() => {
+      if (!getToken()) return;
       try{
         const {data} =  await getUser();
         setUser(data)
       }catch(err){
+        clearAuth();
         console.log(err,'from also authContext useEffect')
         navigate('/login')
       }

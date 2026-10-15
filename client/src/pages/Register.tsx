@@ -31,7 +31,6 @@ export default function Register() {
     try {
       await register(formData);
       localStorage.setItem('email',formData.email)
-      navigate('/login')
     } catch {
       toast.error('Failed to Register')
     }

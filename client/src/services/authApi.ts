@@ -12,7 +12,7 @@ interface AuthBackendPayload {
   data: {
     access_token: string;
     refresh_token:string;
-    expire_at:string;
+    expires_at:number;
     user: UserDetails;
   };
 }
@@ -23,8 +23,8 @@ export async function loginUserApi(formData: any) {
     const payload = response.data.data; 
 
     if (payload?.access_token) localStorage.setItem("token", payload.access_token);
-    if(payload?.refresh_token) localStorage.setItem("refresh_token",payload.refresh_token)
-    if(payload?.expire_at) localStorage.setItem('expire_at',payload.expire_at)
+    if (payload?.refresh_token) localStorage.setItem("refresh_token", payload.refresh_token);
+    if (payload?.expires_at) localStorage.setItem("expires_at", String(payload.expires_at));
     return payload;
   } catch (err: any) {
     console.error("Critical Network Error on Login Channel:", err.response?.data || err.message);

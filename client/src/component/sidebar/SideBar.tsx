@@ -21,6 +21,7 @@ import AccountDropdown from "./AccountDropdown";
 import SidebarNavigation from "./SidebarNavigation";
 import SidebarFooter from "./SidebarFooter";
 import ConfirmModal from "../ui/ConfirmModal";
+import { toast } from "sonner";
 
 type Account = {
   id: string;
@@ -98,7 +99,11 @@ export default function SideBar() {
     }, [selectedAccount?.id, location.pathname, navigate,accounts]);
 
   const handleNavigation = (item: { id: number; name: string; path: string }) => {
-    if(!selectedAccount?.id) return;
+    if(!selectedAccount?.id) {
+      toast.error('Create a Account First')
+      setIsModalOpen(true)
+      return;
+    }
     if (
       item.name === "Dashboard" ||
       item.name === "History"   ||

@@ -64,7 +64,7 @@ function AccountSelector() {
         )}
       </main>
 
-      {isModalOpen && <AddAccount  />}
+      {isModalOpen && <AddAccount/>}
     </div>
   );
 }

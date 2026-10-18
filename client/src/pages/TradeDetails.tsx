@@ -15,11 +15,11 @@ import { useClipboard } from "@hooks/useClipboard";
 import { FaCopy } from "react-icons/fa6";
 import { toast } from "sonner";
 import ConfirmModal from "../component/ui/ConfirmModal";
-
-
+import ScreenshotLoader from '../component/ui/ScreenshotLoader'
 
 export default function TradeDetails() {
   const [screenshots, setScreenshots] = useState<responseScreenshotData[]>([]);
+  const [isScreenshotsLoading, setIsScreenshotLoading] = useState(false);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [deleteImageModal, setDeleteImageModal] = useState(false);
   const [deleteImage, setDeleteImage] = useState<{
@@ -34,12 +34,18 @@ export default function TradeDetails() {
   const { fetchScreenshots, deleteScreenshot } = useScreenshot();
   const { copy, copied } = useClipboard();
 
-  
+
   useEffect(() => {
     const getStuffs = async () => {
-
-      const data = await fetchScreenshots(id)
-      setScreenshots(data)
+try{
+  setIsScreenshotLoading(true)
+  const data = await fetchScreenshots(id)
+  setScreenshots(data)
+}catch(err){
+  //fetchScreenShot catch will handle this
+}finally{
+  setIsScreenshotLoading(false)
+}
     }
 
     getStuffs();
@@ -116,10 +122,8 @@ export default function TradeDetails() {
   }
 
 
-  const handleFullView = (url: string) => {
-    setSelectedImage(url)
+  const handleFullView = (url: string) => setSelectedImage(url)
 
-  }
   return (
     <div className="flex flex-col flex-1 min-h-screen bg-black text-zinc-100 font-mono antialiased selection:bg-zinc-800 relative">
       <Navbar toggleSidebar={toggleSidebar} >Details</Navbar>
@@ -207,13 +211,24 @@ export default function TradeDetails() {
         <div className="w-full max-w-7xl mx-auto px-6 pb-24 flex flex-col gap-4">
           <span className="text-xs text-zinc-400 uppercase tracking-widest font-semibold">Attached Visual Evidence / Screenshots</span>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {screenshots.map((screenshot, index) => {
-              return (
-                <div key={screenshot.id} className="border relative border-zinc-900 bg-zinc-950 p-2 rounded-lg overflow-hidden">
-                  <MdDeleteOutline onClick={() => {
-                    setDeleteImage({ screenshot, index });
-                    setDeleteImageModal(true);
-                  }} size={20} className="absolute right-5  bottom-5 cursor-pointer  " color="red" />
+            {isScreenshotsLoading ? (
+              <ScreenshotLoader />  
+            ) : (
+              screenshots.map((screenshot, index) => (
+                <div
+                  key={screenshot.id}
+                  className="border relative border-zinc-900 bg-zinc-950 p-2 rounded-lg overflow-hidden"
+                >
+                  <MdDeleteOutline
+                    onClick={() => {
+                      setDeleteImage({ screenshot, index });
+                      setDeleteImageModal(true);
+                    }}
+                    size={20}
+                    className="absolute right-5 bottom-5 cursor-pointer"
+                    color="red"
+                  />
+
                   <img
                     onClick={() => handleFullView(screenshot.public_url)}
                     src={screenshot.public_url}
@@ -221,17 +236,16 @@ export default function TradeDetails() {
                     className="w-full h-auto object-cover rounded"
                   />
                 </div>
-              );
-
-            })}
-            {deleteImageModal && deleteImage && 
-            <ConfirmModal 
-            title="Delete Screenshot" 
-            description="Are you sure to Delete this screensShot permantly" 
-            onClose={() => setDeleteImageModal(false)} 
-            onDelete={() => handleDelete(deleteImage.screenshot,deleteImage.index)}
-            loading={deleteScreenshotLoading}/>
-             }
+              ))
+            )}
+            {deleteImageModal && deleteImage &&
+              <ConfirmModal
+                title="Delete Screenshot"
+                description="Are you sure to Delete this screensShot permantly"
+                onClose={() => setDeleteImageModal(false)}
+                onDelete={() => handleDelete(deleteImage.screenshot, deleteImage.index)}
+                loading={deleteScreenshotLoading} />
+            }
           </div>
         </div>
       )}

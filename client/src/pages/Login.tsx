@@ -56,7 +56,7 @@ export default function Login() {
       await login({email:data.email,password:data.password});
       localStorage.removeItem('email')
       localStorage.removeItem('selectedAccount')
-      toast.message(`Welcome Back ${user.full_name}`)
+      toast.message(`Welcome Back ${user.full_name ?? "User"}`)
     } catch (err:any){ 
      console.warn(err)
     }
